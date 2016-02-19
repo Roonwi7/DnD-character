@@ -30,7 +30,7 @@
       <button id="gentype" class="gen" type="button" value="0" onclick="changeGen()"> 3d6 </button>
     </div>
 
-    <div class="chartop">
+    <div class="charmain">
       <h2> Character Identity </h2>
       <p> Character Name: <input type="text" id="name"> </p>
       <p> Player Name: <input type="text" id="name"> </p>
@@ -49,7 +49,7 @@
         </select>
       </p>
       <p> Sub-Race: 
-        <select id="srace" onchange="updateSubRace()">
+        <select id="srace" onchange="determineRaceTraits()">
         </select>
       </p>
       <p> Class: 
@@ -70,7 +70,7 @@
         </select>
       </p>
       <p> Sub-Class: 
-        <select id="sclass" onchange="updateSubClass()">
+        <select id="sclass" onchange="determineClassTraits()">
         </select>
       </p>
 
@@ -132,6 +132,7 @@
       <h2> Class Characteristics </h2>
       <p id="classInfo"> </p>
     </div>
+
     </div>
 
 

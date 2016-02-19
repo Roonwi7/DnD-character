@@ -9,9 +9,9 @@ button.gen { font-size: 22px; width: 100%; border-width: thick; }
 button.gen:hover { background-color: cadetblue; }
 input[type="number"] { font-size: 22px; }
 div.left { width: 120px; float: left; position: fixed; height: 100%; }
-div.chartop { border-style: ridge; border-width: thick; margin-left: 124px; margin-top: 60px; }
+div.charmain { position: fixed; border-style: ridge; border-width: thick; left: 168px; margin-top: 60px; overflow-y: auto; }
 div.char { border-style: ridge; border-width: thick; overflow-y: scroll; }
-header { position: fixed; margin-left: 124px; height: auto; width: auto; align: center; display: block; }
+header { position: fixed; left: 168px; height: auto; width: auto; align: center; display: block; }
 
 * { margin: 0; padding: 0; }
 a { background-color: transparent; color: #23223e; }

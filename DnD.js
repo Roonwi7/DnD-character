@@ -1,4 +1,6 @@
 
+  //if (isNaN(x.innerHTML)) {
+
 var genTypes=[ "3d6", "4d6 - 1", "5d6 - 2", "Non-Elite Array", "Elite Array", "Basic Array" ];
 var genType3d6=0;
 var genType4d6=1;
@@ -20,6 +22,7 @@ var raceTypes= [
   ["Human" ],
   ["Tiefling" ]
 ];
+
 var classTypes= [
   ["Barbarian", "Berserker", "Totem" ],
   ["Bard", "Lore", "Valor" ],
@@ -35,65 +38,37 @@ var classTypes= [
   ["Wizard", "Abjuration", "Conjuration", "Divination", "Enchantment", "Evocation", "Illusion", "Necromancy", "Transmutation", "Artificer" ]
 ];
 
-
 var raceTraits = [ 
-{ race:"Dragonborn", str:2, cha:1, size:"M", speed:"25-HA", lang:"Common, Draconic", other:"Breath Weapon, Damage Resistance" },
-{ race:"Dwarf", con:2, size:"M", speed:"30", lang:"Common, Dwarf", other:"Darkvision, Dwarven Resistane, Dwarven Combat Training, Tool Proficiency, Stone-cunning" },
-{ race:"Elf", dex:2, size:"M", speed:"30", lang:"Common, Elvish", other:"Darkvision, Keen Senses, Fey Ancestry, Trance" },
-{ race:"Gnome", int:2, size:"S", speed:"25", lang:"Common, Gnomish", other:"Darkvision, Gnome Cunning" },
-{ race:"Halfling", dex:2, size:"S", speed:"25", lang:"Common, Halfling", other:"Lucky, Brave, Halfling Nimbleness" },
-{ race:"Half-Elf", cha:2, size:"M", speed:"30", lang:"Common, Elvish", other:"2x(+1 ASI), Darkvision, Fey Ancestry, Skill Versitility" },
-{ race:"Half-Orc", str:2, con:1, size:"M", speed:"30", lang:"Common, Orc", other:"Darkvision, Menacing, Relentless Endurance, Savage Attacks" },
-{ race:"Human", str:1, dex:1, con:1, int:1, wis:1, cha:1, size:"M", speed:"30", lang:"Common, +1 language", other:"" },
-{ race:"Tiefling", int:1, cha:2, size:"M", speed:"30", lang:"Common, Infernal", other:"Darkvision, Hellish Resistance, Infernal Legacy" }
-];
-
-var subRaceTraits = [ 
- [ {race:"Dragonborn"} ],
- [ {race:"Dwarf"},
+ [ { race:"Dragonborn", str:2, cha:1, size:"M", speed:"25-HA", lang:"Common, Draconic", other:"Breath Weapon, Damage Resistance" } ],
+ [ { race:"Dwarf", con:2, size:"M", speed:"30", lang:"Common, Dwarf", other:"Darkvision, Dwarven Resistane, Dwarven Combat Training, Tool Proficiency, Stone-cunning" },
    {  race:"Hill Dwarf", wis:1, other:", Dwarven Toughness" },
    {  race:"Mountain Dwarf", str:2, other:", Dwarven Armor Training" } ],
- [ {race:"Elf"},
+ [ { race:"Elf", dex:2, size:"M", speed:"30", lang:"Common, Elvish", other:"Darkvision, Keen Senses, Fey Ancestry, Trance" },
    {  race:"Eladrin", int:1, other:", Elf Weapon Training, Fey Step" },
    {  race:"High Elf", int:1, lang:", +1 language", other:", Elf Weapon Training, +1 Cantrip" },
    {  race:"Wood Elf", wis:1, speed:"+5ft", other:", Elf Weapon Training, Mask of the Wild" } ],
- [ {race:"Gnome"},
+ [ { race:"Gnome", int:2, size:"S", speed:"25", lang:"Common, Gnomish", other:"Darkvision, Gnome Cunning" },
    {  race:"Forest Gnome", dex:1, other:", Minor Illusion Cantrip, Speak with Small Beasts" },
    {  race:"Rock Gnome", con:1, other:", Artificer's Lore, Tinker" } ],
- [ {race:"Halfling"},
+ [ { race:"Halfling", dex:2, size:"S", speed:"25", lang:"Common, Halfling", other:"Lucky, Brave, Halfling Nimbleness" },
    {  race:"Lightfoot Halfling", cha:1, other:", Naturally Stealthy" },
    {  race:"Stout Halfling", con:1, other:", Stout Resilience" } ],
- [ {race:"Half-Elf"},
+ [ { race:"Half-Elf", cha:2, size:"M", speed:"30", lang:"Common, Elvish", other:"2x(+1 ASI), Darkvision, Fey Ancestry, Skill Versitility" },
    {  race:"Half Wood Elf", other:", (-Skill Versitility) Elf Weapon Training, or Fleet of Foot, or Mask of the Wild" },
    {  race:"Half Moon/Sun Elf", other:", (-Skill Versitility) Elf Weapon Training, or Cantrip" } ],
- [ {race:"Half-Orc"} ],
- [ {race:"Human"} ],
- [ {race:"Tiefling"} ]
+ [ { race:"Half-Orc", str:2, con:1, size:"M", speed:"30", lang:"Common, Orc", other:"Darkvision, Menacing, Relentless Endurance, Savage Attacks" } ],
+ [ { race:"Human", str:1, dex:1, con:1, int:1, wis:1, cha:1, size:"M", speed:"30", lang:"Common, +1 language", other:"" } ],
+ [ { race:"Tiefling", int:1, cha:2, size:"M", speed:"30", lang:"Common, Infernal", other:"Darkvision, Hellish Resistance, Infernal Legacy" } ]
 ];
 
 var classTraits = [ 
-  { class:"Barbarian", armr:"Medium or 10+CON+DEX", weap:"Martial", hitd:"D12", prim:"STR+CON", savt:"STR+CON" },
-  { class:"Bard", armr:"Light", weap:"Simple +4", hitd:"D8", prim:"CHA", savt:"DEX+CHA" },
-  { class:"Cleric", armr:"Medium", weap:"Simple", hitd:"D8", prim:"WIS", savt:"WIS+CHA" },
-  { class:"Druid", armr:"Medium Nature", weap:"10 specific", hitd:"D8", prim:"WIS", savt:"INT+WIS" },
-  { class:"Fighter", armr:"Heavy", weap:"Martial", hitd:"D10", prim:"(STR or DEX)", savt:"STR+CON" },
-  { class:"Monk", armr:"10+WIS+DEX", weap:"Simple +1", hitd:"D8", prim:"DEX+WIS", savt:"STR+DEX,  All(14th)" },
-  { class:"Paladin", armr:"Heavy", weap:"Martial", hitd:"D10", prim:"STR+CHA", savt:"WIS+CHA" },
-  { class:"Ranger", armr:"Medium", weap:"Martial", hitd:"D10", prim:"(DEX or STR)+WIS", savt:"STR+DEX" },
-  { class:"Rogue", armr:"Light", weap:"Simple +4", hitd:"D8", prim:"DEX", savt:"DEX+INT" },
-  { class:"Sorcerer", armr:"None", weap:"5 specific", hitd:"D6", prim:"CHA", savt:"CON+CHA" },
-  { class:"Warlock", armr:"Light", weap:"Simple (+PoB)", hitd:"D8", prim:"CHA", savt:"WIS+CHA" },
-  { class:"Wizard", armr:"None", weap:"5 specific", hitd:"D6", prim:"INT", savt:"INT+WIS" }
-];
-
-var subClassTraits = [ 
- [ { class:"Barbarian" },
+ [ { class:"Barbarian", armr:"Medium or 10+CON+DEX", weap:"Martial", hitd:"D12", prim:"STR+CON", savt:"STR+CON" },
    {   class:"Berserker",prim:"+CHA" },
    {   class:"Totem" } ],
- [ { class:"Bard" },
+ [ { class:"Bard", armr:"Light", weap:"Simple +4", hitd:"D8", prim:"CHA", savt:"DEX+CHA" },
    {   class:"Lore" },
    {   class:"Valor",armr:", Medium",prim:"+(STR or DEX)" } ],
- [ { class:"Cleric" },
+ [ { class:"Cleric", armr:"Medium", weap:"Simple", hitd:"D8", prim:"WIS", savt:"WIS+CHA" },
    {   class:"Knowledge" },
    {   class:"Life",armr:", Heavy" },
    {   class:"Light" },
@@ -102,40 +77,40 @@ var subClassTraits = [
    {   class:"Trickery" },
    {   class:"War",armr:", Heavy",weap:", Martial" },
    {   class:"Death",weap:", Martial" } ],
- [ { class:"Druid" },
+ [ { class:"Druid", armr:"Medium Nature", weap:"10 specific", hitd:"D8", prim:"WIS", savt:"INT+WIS" },
    {   class:"Land" },
    {   class:"Moon" } ],
- [ { class:"Fighter" },
+ [ { class:"Fighter", armr:"Heavy", weap:"Martial", hitd:"D10", prim:"(STR or DEX)", savt:"STR+CON" },
    {   class:"Champion" },
    {   class:"Battle Master" },
    {   class:"Eldritch Knight",prim:"+INT" } ],
- [ { class:"Monk" },
+ [ { class:"Monk", armr:"10+WIS+DEX", weap:"Simple +1", hitd:"D8", prim:"DEX+WIS", savt:"STR+DEX,  All(14th)" },
    {   class:"Open Hand" },
    {   class:"Shadow" },
    {   class:"Four Elements" } ],
- [ { class:"Paladin" },
+ [ { class:"Paladin", armr:"Heavy", weap:"Martial", hitd:"D10", prim:"STR+CHA", savt:"WIS+CHA" },
    {   class:"Devotion" },
    {   class:"Ancients" },
    {   class:"Vengeance" },
    {   class:"Oath-Breaker" } ],
- [ { class:"Ranger" },
+ [ { class:"Ranger", armr:"Medium", weap:"Martial", hitd:"D10", prim:"(DEX or STR)+WIS", savt:"STR+DEX" },
    {   class:"Hunter" },
    {   class:"Beast Master" } ],
- [ { class:"Rogue" },
+ [ { class:"Rogue", armr:"Light", weap:"Simple +4", hitd:"D8", prim:"DEX", savt:"DEX+INT" },
    {   class:"Thief" },
    {   class:"Assassin" },
    {   class:"Arcane Trickster",prim:"+INT" },
    {   class:"Swashbuckler",prim:"+CHA" } ],
- [ { class:"Sorcerer" },
+ [ { class:"Sorcerer", armr:"None", weap:"5 specific", hitd:"D6", prim:"CHA", savt:"CON+CHA" },
    {   class:"Draconic",armr:", 13+DEX" },
    {   class:"Wild Magic" },
    {   class:"Favoured Soul",armr:", Medium",weap:", Simple" },
    {   class:"Storm" } ],
- [ { class:"Warlock" },
+ [ { class:"Warlock", armr:"Light", weap:"Simple (+PoB)", hitd:"D8", prim:"CHA", savt:"WIS+CHA" },
    {   class:"Arch-Fey" },
    {   class:"Fiend" },
    {   class:"GOO" } ],
- [ { class:"Wizard" },
+ [ { class:"Wizard", armr:"None", weap:"5 specific", hitd:"D6", prim:"INT", savt:"INT+WIS" },
    {   class:"Abjuration" },
    {   class:"Conjuration" },
    {   class:"Divination" },
@@ -147,17 +122,11 @@ var subClassTraits = [
    {   class:"Artificer" } ]
 ];
 
-  //var a=[];
-  //var b,c,d,e,f,g;
-  //if (isNaN(x.innerHTML)) {
-
 function genStats() {
-  //do {
   for (i=0; i<statTypes.length; i++) {
     generateStat(i);
   }
-    calcPoints();
-  //} while (27 < calcPoints());
+  calcPoints();
 }
 
 function generateStat(attribute) {
@@ -304,30 +273,29 @@ function changeGen() {
 
   document.getElementById("gentype").value = type;
   document.getElementById("gentype").innerHTML = genTypes[type];
-
 }
 
 function updateRace() {
-  changeSubRace();
+  initSubRace();
 }
 
-function updateSubRace() {
+function determineRaceTraits() {
   var t;
   var e = document.getElementById("mrace");
   var e2 = document.getElementById("srace");
   var theRace = e.options[e.selectedIndex].value;
   var theSubRace = e2.options[e2.selectedIndex].value;
-  if (typeof raceTraits[theRace].speed !== "undefined") {
-    t = "<strong>Speed:</strong> " + raceTraits[theRace].speed;
-    if (typeof (subRaceTraits[theRace][theSubRace]).speed !== "undefined") {
-      t = t + (subRaceTraits[theRace][theSubRace]).speed;
+  if (typeof raceTraits[theRace][0].speed !== "undefined") {
+    t = "<strong>Speed:</strong> " + raceTraits[theRace][0].speed;
+    if (theSubRace > 0 && typeof (raceTraits[theRace][theSubRace]).speed !== "undefined") {
+      t = t + (raceTraits[theRace][theSubRace]).speed;
     }
     t = t + "<br>";
   }
-  if (typeof raceTraits[theRace].lang !== "undefined") {
-    t = t + "<strong>Languages:</strong> " + raceTraits[theRace].lang;
-    if (typeof (subRaceTraits[theRace][theSubRace]).lang !== "undefined") {
-      t = t + (subRaceTraits[theRace][theSubRace]).lang;
+  if (typeof raceTraits[theRace][0].lang !== "undefined") {
+    t = t + "<strong>Languages:</strong> " + raceTraits[theRace][0].lang;
+    if (theSubRace > 0 && typeof (raceTraits[theRace][theSubRace]).lang !== "undefined") {
+      t = t + (raceTraits[theRace][theSubRace]).lang;
     }
     t = t + "<br>";
   }
@@ -341,61 +309,61 @@ function updateSubRace() {
   document.getElementById("wismod").innerHTML = t;
   document.getElementById("chamod").innerHTML = t;
 
-  if (typeof raceTraits[theRace].str !== "undefined") {
-    t = "+" + raceTraits[theRace].str;
+  if (typeof raceTraits[theRace][0].str !== "undefined") {
+    t = "+" + raceTraits[theRace][0].str;
   }
-  if (typeof (subRaceTraits[theRace][theSubRace]).str !== "undefined") {
-    t = t + "+" + (subRaceTraits[theRace][theSubRace]).str;
+  if (theSubRace > 0 && typeof (raceTraits[theRace][theSubRace]).str !== "undefined") {
+    t = t + "+" + (raceTraits[theRace][theSubRace]).str;
   }
   document.getElementById("strmod").innerHTML = t;
 
   t = "";
-  if (typeof raceTraits[theRace].dex !== "undefined") {
-    t = "+" + raceTraits[theRace].dex;
+  if (typeof raceTraits[theRace][0].dex !== "undefined") {
+    t = "+" + raceTraits[theRace][0].dex;
   }
-  if (typeof (subRaceTraits[theRace][theSubRace]).dex !== "undefined") {
-    t = t + "+" + (subRaceTraits[theRace][theSubRace]).dex;
+  if (theSubRace > 0 && typeof (raceTraits[theRace][theSubRace]).dex !== "undefined") {
+    t = t + "+" + (raceTraits[theRace][theSubRace]).dex;
   }
   document.getElementById("dexmod").innerHTML = t;
 
   t = "";
-  if (typeof raceTraits[theRace].con !== "undefined") {
-    t = "+" + raceTraits[theRace].con;
+  if (typeof raceTraits[theRace][0].con !== "undefined") {
+    t = "+" + raceTraits[theRace][0].con;
   }
-  if (typeof (subRaceTraits[theRace][theSubRace]).con !== "undefined") {
-    t = t + "+" + (subRaceTraits[theRace][theSubRace]).con;
+  if (theSubRace > 0 && typeof (raceTraits[theRace][theSubRace]).con !== "undefined") {
+    t = t + "+" + (raceTraits[theRace][theSubRace]).con;
   }
   document.getElementById("conmod").innerHTML = t;
 
   t = "";
-  if (typeof raceTraits[theRace].int !== "undefined") {
-    t = "+" + raceTraits[theRace].int;
+  if (typeof raceTraits[theRace][0].int !== "undefined") {
+    t = "+" + raceTraits[theRace][0].int;
   }
-  if (typeof (subRaceTraits[theRace][theSubRace]).int !== "undefined") {
-    t = t + "+" + (subRaceTraits[theRace][theSubRace]).int;
+  if (theSubRace > 0 && typeof (raceTraits[theRace][theSubRace]).int !== "undefined") {
+    t = t + "+" + (raceTraits[theRace][theSubRace]).int;
   }
   document.getElementById("intmod").innerHTML = t;
 
   t = "";
-  if (typeof raceTraits[theRace].wis !== "undefined") {
-    t = "+" + raceTraits[theRace].wis;
+  if (typeof raceTraits[theRace][0].wis !== "undefined") {
+    t = "+" + raceTraits[theRace][0].wis;
   }
-  if (typeof (subRaceTraits[theRace][theSubRace]).wis !== "undefined") {
-    t = t + "+" + (subRaceTraits[theRace][theSubRace]).wis;
+  if (theSubRace > 0 && typeof (raceTraits[theRace][theSubRace]).wis !== "undefined") {
+    t = t + "+" + (raceTraits[theRace][theSubRace]).wis;
   }
   document.getElementById("wismod").innerHTML = t;
 
   t = "";
-  if (typeof raceTraits[theRace].cha !== "undefined") {
-    t = "+" + raceTraits[theRace].cha;
+  if (typeof raceTraits[theRace][0].cha !== "undefined") {
+    t = "+" + raceTraits[theRace][0].cha;
   }
-  if (typeof (subRaceTraits[theRace][theSubRace]).cha !== "undefined") {
-    t = t + "+" + (subRaceTraits[theRace][theSubRace]).cha;
+  if (theSubRace > 0 && typeof (raceTraits[theRace][theSubRace]).cha !== "undefined") {
+    t = t + "+" + (raceTraits[theRace][theSubRace]).cha;
   }
   document.getElementById("chamod").innerHTML = t;
 }
 
-function changeSubRace() {
+function initSubRace() {
   var e = document.getElementById("mrace");
   var theRace = e.options[e.selectedIndex].value;
   //document.getElementById("test").innerHTML = theRace;
@@ -415,15 +383,15 @@ function changeSubRace() {
     e2.options.add(opt);
   }
 
-  updateSubRace();
+  determineRaceTraits();
 }
 
 
 function updateClass() {
-  changeSubClass();
+  initSubClass();
 }
 
-function changeSubClass() {
+function initSubClass() {
   var e = document.getElementById("mclass");
   var theClass = e.options[e.selectedIndex].value;
   //document.getElementById("test").innerHTML = theClass;
@@ -443,41 +411,41 @@ function changeSubClass() {
     e2.options.add(opt);
   }
 
-  updateSubClass();
+  determineClassTraits();
 }
 
-function updateSubClass() {
+function determineClassTraits() {
   var t = "";
   var e = document.getElementById("mclass");
   var e2 = document.getElementById("sclass");
   var theClass = e.options[e.selectedIndex].value;
   var theSubClass = e2.options[e2.selectedIndex].value;
-  if (typeof classTraits[theClass].hitd !== "undefined") {
-    t = t + "<strong>Hit Die:</strong> " + classTraits[theClass].hitd + "<br>";
+  if (typeof classTraits[theClass][0].hitd !== "undefined") {
+    t = t + "<strong>Hit Die:</strong> " + classTraits[theClass][0].hitd + "<br>";
   }
-  if (typeof classTraits[theClass].armr !== "undefined") {
-    t = t + "<strong>Armor:</strong> " + classTraits[theClass].armr;
-    if (typeof (subClassTraits[theClass][theSubClass]).armr !== "undefined") {
-      t = t + (subClassTraits[theClass][theSubClass]).armr;
+  if (typeof classTraits[theClass][0].armr !== "undefined") {
+    t = t + "<strong>Armor:</strong> " + classTraits[theClass][0].armr;
+    if (theSubClass > 0 && typeof (classTraits[theClass][theSubClass]).armr !== "undefined") {
+      t = t + (classTraits[theClass][theSubClass]).armr;
     }
     t = t + "<br>";
   }
-  if (typeof classTraits[theClass].weap !== "undefined") {
-    t = t + "<strong>Weapons:</strong> " + classTraits[theClass].weap;
-    if (typeof (subClassTraits[theClass][theSubClass]).weap !== "undefined") {
-      t = t + (subClassTraits[theClass][theSubClass]).weap;
+  if (typeof classTraits[theClass][0].weap !== "undefined") {
+    t = t + "<strong>Weapons:</strong> " + classTraits[theClass][0].weap;
+    if (theSubClass > 0 && typeof (classTraits[theClass][theSubClass]).weap !== "undefined") {
+      t = t + (classTraits[theClass][theSubClass]).weap;
     }
     t = t + "<br>";
   }
-  if (typeof classTraits[theClass].prim !== "undefined") {
-    t = t + "<strong>Primary Abilities:</strong> " + classTraits[theClass].prim;
-    if (typeof (subClassTraits[theClass][theSubClass]).prim !== "undefined") {
-      t = t + (subClassTraits[theClass][theSubClass]).prim;
+  if (typeof classTraits[theClass][0].prim !== "undefined") {
+    t = t + "<strong>Primary Abilities:</strong> " + classTraits[theClass][0].prim;
+    if (theSubClass > 0 && typeof (classTraits[theClass][theSubClass]).prim !== "undefined") {
+      t = t + (classTraits[theClass][theSubClass]).prim;
     }
     t = t + "<br>";
   }
-  if (typeof classTraits[theClass].savt !== "undefined") {
-    t = t + "<strong>Saving Throws:</strong> " + classTraits[theClass].savt + "<br>";
+  if (typeof classTraits[theClass][0].savt !== "undefined") {
+    t = t + "<strong>Saving Throws:</strong> " + classTraits[theClass][0].savt + "<br>";
   }
   document.getElementById("classInfo").innerHTML = t;
 }
