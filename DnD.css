@@ -9,9 +9,9 @@ button.gen { font-size: 22px; width: 100%; border-width: thick; }
 button.gen:hover { background-color: cadetblue; }
 input[type="number"] { font-size: 22px; }
 div.left { width: 120px; float: left; position: fixed; height: 100%; }
-div.charmain { position: fixed; border-style: ridge; border-width: thick; left: 168px; margin-top: 60px; overflow-y: auto; }
-div.char { border-style: ridge; border-width: thick; overflow-y: scroll; }
-header { position: fixed; left: 168px; height: auto; width: auto; align: center; display: block; }
+div.charmain { position: fixed; border-style: ridge; border-width: thick; left: 138px; right: 80px; top: 80px; bottom: 20px; overflow-y: auto; }
+div.char { border-style: ridge; border-width: thick; }
+header { position: fixed; left: 148px; height: auto; width: auto; align: center; display: block; }
 
 * { margin: 0; padding: 0; }
 a { background-color: transparent; color: #23223e; }
@@ -22,7 +22,7 @@ abbr[title] { border-bottom-width: 0; }
 code { font-weight: bold; font-family: "Courier New", Courier, monospace; }
 dfn { font-size: 12px; font-style: normal; }
 article { float: left; padding: 0 10px 0 10px; text-align: justify; width: 710px; }
-body { margin: 10px auto 0 auto; padding: 10px; width: 1200px; }
+body { margin: 10px auto 0 auto; padding: 10px; }
 html { padding-bottom: 30px; }
 nav { float: left; margin: 0 0 10px 0; padding-top: 9px; width: 160px; }
 nav li { margin: 3px 0 3px 0; list-style-type: none; }
