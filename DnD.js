@@ -123,10 +123,38 @@ var classTraits = [
 ];
 
 function genStats() {
+
+  var e = document.getElementById("mrace");
+  var e2 = document.getElementById("srace");
+  var theRace = e.selectedIndex ;
+  var theSubRace = e2.selectedIndex ;
+  theRace = (Math.floor(Math.random() * raceTraits.length) + 1);
+  e.selectedIndex = theRace;
+  initSubRace(e);
+  theSubRace = 0;
+  if (raceTraits[theRace-1].length > 0) {
+    theSubRace = Math.floor( Math.random() * (raceTraits[theRace-1].length) );
+  }
+  e2.selectedIndex = theSubRace;
+
+  var e3 = document.getElementById("mclass");
+  var e4 = document.getElementById("sclass");
+  var theClass = e3.selectedIndex ;
+  var theSubClass = e4.selectedIndex ;
+  theClass = (Math.floor(Math.random() * classTraits.length) + 1);
+  e3.selectedIndex = theClass;
+  initSubClass(e3);
+  theSubClass = 0;
+  if (classTraits[theClass-1].length > 0) {
+    theSubClass = Math.floor( Math.random() * (classTraits[theClass-1].length) );
+  }
+  e4.selectedIndex = theSubClass;
+
   for (i=0; i<statTypes.length; i++) {
     generateStat(i);
   }
   calcPoints();
+
 }
 
 function generateStat(attribute) {
@@ -276,7 +304,7 @@ function changeGen() {
 }
 
 function updateRace() {
-  initSubRace();
+  initSubRace( document.getElementById("mrace") );
 }
 
 function determineRaceTraits() {
@@ -363,9 +391,9 @@ function determineRaceTraits() {
   document.getElementById("chamod").innerHTML = t;
 }
 
-function initSubRace() {
-  var e = document.getElementById("mrace");
-  var theRace = e.options[e.selectedIndex].value;
+function initSubRace(raceElement) {
+  var e = raceElement;
+  var theRace = raceElement.options[raceElement.selectedIndex].value;
   //document.getElementById("test").innerHTML = theRace;
 
   var e2 = document.getElementById("srace");
@@ -388,11 +416,11 @@ function initSubRace() {
 
 
 function updateClass() {
-  initSubClass();
+  initSubClass( document.getElementById("mclass") );
 }
 
-function initSubClass() {
-  var e = document.getElementById("mclass");
+function initSubClass(classElement) {
+  var e = classElement;
   var theClass = e.options[e.selectedIndex].value;
   //document.getElementById("test").innerHTML = theClass;
 
