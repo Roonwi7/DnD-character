@@ -1,26 +1,18 @@
-h1 { background-color: cadetblue; 
-border-width: thick;
-border-style: outset dashed outset dashed ;
-border-color: red red blue blue ;
-}
+h1 { background-color: lightblue; }
 tr.head { color: darkblue; font-weight: bold; background-color: lightgray; }
 tr.body { text-align: center; background-color: lightblue; }
-button.gen { font-size: 22px; width: 100%; border-width: thick; }
-button.gen:hover { background-color: cadetblue; }
-input[type="number"] { font-size: 22px; }
-div.left { width: 120px; float: left; position: fixed; height: 100%; }
-div.charmain { position: fixed; border-style: ridge; border-width: thick; left: 138px; right: 80px; top: 80px; bottom: 20px; overflow-y: auto; }
-div.char { border-style: ridge; border-width: thick; }
-header { position: fixed; left: 148px; height: auto; width: auto; align: center; display: block; }
+button.gen { font-size: 22px; width: 100%; border-width: medium; }
+input[type="number"] { font-size: 22px; background-color: lightblue; }
+
+header {position: fixed; height: 50px; width: 100%; text-align: center; }
+nav.left {   position: fixed; left: 0;   top: 50px; bottom: 50px; width: 130px; overflow: auto; }
+nav.right { position: fixed; right: 0; top: 50px; bottom: 50px; width: 130px; overflow: auto; }
+div { border-style: ridge; border-width: thick; }
+div.charmain { position: fixed; top: 50px; left: 130px; right: 130px; bottom: 50px; text-align: justify; overflow: auto; }
+div.charmain p { padding-left: 15px; }
+footer { text-align: center; position: fixed; bottom: 0; height: 50px; width: 100%; }
 
 /*
-html { padding-bottom: 30px; }
-div { background-color: lightgray; }
-header {position: fixed; height: 70px; width: 100%; background-color: darkgray; }
-nav.right { position: fixed; right: 0; top: 70px; bottom: 30px; width: 130px; overflow: auto; }
-nav.left {   position: fixed; left: 0;   top: 70px; bottom: 30px; width: 130px; overflow: auto; }
-footer { text-align: center; position: fixed; bottom: 0; width: 100%; background-color: darkgray; }
-div.main { position: fixed; top: 70px; left: 130px; right: 130px; bottom: 30px; text-align: justify; overflow: auto; }
 nav li { margin: 3px 0 3px 0; list-style-type: none; border-bottom: 0px solid darkgray; }
 nav ul { border-top: 5px solid darkblue; border-bottom: 5px solid darkblue; border-left: 2px solid darkgray; border-right: 2px solid darkgray; }
 nav strong { font-size: 16px; }
@@ -39,7 +31,7 @@ abbr[title] { border-bottom-width: 0; }
 code { font-weight: bold; font-family: "Courier New", Courier, monospace; }
 dfn { font-size: 12px; font-style: normal; }
 article { float: left; padding: 0 10px 0 10px; text-align: justify; width: 710px; }
-body { margin: 10px auto 0 auto; padding: 10px; }
+//body { margin: 10px auto 0 auto; padding: 10px; }
 html { padding-bottom: 30px; }
 nav { float: left; margin: 0 0 10px 0; padding-top: 9px; width: 160px; }
 nav li { margin: 3px 0 3px 0; list-style-type: none; }
@@ -67,9 +59,6 @@ h4.nrml { font-size: 1.12em; }
 h5.nrml { font-size: .83em; }
 h6.nrml { font-size: .75em; }
 header, nav, article, section, footer, figure, aside { display: block; }
-/*
-html { background-color: #ffffff; color: #23223e; font-family: Arial, Helvetica, sans-serif; }
-*/
 html { background-color: linen; color: #23223e; font-family: Arial, Helvetica, sans-serif; }
 img { border: none; }
 img.showcode { float: right; margin: 8px 0 5px 20px; }
@@ -77,7 +66,6 @@ li { font-size: 14px; margin: 0 0 6px 15px; }
 ol li { font-size: 14px; margin: 5px 0 5px 30px; }
 div.search { height: 35px; width: 300px; }
 table.tbl th, table.tbl td { background-color: #f0f1f9; color: #f3223e; padding: 3px; text-align: center; vertical-align: middle; }
-img.bluehost { border: 1px solid #000000; }
 td { vertical-align: top; }
 .c { text-align: center; margin: 0 auto 0 auto; }
 .cm { text-align: center; vertical-align: middle; }
@@ -91,39 +79,22 @@ td { vertical-align: top; }
 .r { text-align: right; }
 .sm { font-size: 12px; }
 .xsm { font-size: 9px; }
-img.bluehost { margin-bottom: -8px; }
-span.bluehost { font-size: 9px; margin-top: -5px; }
-footer { padding: 20px 0 20px 0; text-align: center; }
 footer td.lr { width: 275px; }
 p.copy, address { font-size: 12px; font-style: normal; text-align: center; text-decoration: none; }
 .wd100 { width: 100%; }
 .wd50 { width: 50%; }
 .wd33 { width: 33%; }
-img.googleplus { float: right; }
-img.html5logo { margin-top: 15px; }
 figcaption.figcap { padding: 10px 0 5px 0; font-style: italic; font-size: 12px; }
 input.wd140 { width: 140px; }
-mark { background-color: #f0f1f9; color: #23223e; }
-aside.blue { width: 100%; text-align: center; }
-aside.translate { height: 45px; }
-div.glossary { width: 710px; padding: 0; display: table; }
-div.glossaryl { width: 50%; float: left; }
-div.glossaryr { width: 50%; float: right; }
 section { width: 335px; border-left: 1px solid #b52c25; padding: 0 10px 0 10px; margin: 4px 0 4px 0; }
 section.flags { width: 300px; border: none; padding: 0; float: right; text-align: center; }
 section.flags img { margin: 0 3px 0 3px; }
 b.red { color: #b52c25; }
-div.gplus { text-align: center; width: 90px; padding-top: 4px; float: right; height: 41px; }
-p.gplus { font-size: 11px; color: #666666; background-color: transparent; padding: 0 0 0 7px; margin: 0; text-align: left;  }
-div.translate { width: 210px; text-align: center; height: 45px; }
 ul.dot { width: 118px; vertical-align: top; }
 ul.nodot { list-style: none; width: 115px; }
 ul.nodot a, ul.dot a { height: 20px; margin: 0; padding: 0; }
 ul.nodot li { height: 20px; font-size: smaller; margin: 0; padding: 0; }
 ul.nodot li, ul.dot li { height: 20px; font-size: smaller; margin: 0 0 0 18px; padding: 0; }
-code.not5, span.not5 { color: #aaaaaa; background-color: transparent; }
-code.new5, span.new5 { color: #b52c25; background-color: transparent; }
-code.new5but, span.new5but { color: #e07f7a; background-color: transparent; }
 td.chbx1 { padding: 9px 0 0 0; }
 td.chbx2 { padding: 12px 0 0 10px; }
 .margtop { margin-top: 10px; }
