@@ -13,6 +13,23 @@ div.charmain { position: fixed; border-style: ridge; border-width: thick; left: 
 div.char { border-style: ridge; border-width: thick; }
 header { position: fixed; left: 148px; height: auto; width: auto; align: center; display: block; }
 
+/*
+html { padding-bottom: 30px; }
+div { background-color: lightgray; }
+header {position: fixed; height: 70px; width: 100%; background-color: darkgray; }
+nav.right { position: fixed; right: 0; top: 70px; bottom: 30px; width: 130px; overflow: auto; }
+nav.left {   position: fixed; left: 0;   top: 70px; bottom: 30px; width: 130px; overflow: auto; }
+footer { text-align: center; position: fixed; bottom: 0; width: 100%; background-color: darkgray; }
+div.main { position: fixed; top: 70px; left: 130px; right: 130px; bottom: 30px; text-align: justify; overflow: auto; }
+nav li { margin: 3px 0 3px 0; list-style-type: none; border-bottom: 0px solid darkgray; }
+nav ul { border-top: 5px solid darkblue; border-bottom: 5px solid darkblue; border-left: 2px solid darkgray; border-right: 2px solid darkgray; }
+nav strong { font-size: 16px; }
+nav li a { text-decoration: none; display: block; color: darkred; }
+nav li a:hover:not(.active) { background-color: darkred; color: white; }
+.active { background-color: cadetblue; }
+nav { background-color: darkgray; }
+*/
+
 * { margin: 0; padding: 0; }
 a { background-color: transparent; color: #23223e; }
 a.botlink { background-color: #ffffff; color: #23223e; text-decoration: none; cursor: text; }
