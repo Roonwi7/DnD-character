@@ -122,6 +122,49 @@ var classTraits = [
    {   class:"Artificer" } ]
 ];
 
+function initOptions() {
+  //document.getElementById("test").innerHTML = "Hello, init";
+  initRace();
+  initClass();
+}
+
+function initRace() {
+  var e = document.getElementById("mrace");
+  e.options.length = 0;
+
+  var opt = document.createElement('option');
+  opt.value = "";
+  opt.text = "-- select one --";
+  e.options.add(opt);
+
+  for (i=0; i<raceTypes.length; i++) {
+    opt = document.createElement('option');
+    opt.value = i;
+    opt.text = raceTypes[i][0];
+    e.options.add(opt);
+  }
+}
+
+function initClass() {
+  var e = document.getElementById("mclass");
+  e.options.length = 0;
+
+  var opt = document.createElement('option');
+  opt.value = "";
+  opt.text = "-- select one --";
+  e.options.add(opt);
+
+  for (i=0; i<classTypes.length; i++) {
+    opt = document.createElement('option');
+    opt.value = i;
+    opt.text = classTypes[i][0];
+    e.options.add(opt);
+  }
+}
+
+
+onload = initOptions;
+
 function genStats() {
 
   var e = document.getElementById("mrace");

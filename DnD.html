@@ -13,7 +13,7 @@
       <script src="http://html5shiv.googlecode.com/svn/trunk/html5.js"></script>
     <![endif]-->
 
-    <script src="DnD.js"></script>
+    <script src="DnD.js"> </script>
 
   </head>
 
@@ -29,48 +29,24 @@
       <button id="gentype" class="gen" type="button" value="0" onclick="changeGen()"> 3d6 </button>
     </nav>
 
+    <nav class="right">
+    </nav>
+
     <div class="charmain">
       <h2> Character Identity </h2>
-      <p> Character Name: <input type="text" id="name"> </p>
       <p> Player Name: <input type="text" id="name"> </p>
+      <p> Character Name: <input type="text" id="name"> </p>
       <p> Race: 
-        <select id="mrace" onchange="updateRace()">
-          <option value=""> -- select one -- </option>
-          <option value="0"> Dragonborn </option>
-          <option value="1"> Dwarf </option>
-          <option value="2"> Elf </option>
-          <option value="3"> Gnome </option>
-          <option value="4"> Halfling </option>
-          <option value="5"> Half-Elf </option>
-          <option value="6"> Half-Orc </option>
-          <option value="7"> Human </option>
-          <option value="8"> Tiefling </option>
-        </select>
+        <select id="mrace" onchange="updateRace()"> </select>
       </p>
       <p> Sub-Race: 
-        <select id="srace" onchange="determineRaceTraits()">
-        </select>
+        <select id="srace" onchange="determineRaceTraits()"> </select>
       </p>
       <p> Class: 
-        <select id="mclass" onchange="updateClass()">
-          <option value=""> -- select one -- </option>
-          <option value="0"> Barbarian </option>
-          <option value="1"> Bard </option>
-          <option value="2"> Cleric </option>
-          <option value="3"> Druid </option>
-          <option value="4"> Fighter </option>
-          <option value="5"> Monk </option>
-          <option value="6"> Paladin </option>
-          <option value="7"> Ranger </option>
-          <option value="8"> Rogue </option>
-          <option value="9"> Sorcerer </option>
-          <option value="10"> Warlock </option>
-          <option value="11"> Wizard </option>
-        </select>
+        <select id="mclass" onchange="updateClass()"> </select>
       </p>
       <p> Sub-Class: 
-        <select id="sclass" onchange="determineClassTraits()">
-        </select>
+        <select id="sclass" onchange="determineClassTraits()"> </select>
       </p>
 
     <div class="char">
