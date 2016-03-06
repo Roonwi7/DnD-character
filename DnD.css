@@ -1,16 +1,27 @@
-h1 { background-color: lightblue; }
+* { margin: 0; padding: 0; }
+html { padding-bottom: 30px; } // don't know if this works???
+a { background-color: transparent; color: #23223e; }
+a.noshow { text-decoration: none; cursor: text; }
+
+header { background-color: lightblue; text-align: center; position: fixed; top: 0;    height: 50px; width: 100%; }
+footer { background-color: lightblue; text-align: center; position: fixed; bottom: 0; height: 50px; width: 100%; }
+
+nav { background-color: lightblue; padding-top: 20px; }
+nav li { margin: 3px 0 3px 0; list-style-type: none; }
+nav.left {  position: fixed;  left: 0; top: 50px; bottom: 50px; width: 130px; overflow: auto; }
+nav.right { position: fixed; right: 0; top: 50px; bottom: 50px; width: 130px; overflow: auto; }
+
+div { border-style: ridge; border-width: thick; }
+/* Child div will only have top ridge */
+div > div { border-style: ridge none none none; border-width: thick; }
+div.charmain { position: fixed; top: 50px; left: 130px; right: 130px; bottom: 50px; text-align: justify; overflow: auto; }
+div table { 5px; margin: 5px; }
+div p { padding-left: 15px; }
+
+button.gen { font-size: 22px; width: 100%; border-width: medium; }
 tr.head { color: darkblue; font-weight: bold; background-color: lightgray; }
 tr.body { text-align: center; background-color: lightblue; }
-button.gen { font-size: 22px; width: 100%; border-width: medium; }
 input[type="number"] { font-size: 22px; background-color: lightblue; }
-
-header {position: fixed; height: 50px; width: 100%; text-align: center; }
-nav.left {   position: fixed; left: 0;   top: 50px; bottom: 50px; width: 130px; overflow: auto; }
-nav.right { position: fixed; right: 0; top: 50px; bottom: 50px; width: 130px; overflow: auto; }
-div { border-style: ridge; border-width: thick; }
-div.charmain { position: fixed; top: 50px; left: 130px; right: 130px; bottom: 50px; text-align: justify; overflow: auto; }
-div.charmain p { padding-left: 15px; }
-footer { text-align: center; position: fixed; bottom: 0; height: 50px; width: 100%; }
 
 /*
 nav li { margin: 3px 0 3px 0; list-style-type: none; border-bottom: 0px solid darkgray; }
@@ -22,20 +33,12 @@ nav li a:hover:not(.active) { background-color: darkred; color: white; }
 nav { background-color: darkgray; }
 */
 
-* { margin: 0; padding: 0; }
-a { background-color: transparent; color: #23223e; }
 a.botlink { background-color: #ffffff; color: #23223e; text-decoration: none; cursor: text; }
 .define { background-color: #ffffff; color: #b52c25; text-decoration: none; cursor: text; }
-a.noshow { text-decoration: none; cursor: text; }
 abbr[title] { border-bottom-width: 0; }
 code { font-weight: bold; font-family: "Courier New", Courier, monospace; }
 dfn { font-size: 12px; font-style: normal; }
 article { float: left; padding: 0 10px 0 10px; text-align: justify; width: 710px; }
-//body { margin: 10px auto 0 auto; padding: 10px; }
-html { padding-bottom: 30px; }
-nav { float: left; margin: 0 0 10px 0; padding-top: 9px; width: 160px; }
-nav li { margin: 3px 0 3px 0; list-style-type: none; }
-nav.pvnx { font-size: 5mm; margin: 0 0 10px 0; padding: 10px 0 0 0; text-align: right; width: 100%; font-weight: bold; }
 nav strong { font-size: 16px; }
 aside {  float: right; margin: 5px 0 5px 0; width: 300px; }
 div.ads { background-color: #ffffff; color: #b52c25; font-size: 10px; padding: 4px 0  4px 0; text-align: right; display: table; padding-left: 10px; }
