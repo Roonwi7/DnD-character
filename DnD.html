@@ -36,18 +36,10 @@
       <h2> Character Identity </h2>
       <p> Player Name: <input type="text" id="name"> </p>
       <p> Character Name: <input type="text" id="name"> </p>
-      <p> Race: 
-        <select id="mrace" onchange="updateRace()"> </select>
-      </p>
-      <p> Sub-Race: 
-        <select id="srace" onchange="determineRaceTraits()"> </select>
-      </p>
-      <p> Class: 
-        <select id="mclass" onchange="updateClass()"> </select>
-      </p>
-      <p> Sub-Class: 
-        <select id="sclass" onchange="determineClassTraits()"> </select>
-      </p>
+      <p> Race: <select id="mrace" onchange="updateRace()"> </select> </p>
+      <p> Sub-Race: <select id="srace" onchange="determineRaceTraits()"> </select> </p>
+      <p> Class: <select id="mclass" onchange="updateClass()"> </select> </p>
+      <p> Sub-Class: <select id="sclass" onchange="determineClassTraits()"> </select> </p>
 
     <div class="char">
       <h2> Character Attributes </h2>
@@ -59,47 +51,60 @@
           <td id="pnts"> 0 </td>
         </tr>
       </table>
-      <table border=3>
+      <table border=3 width=100%>
         <tr class="head">
-          <td> Strength </td>
-          <td> Dexterity </td>
-          <td> Constitution </td>
-          <td> Intelligence </td>
-          <td> Wisdom </td>
-          <td> Charisma </td>
+          <td id="strtot" > Strength </td>
+          <td id="dextot" > Dexterity </td>
+          <td id="contot" > Constitution </td>
+          <td id="inttot" > Intelligence </td>
+          <td id="wistot" > Wisdom </td>
+          <td id="chatot" > Charisma </td>
         </tr>
-        <tr class="body">
-          <td >
-            <input type="number" id="str" min="3" max="18" 
-                   onchange="calcPoints()" /> <p id="strmod"> </p>
-          </td>
-          <td >
-            <input type="number" id="dex" min="3" max="18" 
-                   onchange="calcPoints()" /> <p id="dexmod"> </p>
-          </td>
-          <td >
-            <input type="number" id="con" min="3" max="18" 
-                   onchange="calcPoints()" /> <p id="conmod"> </p>
-          </td>
-          <td >
-            <input type="number" id="int" min="3" max="18" 
-                   onchange="calcPoints()" /> <p id="intmod"> </p>
-          </td>
-          <td >
-            <input type="number" id="wis" min="3" max="18" 
-                   onchange="calcPoints()" /> <p id="wismod"> </p>
-          </td>
-          <td >
-            <input type="number" id="cha" min="3" max="18" 
-                   onchange="calcPoints()" /> <p id="chamod"> </p>
+        <tr class="body" height=50px>
+          <td> 
+          <table>  <tr> <td>
+                <input type="number" id="str" min="3" max="18" onchange="calcPoints()" /> 
+          </td> <td>
+                <b class="MOD" id="strmod" />
+          </td> </tr> </table> 
+          <td>
+          <table>  <tr> <td>
+          <td> <input type="number" id="dex" min="3" max="18" onchange="calcPoints()" /> 
+          </td> <td>
+                <b class="MOD" id="dexmod" />
+          </td> </tr> </table> 
+          <td>
+          <table>  <tr> <td>
+          <input type="number" id="con" min="3" max="18" onchange="calcPoints()" /> 
+          </td> <td>
+                <b class="MOD" id="conmod" />
+          </td> </tr> </table> 
+          <td>
+          <table>  <tr> <td>
+          <input type="number" id="int" min="3" max="18" onchange="calcPoints()" /> 
+          </td> <td>
+                <b class="MOD" id="intmod" />
+          </td> </tr> </table> 
+          <td>
+          <table>  <tr> <td>
+          <input type="number" id="wis" min="3" max="18" onchange="calcPoints()" /> 
+          </td> <td>
+                <b class="MOD" id="wismod" />
+          </td> </tr> </table> 
+          <td>
+          <table>  <tr> <td>
+          <input type="number" id="cha" min="3" max="18" onchange="calcPoints()" /> 
+          </td> <td>
+                <b class="MOD" id="chamod" />
+          </td> </tr> </table> 
           </td>
         </tr>
       </table>
-      <p id="test"> </p>
     </div>
 
     <div class="char">
       <h2> Racial Characteristics </h2>
+      <p id="test"> </p>
       <p id="raceInfo"> </p>
     </div>
 

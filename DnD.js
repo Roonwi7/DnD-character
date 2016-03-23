@@ -331,7 +331,96 @@ function calcPoints() {
     }
   }
   document.getElementById("pnts").innerHTML = pnts;
+  sumAttributes();
+
   return (pnts);
+}
+
+function sumAttributes() {
+
+  var e = document.getElementById("mrace");
+  var e2 = document.getElementById("srace");
+  var theRace = e.options[e.selectedIndex].value;
+  var theSubRace = e2.options[e2.selectedIndex].value;
+
+  t0 = Number((raceTraits[theRace][0]).str);
+  if (isNaN(t0)) { t0 = 0; }
+  t1 = 0;
+  if (theSubRace > 0)
+  {
+    t1 = Number((raceTraits[theRace][theSubRace]).str);
+    if (isNaN(t1)) { t1 = 0; }
+  }
+  t2 = Number(document.getElementById("str").value);
+  if (isNaN(t2)) { t2 = 0; }
+  var t3 = Number(t0 + t1 + t2);
+  document.getElementById("strtot").innerHTML = "Strength = " + t3;
+
+  t0 = Number((raceTraits[theRace][0]).dex);
+  if (isNaN(t0)) { t0 = 0; }
+  t1 = 0;
+  if (theSubRace > 0)
+  {
+    t1 = Number((raceTraits[theRace][theSubRace]).dex);
+    if (isNaN(t1)) { t1 = 0; }
+  }
+  t2 = Number(document.getElementById("dex").value);
+  if (isNaN(t2)) { t2 = 0; }
+  var t3 = Number(t0 + t1 + t2);
+  document.getElementById("dextot").innerHTML = "Dexterity = " + t3;
+
+  t0 = Number((raceTraits[theRace][0]).con);
+  if (isNaN(t0)) { t0 = 0; }
+  t1 = 0;
+  if (theSubRace > 0)
+  {
+    t1 = Number((raceTraits[theRace][theSubRace]).con);
+    if (isNaN(t1)) { t1 = 0; }
+  }
+  t2 = Number(document.getElementById("con").value);
+  if (isNaN(t2)) { t2 = 0; }
+  var t3 = Number(t0 + t1 + t2);
+  document.getElementById("contot").innerHTML = "Constitution = " + t3;
+
+  t0 = Number((raceTraits[theRace][0]).int);
+  if (isNaN(t0)) { t0 = 0; }
+  t1 = 0;
+  if (theSubRace > 0)
+  {
+    t1 = Number((raceTraits[theRace][theSubRace]).int);
+    if (isNaN(t1)) { t1 = 0; }
+  }
+  t2 = Number(document.getElementById("int").value);
+  if (isNaN(t2)) { t2 = 0; }
+  var t3 = Number(t0 + t1 + t2);
+  document.getElementById("inttot").innerHTML = "Intelligence = " + t3;
+
+  t0 = Number((raceTraits[theRace][0]).wis);
+  if (isNaN(t0)) { t0 = 0; }
+  t1 = 0;
+  if (theSubRace > 0)
+  {
+    t1 = Number((raceTraits[theRace][theSubRace]).wis);
+    if (isNaN(t1)) { t1 = 0; }
+  }
+  t2 = Number(document.getElementById("wis").value);
+  if (isNaN(t2)) { t2 = 0; }
+  var t3 = Number(t0 + t1 + t2);
+  document.getElementById("wistot").innerHTML = "Wisdom = " + t3;
+
+  t0 = Number((raceTraits[theRace][0]).cha);
+  if (isNaN(t0)) { t0 = 0; }
+  t1 = 0;
+  if (theSubRace > 0)
+  {
+    t1 = Number((raceTraits[theRace][theSubRace]).cha);
+    if (isNaN(t1)) { t1 = 0; }
+  }
+  t2 = Number(document.getElementById("cha").value);
+  if (isNaN(t2)) { t2 = 0; }
+  var t3 = Number(t0 + t1 + t2);
+  document.getElementById("chatot").innerHTML = "Charisma = " + t3;
+
 }
 
 function changeGen() {
@@ -432,6 +521,7 @@ function determineRaceTraits() {
     t = t + "+" + (raceTraits[theRace][theSubRace]).cha;
   }
   document.getElementById("chamod").innerHTML = t;
+  calcPoints()
 }
 
 function initSubRace(raceElement) {
@@ -519,6 +609,7 @@ function determineClassTraits() {
     t = t + "<strong>Saving Throws:</strong> " + classTraits[theClass][0].savt + "<br>";
   }
   document.getElementById("classInfo").innerHTML = t;
+  calcPoints()
 }
 
 

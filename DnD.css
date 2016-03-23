@@ -19,9 +19,10 @@ div table { 5px; margin: 5px; }
 div p { padding-left: 15px; }
 
 button.gen { font-size: 22px; width: 100%; border-width: medium; }
-tr.head { color: darkblue; font-weight: bold; background-color: lightgray; }
+tr.head { color: darkblue; font-weight: bold; background-color: lightgray; font-size: 16px; }
 tr.body { text-align: center; background-color: lightblue; }
-input[type="number"] { font-size: 22px; background-color: lightblue; }
+input[type="number"] { font-size: 16px; background-color: lightblue; }
+b.MOD { font-size: 16px; }
 
 /*
 nav li { margin: 3px 0 3px 0; list-style-type: none; border-bottom: 0px solid darkgray; }
@@ -36,7 +37,9 @@ nav { background-color: darkgray; }
 a.botlink { background-color: #ffffff; color: #23223e; text-decoration: none; cursor: text; }
 .define { background-color: #ffffff; color: #b52c25; text-decoration: none; cursor: text; }
 abbr[title] { border-bottom-width: 0; }
+/*
 code { font-weight: bold; font-family: "Courier New", Courier, monospace; }
+*/
 dfn { font-size: 12px; font-style: normal; }
 article { float: left; padding: 0 10px 0 10px; text-align: justify; width: 710px; }
 nav strong { font-size: 16px; }
