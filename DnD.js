@@ -1,129 +1,7 @@
 
   //if (isNaN(x.innerHTML)) {
 
-var genTypes=[ "3d6", "4d6 - 1", "5d6 - 2", "Non-Elite Array", "Elite Array", "Basic Array" ];
-var genType3d6=0;
-var genType4d6=1;
-var genType5d6=2;
-var genTypeNonEl=3;
-var genTypeElite=4;
-var genTypeBasic=5;
-
-var statTypes=[ "str", "dex", "con", "int", "wis", "cha" ];
-
-var raceTypes= [ 
-  ["Dragonborn" ],
-  ["Dwarf", "Hill Dwarf", "Mountain Dwarf" ],
-  ["Elf", "Eladrin", "High Elf", "Wood Elf" ],
-  ["Gnome", "Forest Gnome", "Rock Gnome" ],
-  ["Halfling", "Lightfoot Halfling", "Stout Halfling" ],
-  ["Half-Elf", "Half Wood Elf", "Half Moon/Sun Elf" ],
-  ["Half-Orc" ],
-  ["Human" ],
-  ["Tiefling" ]
-];
-
-var classTypes= [
-  ["Barbarian", "Berserker", "Totem" ],
-  ["Bard", "Lore", "Valor" ],
-  ["Cleric", "Knowledge", "Life", "Light", "Nature", "Tempest", "Trickery", "War", "Death" ],
-  ["Druid", "Land", "Moon" ],
-  ["Fighter", "Champion", "Battle Master", "Eldritch Knight" ],
-  ["Monk", "Open Hand", "Shadow", "Four Elements" ],
-  ["Paladin", "Devotion", "Ancients", "Vengeance", "Oath-Breaker" ],
-  ["Ranger", "Hunter", "Beast Master" ],
-  ["Rogue", "Thief", "Assassin", "Arcane Trickster", "Swashbuckler" ],
-  ["Sorcerer", "Draconic", "Wild Magic", "Favoured Soul", "Storm" ],
-  ["Warlock", "Arch-Fey", "Fiend", "GOO" ],
-  ["Wizard", "Abjuration", "Conjuration", "Divination", "Enchantment", "Evocation", "Illusion", "Necromancy", "Transmutation", "Artificer" ]
-];
-
-var raceTraits = [ 
- [ { race:"Dragonborn", str:2, cha:1, size:"M", speed:"25-HA", lang:"Common, Draconic", other:"Breath Weapon, Damage Resistance" } ],
- [ { race:"Dwarf", con:2, size:"M", speed:"30", lang:"Common, Dwarf", other:"Darkvision, Dwarven Resistane, Dwarven Combat Training, Tool Proficiency, Stone-cunning" },
-   {  race:"Hill Dwarf", wis:1, other:", Dwarven Toughness" },
-   {  race:"Mountain Dwarf", str:2, other:", Dwarven Armor Training" } ],
- [ { race:"Elf", dex:2, size:"M", speed:"30", lang:"Common, Elvish", other:"Darkvision, Keen Senses, Fey Ancestry, Trance" },
-   {  race:"Eladrin", int:1, other:", Elf Weapon Training, Fey Step" },
-   {  race:"High Elf", int:1, lang:", +1 language", other:", Elf Weapon Training, +1 Cantrip" },
-   {  race:"Wood Elf", wis:1, speed:"+5ft", other:", Elf Weapon Training, Mask of the Wild" } ],
- [ { race:"Gnome", int:2, size:"S", speed:"25", lang:"Common, Gnomish", other:"Darkvision, Gnome Cunning" },
-   {  race:"Forest Gnome", dex:1, other:", Minor Illusion Cantrip, Speak with Small Beasts" },
-   {  race:"Rock Gnome", con:1, other:", Artificer's Lore, Tinker" } ],
- [ { race:"Halfling", dex:2, size:"S", speed:"25", lang:"Common, Halfling", other:"Lucky, Brave, Halfling Nimbleness" },
-   {  race:"Lightfoot Halfling", cha:1, other:", Naturally Stealthy" },
-   {  race:"Stout Halfling", con:1, other:", Stout Resilience" } ],
- [ { race:"Half-Elf", cha:2, size:"M", speed:"30", lang:"Common, Elvish", other:"2x(+1 ASI), Darkvision, Fey Ancestry, Skill Versitility" },
-   {  race:"Half Wood Elf", other:", (-Skill Versitility) Elf Weapon Training, or Fleet of Foot, or Mask of the Wild" },
-   {  race:"Half Moon/Sun Elf", other:", (-Skill Versitility) Elf Weapon Training, or Cantrip" } ],
- [ { race:"Half-Orc", str:2, con:1, size:"M", speed:"30", lang:"Common, Orc", other:"Darkvision, Menacing, Relentless Endurance, Savage Attacks" } ],
- [ { race:"Human", str:1, dex:1, con:1, int:1, wis:1, cha:1, size:"M", speed:"30", lang:"Common, +1 language", other:"" } ],
- [ { race:"Tiefling", int:1, cha:2, size:"M", speed:"30", lang:"Common, Infernal", other:"Darkvision, Hellish Resistance, Infernal Legacy" } ]
-];
-
-var classTraits = [ 
- [ { class:"Barbarian", armr:"Medium or 10+CON+DEX", weap:"Martial", hitd:"D12", prim:"STR+CON", savt:"STR+CON" },
-   {   class:"Berserker",prim:"+CHA" },
-   {   class:"Totem" } ],
- [ { class:"Bard", armr:"Light", weap:"Simple +4", hitd:"D8", prim:"CHA", savt:"DEX+CHA" },
-   {   class:"Lore" },
-   {   class:"Valor",armr:", Medium",prim:"+(STR or DEX)" } ],
- [ { class:"Cleric", armr:"Medium", weap:"Simple", hitd:"D8", prim:"WIS", savt:"WIS+CHA" },
-   {   class:"Knowledge" },
-   {   class:"Life",armr:", Heavy" },
-   {   class:"Light" },
-   {   class:"Nature",armr:", Heavy" },
-   {   class:"Tempest",armr:", Heavy",weap:", Martial" },
-   {   class:"Trickery" },
-   {   class:"War",armr:", Heavy",weap:", Martial" },
-   {   class:"Death",weap:", Martial" } ],
- [ { class:"Druid", armr:"Medium Nature", weap:"10 specific", hitd:"D8", prim:"WIS", savt:"INT+WIS" },
-   {   class:"Land" },
-   {   class:"Moon" } ],
- [ { class:"Fighter", armr:"Heavy", weap:"Martial", hitd:"D10", prim:"(STR or DEX)", savt:"STR+CON" },
-   {   class:"Champion" },
-   {   class:"Battle Master" },
-   {   class:"Eldritch Knight",prim:"+INT" } ],
- [ { class:"Monk", armr:"10+WIS+DEX", weap:"Simple +1", hitd:"D8", prim:"DEX+WIS", savt:"STR+DEX,  All(14th)" },
-   {   class:"Open Hand" },
-   {   class:"Shadow" },
-   {   class:"Four Elements" } ],
- [ { class:"Paladin", armr:"Heavy", weap:"Martial", hitd:"D10", prim:"STR+CHA", savt:"WIS+CHA" },
-   {   class:"Devotion" },
-   {   class:"Ancients" },
-   {   class:"Vengeance" },
-   {   class:"Oath-Breaker" } ],
- [ { class:"Ranger", armr:"Medium", weap:"Martial", hitd:"D10", prim:"(DEX or STR)+WIS", savt:"STR+DEX" },
-   {   class:"Hunter" },
-   {   class:"Beast Master" } ],
- [ { class:"Rogue", armr:"Light", weap:"Simple +4", hitd:"D8", prim:"DEX", savt:"DEX+INT" },
-   {   class:"Thief" },
-   {   class:"Assassin" },
-   {   class:"Arcane Trickster",prim:"+INT" },
-   {   class:"Swashbuckler",prim:"+CHA" } ],
- [ { class:"Sorcerer", armr:"None", weap:"5 specific", hitd:"D6", prim:"CHA", savt:"CON+CHA" },
-   {   class:"Draconic",armr:", 13+DEX" },
-   {   class:"Wild Magic" },
-   {   class:"Favoured Soul",armr:", Medium",weap:", Simple" },
-   {   class:"Storm" } ],
- [ { class:"Warlock", armr:"Light", weap:"Simple (+PoB)", hitd:"D8", prim:"CHA", savt:"WIS+CHA" },
-   {   class:"Arch-Fey" },
-   {   class:"Fiend" },
-   {   class:"GOO" } ],
- [ { class:"Wizard", armr:"None", weap:"5 specific", hitd:"D6", prim:"INT", savt:"INT+WIS" },
-   {   class:"Abjuration" },
-   {   class:"Conjuration" },
-   {   class:"Divination" },
-   {   class:"Enchantment" },
-   {   class:"Evocation" },
-   {   class:"Illusion" },
-   {   class:"Necromancy" },
-   {   class:"Transmutation" },
-   {   class:"Artificer" } ]
-];
-
 function initOptions() {
-  //document.getElementById("test").innerHTML = "Hello, init";
   initRace();
   initClass();
 }
@@ -132,13 +10,13 @@ function initRace() {
   var e = document.getElementById("mrace");
   e.options.length = 0;
 
-  var opt = document.createElement('option');
+  var opt = document.createElement("option");
   opt.value = "";
   opt.text = "-- select one --";
   e.options.add(opt);
 
   for (i=0; i<raceTypes.length; i++) {
-    opt = document.createElement('option');
+    opt = document.createElement("option");
     opt.value = i;
     opt.text = raceTypes[i][0];
     e.options.add(opt);
@@ -149,13 +27,13 @@ function initClass() {
   var e = document.getElementById("mclass");
   e.options.length = 0;
 
-  var opt = document.createElement('option');
+  var opt = document.createElement("option");
   opt.value = "";
   opt.text = "-- select one --";
   e.options.add(opt);
 
   for (i=0; i<classTypes.length; i++) {
-    opt = document.createElement('option');
+    opt = document.createElement("option");
     opt.value = i;
     opt.text = classTypes[i][0];
     e.options.add(opt);
@@ -293,7 +171,6 @@ function calcPoints() {
   a.push( document.getElementById("wis").value);
   a.push( document.getElementById("cha").value);
   for (i=0; i<a.length; i++) {
-  //document.getElementById("test").innerHTML = ("Generated " + a[i].toString());
     switch (a[i]) {
       case "9":
         pnts += 1;
@@ -343,9 +220,11 @@ function sumAttributes() {
   var theRace = e.options[e.selectedIndex].value;
   var theSubRace = e2.options[e2.selectedIndex].value;
 
-  t0 = Number((raceTraits[theRace][0]).str);
+  var t0 = Number((raceTraits[theRace][0]).str);
+  var t1 = 0;
+  var t2 = 0;
+  var t3 = 0;
   if (isNaN(t0)) { t0 = 0; }
-  t1 = 0;
   if (theSubRace > 0)
   {
     t1 = Number((raceTraits[theRace][theSubRace]).str);
@@ -353,8 +232,9 @@ function sumAttributes() {
   }
   t2 = Number(document.getElementById("str").value);
   if (isNaN(t2)) { t2 = 0; }
-  var t3 = Number(t0 + t1 + t2);
-  document.getElementById("strtot").innerHTML = "Strength = " + t3;
+  t3 = Number(t0 + t1 + t2);
+  document.getElementById("strmod2").innerHTML = calcModifier(t3);
+  document.getElementById("strtot").innerHTML = "Total = " + t3;
 
   t0 = Number((raceTraits[theRace][0]).dex);
   if (isNaN(t0)) { t0 = 0; }
@@ -366,8 +246,9 @@ function sumAttributes() {
   }
   t2 = Number(document.getElementById("dex").value);
   if (isNaN(t2)) { t2 = 0; }
-  var t3 = Number(t0 + t1 + t2);
-  document.getElementById("dextot").innerHTML = "Dexterity = " + t3;
+  t3 = Number(t0 + t1 + t2);
+  document.getElementById("dexmod2").innerHTML = calcModifier(t3);
+  document.getElementById("dextot").innerHTML = "Total = " + t3;
 
   t0 = Number((raceTraits[theRace][0]).con);
   if (isNaN(t0)) { t0 = 0; }
@@ -379,8 +260,9 @@ function sumAttributes() {
   }
   t2 = Number(document.getElementById("con").value);
   if (isNaN(t2)) { t2 = 0; }
-  var t3 = Number(t0 + t1 + t2);
-  document.getElementById("contot").innerHTML = "Constitution = " + t3;
+  t3 = Number(t0 + t1 + t2);
+  document.getElementById("conmod2").innerHTML = calcModifier(t3);
+  document.getElementById("contot").innerHTML = "Total = " + t3;
 
   t0 = Number((raceTraits[theRace][0]).int);
   if (isNaN(t0)) { t0 = 0; }
@@ -392,8 +274,9 @@ function sumAttributes() {
   }
   t2 = Number(document.getElementById("int").value);
   if (isNaN(t2)) { t2 = 0; }
-  var t3 = Number(t0 + t1 + t2);
-  document.getElementById("inttot").innerHTML = "Intelligence = " + t3;
+  t3 = Number(t0 + t1 + t2);
+  document.getElementById("intmod2").innerHTML = calcModifier(t3);
+  document.getElementById("inttot").innerHTML = "Total = " + t3;
 
   t0 = Number((raceTraits[theRace][0]).wis);
   if (isNaN(t0)) { t0 = 0; }
@@ -405,8 +288,9 @@ function sumAttributes() {
   }
   t2 = Number(document.getElementById("wis").value);
   if (isNaN(t2)) { t2 = 0; }
-  var t3 = Number(t0 + t1 + t2);
-  document.getElementById("wistot").innerHTML = "Wisdom = " + t3;
+  t3 = Number(t0 + t1 + t2);
+  document.getElementById("wismod2").innerHTML = calcModifier(t3);
+  document.getElementById("wistot").innerHTML = "Total = " + t3;
 
   t0 = Number((raceTraits[theRace][0]).cha);
   if (isNaN(t0)) { t0 = 0; }
@@ -418,9 +302,64 @@ function sumAttributes() {
   }
   t2 = Number(document.getElementById("cha").value);
   if (isNaN(t2)) { t2 = 0; }
-  var t3 = Number(t0 + t1 + t2);
-  document.getElementById("chatot").innerHTML = "Charisma = " + t3;
+  t3 = Number(t0 + t1 + t2);
+  document.getElementById("chamod2").innerHTML = calcModifier(t3);
+  document.getElementById("chatot").innerHTML = "Total = " + t3;
 
+}
+
+function calcModifier(point) {
+  var mod;
+  switch (point) {
+    case 1:
+        mod = "-5";
+      break;
+    case 2:
+    case 3:
+        mod = "-4";
+      break;
+    case 4:
+    case 5:
+        mod = "-3";
+      break;
+    case 6:
+    case 7:
+        mod = "-2";
+      break;
+    case 8:
+    case 9:
+        mod = "-1";
+      break;
+    case 10:
+    case 11:
+        mod = "0";
+      break;
+    case 12:
+    case 13:
+        mod = "+1";
+      break;
+    case 14:
+    case 15:
+        mod = "+2";
+      break;
+    case 16:
+    case 17:
+        mod = "+3";
+      break;
+    case 18:
+    case 19:
+        mod = "+4";
+      break;
+    case 20:
+    case 21:
+        mod = "+5";
+      break;
+    case 22:
+    case 23:
+        mod = "+6";
+      break;
+  }
+  return (mod);
 }
 
 function changeGen() {
@@ -445,17 +384,51 @@ function determineRaceTraits() {
   var e2 = document.getElementById("srace");
   var theRace = e.options[e.selectedIndex].value;
   var theSubRace = e2.options[e2.selectedIndex].value;
+
+  if (typeof raceTraits[theRace][0].size !== "undefined") {
+    t = "<strong>Size:</strong> " + raceTraits[theRace][0].size;
+    if (theSubRace > 0 && typeof (raceTraits[theRace][theSubRace]).size !== "undefined") {
+      t = t + (raceTraits[theRace][theSubRace]).size;
+    }
+    t = t + "<br>";
+  }
+
+  if (typeof raceTraits[theRace][0].height !== "undefined") {
+    t = t + "<strong>Height:</strong> " + raceTraits[theRace][0].height;
+    if (theSubRace > 0 && typeof (raceTraits[theRace][theSubRace]).height !== "undefined") {
+      t = t + (raceTraits[theRace][theSubRace]).height;
+    }
+    t = t + "<br>";
+  }
+
+  if (typeof raceTraits[theRace][0].weight !== "undefined") {
+    t = t + "<strong>Average Weight:</strong> " + raceTraits[theRace][0].weight;
+    if (theSubRace > 0 && typeof (raceTraits[theRace][theSubRace]).weight !== "undefined") {
+      t = t + (raceTraits[theRace][theSubRace]).weight;
+    }
+    t = t + "<br>";
+  }
+
   if (typeof raceTraits[theRace][0].speed !== "undefined") {
-    t = "<strong>Speed:</strong> " + raceTraits[theRace][0].speed;
+    t = t + "<strong>Speed:</strong> " + raceTraits[theRace][0].speed;
     if (theSubRace > 0 && typeof (raceTraits[theRace][theSubRace]).speed !== "undefined") {
       t = t + (raceTraits[theRace][theSubRace]).speed;
     }
     t = t + "<br>";
   }
+
   if (typeof raceTraits[theRace][0].lang !== "undefined") {
     t = t + "<strong>Languages:</strong> " + raceTraits[theRace][0].lang;
     if (theSubRace > 0 && typeof (raceTraits[theRace][theSubRace]).lang !== "undefined") {
       t = t + (raceTraits[theRace][theSubRace]).lang;
+    }
+    t = t + "<br>";
+  }
+
+  if (typeof raceTraits[theRace][0].special !== "undefined") {
+    t = t + "<strong>Special Traits:</strong> " + raceTraits[theRace][0].special;
+    if (theSubRace > 0 && typeof (raceTraits[theRace][theSubRace]).special !== "undefined") {
+      t = t + (raceTraits[theRace][theSubRace]).special;
     }
     t = t + "<br>";
   }
@@ -532,13 +505,13 @@ function initSubRace(raceElement) {
   var e2 = document.getElementById("srace");
   e2.options.length = 0;
 
-  var opt = document.createElement('option');
+  var opt = document.createElement("option");
   opt.value = "0";
   opt.text = "None";
   e2.options.add(opt);
 
   for (i=1; i<raceTypes[theRace].length; i++) {
-    opt = document.createElement('option');
+    opt = document.createElement("option");
     opt.value = i;
     opt.text = raceTypes[theRace][i];
     e2.options.add(opt);
@@ -560,13 +533,13 @@ function initSubClass(classElement) {
   var e2 = document.getElementById("sclass");
   e2.options.length = 0;
 
-  var opt = document.createElement('option');
+  var opt = document.createElement("option");
   opt.value = "0";
   opt.text = "None";
   e2.options.add(opt);
 
   for (i=1; i<classTypes[theClass].length; i++) {
-    opt = document.createElement('option');
+    opt = document.createElement("option");
     opt.value = i;
     opt.text = classTypes[theClass][i];
     e2.options.add(opt);
@@ -611,5 +584,309 @@ function determineClassTraits() {
   document.getElementById("classInfo").innerHTML = t;
   calcPoints()
 }
+
+
+var genTypes=[ "3d6", "4d6 - 1", "5d6 - 2", "Non-Elite Array", "Elite Array", "Basic Array" ];
+var genType3d6=0;
+var genType4d6=1;
+var genType5d6=2;
+var genTypeNonEl=3;
+var genTypeElite=4;
+var genTypeBasic=5;
+
+var statTypes=[ "str", "dex", "con", "int", "wis", "cha" ];
+
+var raceTypes= [ 
+  ["Dragonborn" ],
+  ["Dwarf", "Hill Dwarf", "Mountain Dwarf" ],
+  ["Elf", "Dark Elf", "Eladrin", "High Elf", "Wood Elf" ],
+  ["Gnome", "Forest Gnome", "Rock Gnome" ],
+  ["Halfling", "Lightfoot Halfling", "Stout Halfling" ],
+  ["Half-Elf", "Half Wood Elf", "Half Moon/Sun Elf" ],
+  ["Half-Orc" ],
+  ["Human" ],
+  ["Tiefling" ]
+];
+
+var classTypes= [
+  ["Barbarian", "Berserker", "Totem" ],
+  ["Bard", "Lore", "Valor" ],
+  ["Cleric", "Knowledge", "Life", "Light", "Nature", "Tempest", "Trickery", "War", "Death" ],
+  ["Druid", "Land", "Moon" ],
+  ["Fighter", "Champion", "Battle Master", "Eldritch Knight" ],
+  ["Monk", "Open Hand", "Shadow", "Four Elements" ],
+  ["Paladin", "Devotion", "Ancients", "Vengeance", "Oath-Breaker" ],
+  ["Ranger", "Hunter", "Beast Master" ],
+  ["Rogue", "Thief", "Assassin", "Arcane Trickster", "Swashbuckler" ],
+  ["Sorcerer", "Draconic", "Wild Magic", "Favoured Soul", "Storm" ],
+  ["Warlock", "Arch-Fey", "Fiend", "GOO" ],
+  ["Wizard", "Abjuration", "Conjuration", "Divination", "Enchantment", "Evocation", "Illusion", "Necromancy", "Transmutation", "Artificer" ]
+];
+
+var raceTraits = [ 
+ [ { race:"Dragonborn", 
+           str:2, 
+           cha:1, 
+           size:"Medium", 
+           height:"well over 6\'",
+           weight:"\~250 lbs",
+           age:"80 years",
+           speed:"30", 
+           lang:"Common, Draconic", 
+           special:"Breath Weapon, Damage Resistance" } ],
+ [ { race:"Dwarf", 
+           con:2, 
+           size:"Medium",
+           height:"4\' to 5\'",
+           weight:"\~150 lbs",
+           age:"350 years",
+           speed:"30", 
+           lang:"Common, Dwarf", 
+           special:"Darkvision, Dwarven Resistane, Dwarven Combat Training, Tool Proficiency, Stone-cunning" },
+   {  race:"Hill Dwarf", 
+           wis:1, 
+           special:", Dwarven Toughness" },
+   {  race:"Mountain Dwarf", 
+           str:2, 
+           special:", Dwarven Armor Training" } ],
+ [ { race:"Elf", 
+           dex:2, 
+           size:"Medium",
+           height:"less than 5\' to just over 6\'",
+           weight:"\~150 lbs",
+           age:"750 years",
+           speed:"30", 
+           lang:"Common, Elvish", 
+           special:"Darkvision, Keen Senses, Fey Ancestry, Trance" },
+   {  race:"Dark Elf", 
+           cha:1, 
+           special:", Superior Darkvision, Sunlight Sensitivity, Drow Magic, Drow Weapon Training" },
+   {  race:"Eladrin", 
+           int:1, 
+           special:", Elf Weapon Training, Fey Step" },
+   {  race:"High Elf", 
+           int:1, 
+           lang:", +1 language", 
+           special:", Elf Weapon Training, +1 Cantrip" },
+   {  race:"Wood Elf", 
+           wis:1, 
+           speed:"+5ft", 
+           special:", Elf Weapon Training, Mask of the Wild" } ],
+ [ { race:"Gnome", 
+           int:2, 
+           size:"Small", 
+           height:"3\' to 4\'",
+           weight:"\~40 lbs",
+           age:"350-500 years",
+           speed:"25", 
+           lang:"Common, Gnomish", 
+           special:"Darkvision, Gnome Cunning" },
+   {  race:"Forest Gnome", 
+           dex:1, 
+           special:", Minor Illusion Cantrip, Speak with Small Beasts" },
+   {  race:"Rock Gnome", 
+           con:1, 
+           special:", Artificer's Lore, Tinker" } ],
+ [ { race:"Halfling", 
+           dex:2, 
+           size:"Small", 
+           height:"\~3\'",
+           weight:"\~40 lbs",
+           age:"250 years",
+           speed:"25", 
+           lang:"Common, Halfling", 
+           special:"Lucky, Brave, Halfling Nimbleness" },
+   {  race:"Lightfoot Halfling", 
+           cha:1, 
+           special:", Naturally Stealthy" },
+   {  race:"Stout Halfling", 
+           con:1, 
+           special:", Stout Resilience" } ],
+ [ { race:"Half-Elf", 
+           cha:2, 
+           size:"Medium", 
+           height:"5\' to 6\'",
+           weight:"\~175 lbs",
+           age:"180 years",
+           speed:"30", 
+           lang:"Common, Elvish", 
+           special:"2x(+1 Ability Score Increase), Darkvision, Fey Ancestry, Skill Versitility" },
+   {  race:"Half Wood Elf", 
+           special:", (-Skill Versitility) Elf Weapon Training, or Fleet of Foot, or Mask of the Wild" },
+   {  race:"Half Moon/Sun Elf", 
+           special:", (-Skill Versitility) Elf Weapon Training, or Cantrip" } ],
+ [ { race:"Half-Orc", 
+           str:2, 
+           con:1, 
+           size:"Medium", 
+           height:"5\' to well over 6\'",
+           weight:"\~175 lbs",
+           age:"75 years",
+           speed:"30", 
+           lang:"Common, Orc", 
+           special:"Darkvision, Menacing, Relentless Endurance, Savage Attacks" } ],
+ [ { race:"Human", 
+           str:1, 
+           dex:1, 
+           con:1, 
+           int:1, 
+           wis:1, 
+           cha:1, 
+           size:"Medium", 
+           height:"5\' to well over 6\'",
+           weight:"\~180 lbs",
+           age:"90 years",
+           speed:"30", 
+           lang:"Common, +1 language"
+           /* , special:"" */ 
+           } ],
+ [ { race:"Tiefling", 
+           int:1, 
+           cha:2, 
+           size:"Medium", 
+           height:"5\' to well over 6\'",
+           weight:"\~180 lbs",
+           age:"100 years",
+           speed:"30", 
+           lang:"Common, Infernal", 
+           special:"Darkvision, Hellish Resistance, Infernal Legacy" } ]
+];
+
+var classTraits = [ 
+ [ { class:"Barbarian",
+          armr:"Medium or 10+CON+DEX",
+          weap:"Martial",
+          hitd:"D12",
+          prim:"STR+CON",
+          savt:"STR+CON" },
+   {   class:"Berserker",
+          prim:"+CHA" },
+   {   class:"Totem" } ],
+ [ { class:"Bard",
+          armr:"Light",
+          weap:"Simple +4",
+          hitd:"D8",
+          prim:"CHA",
+          savt:"DEX+CHA" },
+   {   class:"Lore" },
+   {   class:"Valor",
+          armr:", Medium",
+          prim:"+(STR or DEX)" } ],
+ [ { class:"Cleric",
+          armr:"Medium",
+          weap:"Simple",
+          hitd:"D8",
+          prim:"WIS",
+          savt:"WIS+CHA" },
+   {   class:"Knowledge" },
+   {   class:"Life",
+          armr:", Heavy" },
+   {   class:"Light" },
+   {   class:"Nature",
+          armr:", Heavy" },
+   {   class:"Tempest",
+          armr:", Heavy",
+          weap:", Martial" },
+   {   class:"Trickery" },
+   {   class:"War",
+          armr:", Heavy",
+          weap:", Martial" },
+   {   class:"Death",
+          weap:", Martial" } ],
+ [ { class:"Druid",
+          armr:"Medium Nature",
+          weap:"10 specific",
+          hitd:"D8",
+          prim:"WIS",
+          savt:"INT+WIS" },
+   {   class:"Land" },
+   {   class:"Moon" } ],
+ [ { class:"Fighter",
+          armr:"Heavy",
+          weap:"Martial",
+          hitd:"D10",
+          prim:"(STR or DEX)",
+          savt:"STR+CON" },
+   {   class:"Champion" },
+   {   class:"Battle Master" },
+   {   class:"Eldritch Knight",
+          prim:"+INT" } ],
+ [ { class:"Monk",
+          armr:"10+WIS+DEX",
+          weap:"Simple +1",
+          hitd:"D8",
+          prim:"DEX+WIS",
+          savt:"STR+DEX, All(14th)" },
+   {   class:"Open Hand" },
+   {   class:"Shadow" },
+   {   class:"Four Elements" } ],
+ [ { class:"Paladin",
+          armr:"Heavy",
+          weap:"Martial",
+          hitd:"D10",
+          prim:"STR+CHA",
+          savt:"WIS+CHA" },
+   {   class:"Devotion" },
+   {   class:"Ancients" },
+   {   class:"Vengeance" },
+   {   class:"Oath-Breaker" } ],
+ [ { class:"Ranger",
+          armr:"Medium",
+          weap:"Martial",
+          hitd:"D10",
+          prim:"(DEX or STR)+WIS",
+          savt:"STR+DEX" },
+   {   class:"Hunter" },
+   {   class:"Beast Master" } ],
+ [ { class:"Rogue",
+          armr:"Light",
+          weap:"Simple +4",
+          hitd:"D8",
+          prim:"DEX",
+          savt:"DEX+INT" },
+   {   class:"Thief" },
+   {   class:"Assassin" },
+   {   class:"Arcane Trickster",
+          prim:"+INT" },
+   {   class:"Swashbuckler",
+          prim:"+CHA" } ],
+ [ { class:"Sorcerer",
+          armr:"None",
+          weap:"5 specific",
+          hitd:"D6",
+          prim:"CHA",
+          savt:"CON+CHA" },
+   {   class:"Draconic",
+          armr:", 13+DEX" },
+   {   class:"Wild Magic" },
+   {   class:"Favoured Soul",
+          armr:", Medium",
+          weap:", Simple" },
+   {   class:"Storm" } ],
+ [ { class:"Warlock",
+          armr:"Light",
+          weap:"Simple (+PoB)",
+          hitd:"D8",
+          prim:"CHA",
+          savt:"WIS+CHA" },
+   {   class:"Arch-Fey" },
+   {   class:"Fiend" },
+   {   class:"GOO" } ],
+ [ { class:"Wizard",
+          armr:"None",
+          weap:"5 specific",
+          hitd:"D6",
+          prim:"INT",
+          savt:"INT+WIS" },
+   {   class:"Abjuration" },
+   {   class:"Conjuration" },
+   {   class:"Divination" },
+   {   class:"Enchantment" },
+   {   class:"Evocation" },
+   {   class:"Illusion" },
+   {   class:"Necromancy" },
+   {   class:"Transmutation" },
+   {   class:"Artificer" } ]
+];
 
 

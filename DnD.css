@@ -19,7 +19,8 @@ div table { 5px; margin: 5px; }
 div p { padding-left: 15px; }
 
 button.gen { font-size: 22px; width: 100%; border-width: medium; }
-tr.head { color: darkblue; font-weight: bold; background-color: lightgray; font-size: 16px; }
+p.head { color: darkblue; font-weight: bold; font-size: 16px; }
+tr.head { text-align: center; color: darkblue; font-weight: bold; background-color: lightgray; font-size: 16px; }
 tr.body { text-align: center; background-color: lightblue; }
 input[type="number"] { font-size: 16px; background-color: lightblue; }
 b.MOD { font-size: 16px; }

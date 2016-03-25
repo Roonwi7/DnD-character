@@ -53,14 +53,14 @@
       </table>
       <table border=3 width=100%>
         <tr class="head">
-          <td id="strtot" > Strength </td>
-          <td id="dextot" > Dexterity </td>
-          <td id="contot" > Constitution </td>
-          <td id="inttot" > Intelligence </td>
-          <td id="wistot" > Wisdom </td>
-          <td id="chatot" > Charisma </td>
+          <td > Strength </td>
+          <td > Dexterity </td>
+          <td > Constitution </td>
+          <td > Intelligence </td>
+          <td > Wisdom </td>
+          <td > Charisma </td>
         </tr>
-        <tr class="body" height=50px>
+        <tr class="body" height=40px>
           <td> 
           <table>  <tr> <td>
                 <input type="number" id="str" min="3" max="18" onchange="calcPoints()" /> 
@@ -98,6 +98,22 @@
                 <b class="MOD" id="chamod" />
           </td> </tr> </table> 
           </td>
+        </tr>
+        <tr class="body">
+          <td id="strtot" > Total = 0 </td>
+          <td id="dextot" > Total = 0 </td>
+          <td id="contot" > Total = 0 </td>
+          <td id="inttot" > Total = 0 </td>
+          <td id="wistot" > Total = 0 </td>
+          <td id="chatot" > Total = 0 </td>
+        </tr>
+        <tr class="body">
+          <td> Modifier = <b class="MOD" id="strmod2" /> </td>
+          <td> Modifier = <b class="MOD" id="dexmod2" /> </td>
+          <td> Modifier = <b class="MOD" id="conmod2" /> </td>
+          <td> Modifier = <b class="MOD" id="intmod2" /> </td>
+          <td> Modifier = <b class="MOD" id="wismod2" /> </td>
+          <td> Modifier = <b class="MOD" id="chamod2" /> </td>
         </tr>
       </table>
     </div>
