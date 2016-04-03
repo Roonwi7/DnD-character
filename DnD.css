@@ -15,14 +15,16 @@ div { border-style: ridge; border-width: thick; }
 /* Child div will only have top ridge */
 div > div { border-style: ridge none none none; border-width: thick; }
 div.charmain { position: fixed; top: 50px; left: 130px; right: 130px; bottom: 50px; text-align: justify; overflow: auto; }
-div table { 5px; margin: 5px; }
+div table { margin: 5px; }
 div p { padding-left: 15px; }
 
-button.gen { font-size: 22px; width: 100%; border-width: medium; }
+button.nav { font-size: 22px; width: 100%; border-width: medium; }
+button.genl { font-size: 22px; width: 120px; border-width: medium; margin: 0 0 0 10px; }
 p.head { color: darkblue; font-weight: bold; font-size: 16px; }
 tr.head { text-align: center; color: darkblue; font-weight: bold; background-color: lightgray; font-size: 16px; }
 tr.body { text-align: center; background-color: lightblue; }
 input[type="number"] { font-size: 16px; background-color: lightblue; }
+input.sentence { width: 620px; }
 b.MOD { font-size: 16px; }
 
 /*

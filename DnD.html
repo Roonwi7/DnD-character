@@ -24,109 +24,149 @@
     </header>
 
     <nav class="left">
-      <button class="gen" type="button" onclick="genStats()"> Generate </button>
-      <br>
-      <button id="gentype" class="gen" type="button" value="0" onclick="changeGen()"> 3d6 </button>
+      <button class="nav" type="button" onclick="genAll()"> Generate </button>
     </nav>
 
     <nav class="right">
     </nav>
 
     <div class="charmain">
+      <p id="test"> </p>
       <h2> Character Identity </h2>
-      <p> Player Name: <input type="text" id="name"> </p>
-      <p> Character Name: <input type="text" id="name"> </p>
-      <p> Race: <select id="mrace" onchange="updateRace()"> </select> </p>
-      <p> Sub-Race: <select id="srace" onchange="determineRaceTraits()"> </select> </p>
-      <p> Class: <select id="mclass" onchange="updateClass()"> </select> </p>
-      <p> Sub-Class: <select id="sclass" onchange="determineClassTraits()"> </select> </p>
+      <p> Player Name: <input type="text" id="playname"> </p>
+      <p> Character Name: <input type="text" id="charname" onchange="charName(this.value)"> </p>
 
     <div class="char">
-      <h2> Character Attributes </h2>
+      <h2 id="name"> Character Attributes </h2>
+
+      <button class="genl" type="button" onclick="genStats()"> Generate </button>
+      <button class="genl" type="button" onclick="changeGen()" id="gentype" value="0" > 3d6 </button>
+
       <table border=3>
         <tr class="head">
-          <td> Point Total </td>
+          <td width="120px"> Point Total </td>
         </tr>
         <tr class="body">
           <td id="pnts"> 0 </td>
         </tr>
       </table>
-      <table border=3 width=100%>
+
+      <table border=3 >
         <tr class="head">
-          <td > Strength </td>
-          <td > Dexterity </td>
-          <td > Constitution </td>
-          <td > Intelligence </td>
-          <td > Wisdom </td>
-          <td > Charisma </td>
+          <td width="120px"> Attribute </td>
+          <td width="120px"> Modifier </td>
+          <td width="100px"> Stat Total </td>
+          <td width="100px"> Base Stat </td>
         </tr>
-        <tr class="body" height=40px>
+
+        <tr class="body" >
+          <td > Strength </td>
+          <td> <b class="MOD" id="strmod2" >0</b> </td>
+          <td id="strtot" > 0 </td>
           <td> 
           <table>  <tr> <td>
-                <input type="number" id="str" min="3" max="18" onchange="calcPoints()" /> 
+                <input type="number" id="str" min="3" max="18" onchange="calcPoints()" > </input> 
           </td> <td>
-                <b class="MOD" id="strmod" />
+                <b class="MOD" id="strmod" > </b>
           </td> </tr> </table> 
-          <td>
-          <table>  <tr> <td>
-          <td> <input type="number" id="dex" min="3" max="18" onchange="calcPoints()" /> 
-          </td> <td>
-                <b class="MOD" id="dexmod" />
-          </td> </tr> </table> 
-          <td>
-          <table>  <tr> <td>
-          <input type="number" id="con" min="3" max="18" onchange="calcPoints()" /> 
-          </td> <td>
-                <b class="MOD" id="conmod" />
-          </td> </tr> </table> 
-          <td>
-          <table>  <tr> <td>
-          <input type="number" id="int" min="3" max="18" onchange="calcPoints()" /> 
-          </td> <td>
-                <b class="MOD" id="intmod" />
-          </td> </tr> </table> 
-          <td>
-          <table>  <tr> <td>
-          <input type="number" id="wis" min="3" max="18" onchange="calcPoints()" /> 
-          </td> <td>
-                <b class="MOD" id="wismod" />
-          </td> </tr> </table> 
-          <td>
-          <table>  <tr> <td>
-          <input type="number" id="cha" min="3" max="18" onchange="calcPoints()" /> 
-          </td> <td>
-                <b class="MOD" id="chamod" />
-          </td> </tr> </table> 
-          </td>
+          </td> 
         </tr>
-        <tr class="body">
-          <td id="strtot" > Total = 0 </td>
-          <td id="dextot" > Total = 0 </td>
-          <td id="contot" > Total = 0 </td>
-          <td id="inttot" > Total = 0 </td>
-          <td id="wistot" > Total = 0 </td>
-          <td id="chatot" > Total = 0 </td>
+
+        <tr class="body" >
+          <td > Dexterity </td>
+          <td> <b class="MOD" id="dexmod2" >0</b> </td>
+          <td id="dextot" > 0 </td>
+          <td> 
+          <table>  <tr> <td>
+                <input type="number" id="dex" min="3" max="18" onchange="calcPoints()" > </input> 
+          </td> <td>
+                <b class="MOD" id="dexmod" > </b>
+          </td> </tr> </table> 
+          </td> 
         </tr>
-        <tr class="body">
-          <td> Modifier = <b class="MOD" id="strmod2" /> </td>
-          <td> Modifier = <b class="MOD" id="dexmod2" /> </td>
-          <td> Modifier = <b class="MOD" id="conmod2" /> </td>
-          <td> Modifier = <b class="MOD" id="intmod2" /> </td>
-          <td> Modifier = <b class="MOD" id="wismod2" /> </td>
-          <td> Modifier = <b class="MOD" id="chamod2" /> </td>
+
+        <tr class="body" >
+          <td > Constitution </td>
+          <td> <b class="MOD" id="conmod2" >0</b> </td>
+          <td id="contot" > 0 </td>
+          <td> 
+          <table>  <tr> <td>
+                <input type="number" id="con" min="3" max="18" onchange="calcPoints()" > </input> 
+          </td> <td>
+                <b class="MOD" id="conmod" > </b>
+          </td> </tr> </table> 
+          </td> 
+        </tr>
+
+        <tr class="body" >
+          <td > Intelligence </td>
+          <td> <b class="MOD" id="intmod2" >0</b> </td>
+          <td id="inttot" > 0 </td>
+          <td> 
+          <table>  <tr> <td>
+                <input type="number" id="int" min="3" max="18" onchange="calcPoints()" > </input> 
+          </td> <td>
+                <b class="MOD" id="intmod" > </b>
+          </td> </tr> </table> 
+          </td> 
+        </tr>
+
+        <tr class="body" >
+          <td > Wisdom </td>
+          <td> <b class="MOD" id="wismod2" >0</b> </td>
+          <td id="wistot" > 0 </td>
+          <td> 
+          <table>  <tr> <td>
+                <input type="number" id="wis" min="3" max="18" onchange="calcPoints()" > </input> 
+          </td> <td>
+                <b class="MOD" id="wismod" > </b>
+          </td> </tr> </table> 
+          </td> 
+        </tr>
+
+        <tr class="body" >
+          <td > Charisma </td>
+          <td> <b class="MOD" id="chamod2" >0</b> </td>
+          <td id="chatot" > 0 </td>
+          <td> 
+          <table>  <tr> <td>
+                <input type="number" id="cha" min="3" max="18" onchange="calcPoints()" > </input> 
+          </td> <td>
+                <b class="MOD" id="chamod" > </b>
+          </td> </tr> </table> 
+          </td> 
         </tr>
       </table>
+
     </div>
 
     <div class="char">
-      <h2> Racial Characteristics </h2>
-      <p id="test"> </p>
+      <h2 id="racechar"> Racial Characteristics </h2>
+      <p> Race: <select id="mrace" onchange="updateRace()" > </select> </p>
+      <p> Sub-Race: <select id="srace" onchange="determineRaceTraits()" > </select> </p>
       <p id="raceInfo"> </p>
+      <p id="raceTable"> </p>
     </div>
 
     <div class="char">
-      <h2> Class Characteristics </h2>
+      <h2 id="classchar"> Class Characteristics </h2>
+      <p> Class: <select id="mclass" onchange="updateClass()" > </select>  </p>
+      <p> Sub-Class: <select id="sclass" onchange="determineClassTraits()" > </select>  </p>
+      <p id="desc"> </p>
       <p id="classInfo"> </p>
+      <p id="classTable"> </p>
+    </div>
+
+    <div class="char">
+      <h2> Character Background </h2>
+      <button class="genl" type="button" onclick="genBack()"> Generate </button>
+      <p> Background: <select id="backgrnd" onchange="updateTrait()" > </select> </p>
+      <p id="backInfo"> </p>
+      <p> Personality Trait One: <input type="text" class="sentence" id="ptrait1"> </input> </p>
+      <p> Personality Trait Two: <input type="text" class="sentence" id="ptrait2"> </input> </p>
+      <p> Ideal: <input type="text" class="sentence" id="ideal"> </input> </p>
+      <p> Bond: <input type="text" class="sentence" id="bond"> </input> </p>
+      <p> Flaw: <input type="text" class="sentence" id="flaw"> </input> </p>
     </div>
 
     </div>
