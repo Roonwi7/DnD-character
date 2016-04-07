@@ -24,7 +24,7 @@
     </header>
 
     <nav class="left">
-      <button class="nav" type="button" onclick="genAll()"> Generate </button>
+      <button type="button" onclick="genAll()"> Generate All </button>
     </nav>
 
     <nav class="right">
@@ -39,8 +39,8 @@
     <div class="char">
       <h2 id="name"> Character Attributes </h2>
 
-      <button class="genl" type="button" onclick="genStats()"> Generate </button>
-      <button class="genl" type="button" onclick="changeGen()" id="gentype" value="0" > 3d6 </button>
+      <button type="button" onclick="genStats()"> Roll Stats </button>
+      <button type="button" onclick="changeGen()" id="gentype" value="0" > 3d6 </button>
 
       <table border=3>
         <tr class="head">
@@ -159,7 +159,7 @@
 
     <div class="char">
       <h2> Character Background </h2>
-      <button class="genl" type="button" onclick="genBack()"> Generate </button>
+      <button type="button" onclick="genBack()"> Change </button>
       <p> Background: <select id="backgrnd" onchange="updateTrait()" > </select> </p>
       <p id="backInfo"> </p>
       <p> Personality Trait One: <input type="text" class="sentence" id="ptrait1"> </input> </p>
@@ -172,7 +172,7 @@
     </div>
 
     <footer>
-      <h1> Footer </h1>
+      <h1> <b class="red"> Warning: Information may be copyrighted </b> </h1>
     </footer>
 
 

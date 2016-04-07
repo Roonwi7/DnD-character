@@ -1,5 +1,4 @@
 * { margin: 0; padding: 0; }
-html { padding-bottom: 30px; } // don't know if this works???
 a { background-color: transparent; color: #23223e; }
 a.noshow { text-decoration: none; cursor: text; }
 
@@ -8,7 +7,7 @@ footer { background-color: lightblue; text-align: center; position: fixed; botto
 
 nav { background-color: lightblue; padding-top: 20px; }
 nav li { margin: 3px 0 3px 0; list-style-type: none; }
-nav.left {  position: fixed;  left: 0; top: 50px; bottom: 50px; width: 130px; overflow: auto; }
+nav.left {  position: fixed;  left: 0; top: 50px; bottom: 50px; width: 130px; overflow: auto; padding-left: 5px; }
 nav.right { position: fixed; right: 0; top: 50px; bottom: 50px; width: 130px; overflow: auto; }
 
 div { border-style: ridge; border-width: thick; }
@@ -17,25 +16,15 @@ div > div { border-style: ridge none none none; border-width: thick; }
 div.charmain { position: fixed; top: 50px; left: 130px; right: 130px; bottom: 50px; text-align: justify; overflow: auto; }
 div table { margin: 5px; }
 div p { padding-left: 15px; }
+button { font-size: 22px; width: 120px; border-width: medium; }
+div button { margin: 0 0 0 10px; }
 
-button.nav { font-size: 22px; width: 100%; border-width: medium; }
-button.genl { font-size: 22px; width: 120px; border-width: medium; margin: 0 0 0 10px; }
-p.head { color: darkblue; font-weight: bold; font-size: 16px; }
+h2 { color: darkblue; }
 tr.head { text-align: center; color: darkblue; font-weight: bold; background-color: lightgray; font-size: 16px; }
 tr.body { text-align: center; background-color: lightblue; }
 input[type="number"] { font-size: 16px; background-color: lightblue; }
 input.sentence { width: 620px; }
 b.MOD { font-size: 16px; }
-
-/*
-nav li { margin: 3px 0 3px 0; list-style-type: none; border-bottom: 0px solid darkgray; }
-nav ul { border-top: 5px solid darkblue; border-bottom: 5px solid darkblue; border-left: 2px solid darkgray; border-right: 2px solid darkgray; }
-nav strong { font-size: 16px; }
-nav li a { text-decoration: none; display: block; color: darkred; }
-nav li a:hover:not(.active) { background-color: darkred; color: white; }
-.active { background-color: cadetblue; }
-nav { background-color: darkgray; }
-*/
 
 a.botlink { background-color: #ffffff; color: #23223e; text-decoration: none; cursor: text; }
 .define { background-color: #ffffff; color: #b52c25; text-decoration: none; cursor: text; }
