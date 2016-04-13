@@ -1,30 +1,36 @@
 <!DOCTYPE html>
-<html>
+<html ng-app="DnDApp" ng-controller="DnDController as dndChar">
 
   <head>
     <meta charset="UTF-8">
     <title> DnD 5E Random Character Generator </title>
-
-    <!-- The Cascading Style Sheet (CSS) file DnD.css is where I set colors, fonts, spacing etc. - what is called "style". HTML is for "content". -->
-    <link rel="stylesheet" type="text/css" href="DnD.css">
 
     <!-- The following makes older IEs (< IE9) work with new HTML5 tags. -->
     <!--[if lt IE 9]>
       <script src="http://html5shiv.googlecode.com/svn/trunk/html5.js"></script>
     <![endif]-->
 
-    <script src="DnD.js"> </script>
+    <!-- The following adds support for AngularJS -->
+    <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.5.3/angular.min.js"></script>
+
+    <!-- This is the javascript for this specific html -->
+    <script src="dnd.data.js"> </script>
+    <script src="dnd.module.js"> </script>
+    <script src="dnd.controller.js"> </script>
+
+    <!-- The Cascading Style Sheet (CSS) file DnD.css is where I set colors, fonts, 
+         spacing etc. - what is called "style". HTML is for "content".  -->
+    <link rel="stylesheet" type="text/css" href="DnD.css">
 
   </head>
 
   <body>
-
     <header class="top">
       <h1> DnD Character Generator</h1>
     </header>
 
     <nav class="left">
-      <button type="button" onclick="genAll()"> Generate All </button>
+      <button type="button" ng-click="dndChar.genAll()"> Generate All </button>
     </nav>
 
     <nav class="right">
@@ -32,25 +38,102 @@
 
     <div class="charmain">
       <p id="test"> </p>
+      <p ng-model="dndChar.test" > {{dndChar.test}} </p>
+      <span ng-show="dndChar.error"> Error Error </span>
       <h2> Character Identity </h2>
-      <p> Player Name: <input type="text" id="playname"> </p>
-      <p> Character Name: <input type="text" id="charname" onchange="charName(this.value)"> </p>
+      <p> Player  Name: <input type="text" ng-model="dndChar.playName" placeholder="Enter your name"> </p>
+      <p> Character Name: <input type="text" ng-model="dndChar.charName" placeholder="Enter a character name"> </p>
 
-    <div class="char">
-      <h2 id="name"> Character Attributes </h2>
 
-      <button type="button" onclick="genStats()"> Roll Stats </button>
-      <button type="button" onclick="changeGen()" id="gentype" value="0" > 3d6 </button>
+      <div class="char">
+        <h2 id="name"> Character Attributes </h2>
+        <button type="button" ng-click="dndChar.genStats()" > Roll Stats </button>
+        <button type="button" ng-click="dndChar.changeGen()" > {{ dndChar.genType }} </button>
 
-      <table border=3>
-        <tr class="head">
-          <td width="120px"> Point Total </td>
-        </tr>
-        <tr class="body">
-          <td id="pnts"> 0 </td>
-        </tr>
-      </table>
+        <table border=3>
+          <tr class="head">
+            <td width="120px"> Point Total </td>
+          </tr>
+          <tr class="body">
+            <td > {{dndChar.points}} </td>
+          </tr>
+        </table>
 
+        <table border=3 >
+          <tr class="head">
+            <td width="120px"> Attribute </td>
+            <td width="120px"> Modifier </td>
+            <td width="100px"> Stat Total </td>
+            <td width="100px"> Base Stat </td>
+          </tr>
+        </table>
+
+      </div>
+
+      <div class="char">
+        <h2 id="racechar"> Racial Characteristics </h2>
+        <p> Race: 
+          <select 
+            ng-model="dndChar.raceSelect"
+            ng-options="raceType.subr 
+                        group by raceType.race 
+                        for raceType in dndChar.raceTypes"
+            ng-change="dndChar.updateRace()"
+          >
+          </select>
+        </p>
+
+        <table border=3>
+          <tr class="head">
+            <td width="120px"> Item </td>
+            <td width="100px"> Value </td>
+          </tr>
+          <tr ng-repeat="att in dndChar.raceTable">
+            <td> {{att.attr}} </td>
+            <td> {{att.value}} </td>
+          </tr>
+        </table> 
+        <p ng-repeat="line in dndChar.raceInfo">
+          <strong> {{line.lbl}} </strong> {{line.val}} 
+        </p>
+      </div>
+
+      <div class="char">
+        <h2 id="classchar"> Class Characteristics </h2>
+        <p> {{dndChar.classDesc}} </p>
+        <p> Class: 
+          <select 
+            ng-model="dndChar.classSelect"
+            ng-options="classType.class+': '+ classType.subc 
+                        group by classType.class 
+                        for classType in dndChar.classTypes"
+            ng-change="dndChar.updateClass()"
+          >
+          </select>
+        </p>
+
+        <table border=3>
+          <tr class="head">
+            <td width="120px"> Item </td>
+            <td width="100px"> Value </td>
+          </tr>
+          <tr ng-repeat="att in dndChar.classTable">
+            <td> {{att.attr}} </td>
+            <td> {{att.value}} </td>
+          </tr>
+        </table> 
+        <p ng-repeat="line in dndChar.classInfo">
+          <strong> {{line.lbl}} </strong> {{line.val}} 
+        </p>
+      </div>
+
+
+    </div>
+
+  </body>
+</html>
+
+<!--
       <table border=3 >
         <tr class="head">
           <td width="120px"> Attribute </td>
@@ -141,23 +224,6 @@
     </div>
 
     <div class="char">
-      <h2 id="racechar"> Racial Characteristics </h2>
-      <p> Race: <select id="mrace" onchange="updateRace()" > </select> </p>
-      <p> Sub-Race: <select id="srace" onchange="determineRaceTraits()" > </select> </p>
-      <p id="raceInfo"> </p>
-      <p id="raceTable"> </p>
-    </div>
-
-    <div class="char">
-      <h2 id="classchar"> Class Characteristics </h2>
-      <p> Class: <select id="mclass" onchange="updateClass()" > </select>  </p>
-      <p> Sub-Class: <select id="sclass" onchange="determineClassTraits()" > </select>  </p>
-      <p id="desc"> </p>
-      <p id="classInfo"> </p>
-      <p id="classTable"> </p>
-    </div>
-
-    <div class="char">
       <h2> Character Background </h2>
       <button type="button" onclick="genBack()"> Change </button>
       <p> Background: <select id="backgrnd" onchange="updateTrait()" > </select> </p>
@@ -179,3 +245,4 @@
   </body>
 
 </html>
+-->

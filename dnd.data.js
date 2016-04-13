@@ -1,809 +1,7 @@
 
-  //document.getElementById("test").innerHTML = attribute;
-  //if (isNaN(x.innerHTML)) {
-
-
-//  TODO:
-//    Add Armor Class
-//    Add Hit Points
-//    Add Proficiency for Saving Throws & Skills (checklist)
-//    Add Alignment
-//    Allow selection of Ideal based on Alignment
-//    Add picklist for Languages
-//    Add Age/Sex/Eyes/Skin/Hair
-//    Add Name Generator
-//    Add more info under character backgrounds
-//    Add Spell selections
-
-
-function initOptions() {
-  initRace();
-  initClass();
-  initBack();
-}
-
-function initRace() {
-  var e = document.getElementById("mrace");
-  e.options.length = 0;
-
-  var opt = document.createElement("option");
-  opt.value = "";
-  opt.text = "-- select one --";
-  e.options.add(opt);
-
-  for (i=0; i<raceTypes.length; i++) {
-    opt = document.createElement("option");
-    opt.value = i;
-    opt.text = raceTypes[i][0];
-    e.options.add(opt);
-  }
-}
-
-function initClass() {
-  var e = document.getElementById("mclass");
-  e.options.length = 0;
-
-  var opt = document.createElement("option");
-  opt.value = "";
-  opt.text = "-- select one --";
-  e.options.add(opt);
-
-  for (i=0; i<classTypes.length; i++) {
-    opt = document.createElement("option");
-    opt.value = i;
-    opt.text = classTypes[i][0];
-    e.options.add(opt);
-  }
-}
-
-function initBack() {
-  var e = document.getElementById("backgrnd");
-  e.options.length = 0;
-
-  var opt = document.createElement("option");
-  opt.value = "";
-  opt.text = "-- select one --";
-  e.options.add(opt);
-
-  for (i=0; i<bgDetails.length; i++) {
-    opt = document.createElement("option");
-    opt.value = i;
-    opt.text = bgDetails[i].name;
-    e.options.add(opt);
-  }
-}
-
-
-onload = initOptions;
-
-function charName(val) {
-  if (val !== "") {
-    document.getElementById("name").innerHTML = val + "\'s Attributes";
-  }
-  else {
-    document.getElementById("name").innerHTML = "Character Attributes";
-  }
-}
-
-function genAll() {
-  genRaceClass();
-  genStats();
-  genBack();
-}
-
-function genRaceClass() {
-
-  var e = document.getElementById("mrace");
-  var e2 = document.getElementById("srace");
-  var theRace = e.selectedIndex ;
-  var theSubRace = e2.selectedIndex ;
-  theRace = (Math.floor(Math.random() * raceTraits.length) + 1);
-  e.selectedIndex = theRace;
-  initSubRace(e);
-  theSubRace = 0;
-  if (raceTraits[theRace-1].length > 0) {
-    theSubRace = Math.floor( Math.random() * (raceTraits[theRace-1].length) );
-  }
-  e2.selectedIndex = theSubRace;
-
-  var e3 = document.getElementById("mclass");
-  var e4 = document.getElementById("sclass");
-  var theClass = e3.selectedIndex ;
-  var theSubClass = e4.selectedIndex ;
-  theClass = (Math.floor(Math.random() * classTraits.length) + 1);
-  e3.selectedIndex = theClass;
-  initSubClass(e3);
-  theSubClass = 0;
-  if (classTraits[theClass-1].length > 0) {
-    theSubClass = Math.floor( Math.random() * (classTraits[theClass-1].length) );
-  }
-  e4.selectedIndex = theSubClass;
-}
-
-function genStats() {
-
-  for (i=0; i<statTypes.length; i++) {
-    generateStat(i);
-  }
-  calcPoints();
-
-}
-
-function generateStat(attribute) {
-  var d1, d2, d3, d4, total;
-  var pts = [];
-  var type = Number(document.getElementById("gentype").value);
-  pts.push (Math.floor((Math.random() * 6) + 1));
-  pts.push (Math.floor((Math.random() * 6) + 1));
-  pts.push (Math.floor((Math.random() * 6) + 1));
-  total = 0;
-
-  switch (type) {
-    case genType3d6:
-      total = pts[0]+pts[1]+pts[2];
-      break;
-    case genType4d6:
-      pts.push (Math.floor((Math.random() * 6) + 1));
-      pts.sort(function(a,b) {return b-a;});
-      total = pts[0]+pts[1]+pts[2];
-      break;
-    case genType5d6:
-      pts.push (Math.floor((Math.random() * 6) + 1));
-      pts.push (Math.floor((Math.random() * 6) + 1));
-      pts.sort(function(a,b) {return b-a;});
-      total = pts[0]+pts[1]+pts[2];
-      break;
-    case genTypeNonEl:
-           switch (attribute) {
-             case 0:
-               total = 13;
-               break;
-             case 1:
-               total = 12;
-               break;
-             case 2:
-               total = 11;
-               break;
-             case 3:
-               total = 10;
-               break;
-             case 4:
-               total = 9;
-               break;
-             case 5:
-             default:
-               total = 8;
-               break;
-           }
-      break;
-    case genTypeElite:
-           switch (attribute) {
-             case 0:
-               total = 15;
-               break;
-             case 1:
-               total = 14;
-               break;
-             case 2:
-               total = 13;
-               break;
-             case 3:
-               total = 12;
-               break;
-             case 4:
-               total = 10;
-               break;
-             case 5:
-             default:
-               total = 8;
-               break;
-           }
-      break;
-    case genTypeMax:
-           total = 18;
-      break;
-    case genTypeBasic:
-    default: 
-      total = 8;
-      break;
-  }
-
-  document.getElementById(statTypes[attribute]).value = total;
-}
-
-function calcPoints() {
-  var a = [];
-  var pnts = 0;
-  a.push( document.getElementById("str").value);
-  a.push( document.getElementById("con").value);
-  a.push( document.getElementById("dex").value);
-  a.push( document.getElementById("int").value);
-  a.push( document.getElementById("wis").value);
-  a.push( document.getElementById("cha").value);
-  for (i=0; i<a.length; i++) {
-    switch (a[i]) {
-      case "9":
-        pnts += 1;
-        break;
-      case "10":
-        pnts += 2;
-        break;
-      case "11":
-        pnts += 3;
-        break;
-      case "12":
-        pnts += 4;
-        break;
-      case "13":
-        pnts += 5;
-        break;
-      case "14":
-        pnts += 7;
-        break;
-      case "15":
-        pnts += 9;
-        break;
-      case "16":
-        pnts += 12;
-        break;
-      case "17":
-        pnts += 15;
-        break;
-      case "18":
-        pnts += 19;
-        break;
-      default:
-        pnts += 0;
-        break;
-    }
-  }
-  document.getElementById("pnts").innerHTML = pnts;
-  sumAttributes();
-
-  return (pnts);
-}
-
-function sumAttributes() {
-
-  var e = document.getElementById("mrace");
-  var e2 = document.getElementById("srace");
-  var theRace = e.options[e.selectedIndex].value;
-  var theSubRace = e2.options[e2.selectedIndex].value;
-
-  var t0 = Number((raceTraits[theRace][0]).str);
-  var t1 = 0;
-  var t2 = 0;
-  var t3 = 0;
-  if (isNaN(t0)) { t0 = 0; }
-  if (theSubRace > 0)
-  {
-    t1 = Number((raceTraits[theRace][theSubRace]).str);
-    if (isNaN(t1)) { t1 = 0; }
-  }
-  t2 = Number(document.getElementById("str").value);
-  if (isNaN(t2)) { t2 = 0; }
-  t3 = Number(t0 + t1 + t2);
-  document.getElementById("strtot").innerHTML = t3;
-  document.getElementById("strmod2").innerHTML = calcModifier(t3);
-
-  t0 = Number((raceTraits[theRace][0]).dex);
-  if (isNaN(t0)) { t0 = 0; }
-  t1 = 0;
-  if (theSubRace > 0)
-  {
-    t1 = Number((raceTraits[theRace][theSubRace]).dex);
-    if (isNaN(t1)) { t1 = 0; }
-  }
-  t2 = Number(document.getElementById("dex").value);
-  if (isNaN(t2)) { t2 = 0; }
-  t3 = Number(t0 + t1 + t2);
-  document.getElementById("dextot").innerHTML = t3;
-  document.getElementById("dexmod2").innerHTML = calcModifier(t3);
-
-  t0 = Number((raceTraits[theRace][0]).con);
-  if (isNaN(t0)) { t0 = 0; }
-  t1 = 0;
-  if (theSubRace > 0)
-  {
-    t1 = Number((raceTraits[theRace][theSubRace]).con);
-    if (isNaN(t1)) { t1 = 0; }
-  }
-  t2 = Number(document.getElementById("con").value);
-  if (isNaN(t2)) { t2 = 0; }
-  t3 = Number(t0 + t1 + t2);
-  document.getElementById("contot").innerHTML = t3;
-  document.getElementById("conmod2").innerHTML = calcModifier(t3);
-
-  t0 = Number((raceTraits[theRace][0]).int);
-  if (isNaN(t0)) { t0 = 0; }
-  t1 = 0;
-  if (theSubRace > 0)
-  {
-    t1 = Number((raceTraits[theRace][theSubRace]).int);
-    if (isNaN(t1)) { t1 = 0; }
-  }
-  t2 = Number(document.getElementById("int").value);
-  if (isNaN(t2)) { t2 = 0; }
-  t3 = Number(t0 + t1 + t2);
-  document.getElementById("inttot").innerHTML = t3;
-  document.getElementById("intmod2").innerHTML = calcModifier(t3);
-
-  t0 = Number((raceTraits[theRace][0]).wis);
-  if (isNaN(t0)) { t0 = 0; }
-  t1 = 0;
-  if (theSubRace > 0)
-  {
-    t1 = Number((raceTraits[theRace][theSubRace]).wis);
-    if (isNaN(t1)) { t1 = 0; }
-  }
-  t2 = Number(document.getElementById("wis").value);
-  if (isNaN(t2)) { t2 = 0; }
-  t3 = Number(t0 + t1 + t2);
-  document.getElementById("wistot").innerHTML = t3;
-  document.getElementById("wismod2").innerHTML = calcModifier(t3);
-
-  t0 = Number((raceTraits[theRace][0]).cha);
-  if (isNaN(t0)) { t0 = 0; }
-  t1 = 0;
-  if (theSubRace > 0)
-  {
-    t1 = Number((raceTraits[theRace][theSubRace]).cha);
-    if (isNaN(t1)) { t1 = 0; }
-  }
-  t2 = Number(document.getElementById("cha").value);
-  if (isNaN(t2)) { t2 = 0; }
-  t3 = Number(t0 + t1 + t2);
-  document.getElementById("chatot").innerHTML = t3;
-  document.getElementById("chamod2").innerHTML = calcModifier(t3);
-
-}
-
-function calcModifier(point) {
-  var mod;
-  switch (point) {
-    case 1:
-        mod = "-5";
-      break;
-    case 2:
-    case 3:
-        mod = "-4";
-      break;
-    case 4:
-    case 5:
-        mod = "-3";
-      break;
-    case 6:
-    case 7:
-        mod = "-2";
-      break;
-    case 8:
-    case 9:
-        mod = "-1";
-      break;
-    case 10:
-    case 11:
-        mod = "0";
-      break;
-    case 12:
-    case 13:
-        mod = "+1";
-      break;
-    case 14:
-    case 15:
-        mod = "+2";
-      break;
-    case 16:
-    case 17:
-        mod = "+3";
-      break;
-    case 18:
-    case 19:
-        mod = "+4";
-      break;
-    case 20:
-    case 21:
-        mod = "+5";
-      break;
-    case 22:
-    case 23:
-        mod = "+6";
-      break;
-  }
-  return (mod);
-}
-
-function calcHeight(theRace) {
-  var inches = 0;
-  var dice, numdie, valdie;
-  if (typeof raceTraits[theRace][0].heightdice !== "undefined") {
-    dice = raceTraits[theRace][0].heightdice;
-    numdie = Number(dice[0]);
-    if (dice.length == 3) {
-      valdie = Number(dice[2]);
-    } else {
-      valdie = Number(dice[2]+dice[3]);
-    }
-    for (i=0; i<numdie; i++) {
-      inches = inches + (Math.floor(Math.random() * valdie) + 1);
-    }
-  }
-  return (inches);
-}
-
-function calcWeight(theRace, inches) {
-  var pounds = 0;
-  if (typeof raceTraits[theRace][0].weightdice !== "undefined") {
-    var dice = raceTraits[theRace][0].weightdice;
-    var numdie = Number(dice[0]);
-    var valdie = Number(dice[2]);
-    for (i=0; i<numdie; i++) {
-      pounds = pounds + (Math.floor(Math.random() * valdie) + 1);
-    }
-    pounds = inches * pounds;
-  }
-  return (pounds);
-}
-
-function calcWealth(theClass) {
-  var gold = 0;
-  if (typeof classTraits[theClass][0].wealth !== "undefined") {
-    var dice = classTraits[theClass][0].wealth;
-
-    var numdie = Number(dice[0]);
-    var valdie = Number(dice[2]);
-    var valmult = Number(dice[4] + dice[5]);
-    for (i=0; i<numdie; i++) {
-      gold = gold + (Math.floor(Math.random() * valdie) + 1);
-    }
-    gold = valmult * gold;
-  }
-  return (gold);
-}
-
-
-function changeGen() {
-  var type = document.getElementById("gentype").value;
-
-  type = Number(type) + 1;
-  if (type >= genTypes.length) {
-    type = 0;
-  }
-
-  document.getElementById("gentype").value = type;
-  document.getElementById("gentype").innerHTML = genTypes[type];
-}
-
-function updateRace() {
-  initSubRace( document.getElementById("mrace") );
-}
-
-function determineRaceTraits() {
-  var t;
-  var e = document.getElementById("mrace");
-  var e2 = document.getElementById("srace");
-  var theRace = e.options[e.selectedIndex].value;
-  var theSubRace = e2.options[e2.selectedIndex].value;
-
-
-  t = t_open
-      + tr_open_head
-        + td_open_120 + "Item" + td_close
-        + td_open_100 + "Value" + td_close
-      + tr_close;
-
-  var size = "Unknown";
-  if (typeof raceTraits[theRace][0].size !== "undefined") {
-    size = raceTraits[theRace][0].size;
-  }
-  t = t + tr_open_body
-        + td_open + "Size" + td_close
-        + td_open + size + td_close
-      + tr_close;
-
-  var addinches = calcHeight(theRace);
-  var inches = addinches + raceTraits[theRace][0].height;
-  var feet = Math.floor(inches / 12);
-  inches = inches - (feet * 12);
-  t = t + tr_open_body
-        + td_open + "Height" + td_close
-        + td_open + feet + " ft, " + inches + " in" + td_close
-      + tr_close;
-
-  var pounds = calcWeight(theRace, addinches) + raceTraits[theRace][0].weight;
-  t = t + tr_open_body
-        + td_open + "Weight" + td_close
-        + td_open + pounds + " lbs" + td_close
-      + tr_close;
-
-  var speed = "";
-  if (typeof raceTraits[theRace][0].speed !== "undefined") {
-    speed = raceTraits[theRace][0].speed;
-    if (theSubRace > 0 && typeof (raceTraits[theRace][theSubRace]).speed !== "undefined") {
-      speed = speed + (raceTraits[theRace][theSubRace]).speed;
-    }
-  }
-  t = t + tr_open_body
-        + td_open + "Speed" + td_close
-        + td_open + speed + td_close
-      + tr_close;
-
-  t = t + t_close;
-
-  document.getElementById("raceTable").innerHTML = t;
-
-
-
-  t = "";
-  if (typeof raceTraits[theRace][0].lang !== "undefined") {
-    t = t + "<strong>Languages:</strong> " + raceTraits[theRace][0].lang;
-    if (theSubRace > 0 && typeof (raceTraits[theRace][theSubRace]).lang !== "undefined") {
-      t = t + (raceTraits[theRace][theSubRace]).lang;
-    }
-    t = t + "<br>";
-  }
-
-  if (typeof raceTraits[theRace][0].special !== "undefined") {
-    t = t + "<strong>Special Traits:</strong> " + raceTraits[theRace][0].special;
-    if (theSubRace > 0 && typeof (raceTraits[theRace][theSubRace]).special !== "undefined") {
-      t = t + (raceTraits[theRace][theSubRace]).special;
-    }
-    t = t + "<br>";
-  }
-  document.getElementById("raceInfo").innerHTML = t;
-  document.getElementById("racechar").innerHTML = e.options[e.selectedIndex].text + " Racial Characteristics";
-
-  t = "";
-  document.getElementById("strmod").innerHTML = t;
-  document.getElementById("dexmod").innerHTML = t;
-  document.getElementById("conmod").innerHTML = t;
-  document.getElementById("intmod").innerHTML = t;
-  document.getElementById("wismod").innerHTML = t;
-  document.getElementById("chamod").innerHTML = t;
-
-  if (typeof raceTraits[theRace][0].str !== "undefined") {
-    t = "+" + raceTraits[theRace][0].str;
-  }
-  if (theSubRace > 0 && typeof (raceTraits[theRace][theSubRace]).str !== "undefined") {
-    t = t + "+" + (raceTraits[theRace][theSubRace]).str;
-  }
-  document.getElementById("strmod").innerHTML = t;
-
-  t = "";
-  if (typeof raceTraits[theRace][0].dex !== "undefined") {
-    t = "+" + raceTraits[theRace][0].dex;
-  }
-  if (theSubRace > 0 && typeof (raceTraits[theRace][theSubRace]).dex !== "undefined") {
-    t = t + "+" + (raceTraits[theRace][theSubRace]).dex;
-  }
-  document.getElementById("dexmod").innerHTML = t;
-
-  t = "";
-  if (typeof raceTraits[theRace][0].con !== "undefined") {
-    t = "+" + raceTraits[theRace][0].con;
-  }
-  if (theSubRace > 0 && typeof (raceTraits[theRace][theSubRace]).con !== "undefined") {
-    t = t + "+" + (raceTraits[theRace][theSubRace]).con;
-  }
-  document.getElementById("conmod").innerHTML = t;
-
-  t = "";
-  if (typeof raceTraits[theRace][0].int !== "undefined") {
-    t = "+" + raceTraits[theRace][0].int;
-  }
-  if (theSubRace > 0 && typeof (raceTraits[theRace][theSubRace]).int !== "undefined") {
-    t = t + "+" + (raceTraits[theRace][theSubRace]).int;
-  }
-  document.getElementById("intmod").innerHTML = t;
-
-  t = "";
-  if (typeof raceTraits[theRace][0].wis !== "undefined") {
-    t = "+" + raceTraits[theRace][0].wis;
-  }
-  if (theSubRace > 0 && typeof (raceTraits[theRace][theSubRace]).wis !== "undefined") {
-    t = t + "+" + (raceTraits[theRace][theSubRace]).wis;
-  }
-  document.getElementById("wismod").innerHTML = t;
-
-  t = "";
-  if (typeof raceTraits[theRace][0].cha !== "undefined") {
-    t = "+" + raceTraits[theRace][0].cha;
-  }
-  if (theSubRace > 0 && typeof (raceTraits[theRace][theSubRace]).cha !== "undefined") {
-    t = t + "+" + (raceTraits[theRace][theSubRace]).cha;
-  }
-  document.getElementById("chamod").innerHTML = t;
-  calcPoints()
-}
-
-function initSubRace(raceElement) {
-  var e = raceElement;
-  var theRace = raceElement.options[raceElement.selectedIndex].value;
-
-  var e2 = document.getElementById("srace");
-  e2.options.length = 0;
-
-  var opt = document.createElement("option");
-  opt.value = "0";
-  opt.text = "None";
-  e2.options.add(opt);
-
-  for (i=1; i<raceTypes[theRace].length; i++) {
-    opt = document.createElement("option");
-    opt.value = i;
-    opt.text = raceTypes[theRace][i];
-    e2.options.add(opt);
-  }
-
-  determineRaceTraits();
-}
-
-
-function updateClass() {
-  initSubClass( document.getElementById("mclass") );
-}
-
-function initSubClass(classElement) {
-  var e = classElement;
-  var theClass = e.options[e.selectedIndex].value;
-
-  var e2 = document.getElementById("sclass");
-  e2.options.length = 0;
-
-  var opt = document.createElement("option");
-  opt.value = "0";
-  opt.text = "None";
-  e2.options.add(opt);
-
-  for (i=1; i<classTypes[theClass].length; i++) {
-    opt = document.createElement("option");
-    opt.value = i;
-    opt.text = classTypes[theClass][i];
-    e2.options.add(opt);
-  }
-
-  determineClassTraits();
-}
-
-function determineClassTraits() {
-  var t = "";
-  var e = document.getElementById("mclass");
-  var e2 = document.getElementById("sclass");
-  var theClass = e.options[e.selectedIndex].value;
-  var theSubClass = e2.options[e2.selectedIndex].value;
-
-  document.getElementById("classchar").innerHTML = e.options[e.selectedIndex].text + " Class Characteristics";
-  document.getElementById("desc").innerHTML = classTraits[theClass][0].desc;
-
-  t = t_open
-      + tr_open_head
-        + td_open_120 + "Item" + td_close
-        + td_open_100 + "Value" + td_close
-      + tr_close;
-
-  var wealth = calcWealth(theClass) + " gp";
-  t = t + tr_open_body
-        + td_open + "Wealth" + td_close
-        + td_open + wealth + td_close
-      + tr_close;
-
-  var hitd = classTraits[theClass][0].hitd;
-  t = t + tr_open_body
-        + td_open + "Hit Die" + td_close
-        + td_open + hitd + td_close
-      + tr_close;
-
-  if (typeof classTraits[theClass][0].armr !== "undefined") {
-    var armr = classTraits[theClass][0].armr;
-    if (theSubClass > 0 && typeof (classTraits[theClass][theSubClass]).armr !== "undefined") {
-      armr = armr + (classTraits[theClass][theSubClass]).armr;
-    }
-    t = t + tr_open_body
-          + td_open + "Armor" + td_close
-          + td_open + armr + td_close
-        + tr_close;
-  }
-
-  if (typeof classTraits[theClass][0].weap !== "undefined") {
-    var wpn =  classTraits[theClass][0].weap;
-    if (theSubClass > 0 && typeof (classTraits[theClass][theSubClass]).weap !== "undefined") {
-      wpn = wpn + (classTraits[theClass][theSubClass]).weap;
-    }
-    t = t + tr_open_body
-          + td_open + "Weapon" + td_close
-          + td_open + wpn + td_close
-        + tr_close;
-  }
-
-  t = t + t_close;
-  document.getElementById("classTable").innerHTML = t;
-
-
-  t = "";
-  if (typeof classTraits[theClass][0].prim !== "undefined") {
-    t = t + "<strong>Primary Abilities:</strong> " + classTraits[theClass][0].prim;
-    if (theSubClass > 0 && typeof (classTraits[theClass][theSubClass]).prim !== "undefined") {
-      t = t + (classTraits[theClass][theSubClass]).prim;
-    }
-    t = t + "<br>";
-  }
-  if (typeof classTraits[theClass][0].savt !== "undefined") {
-    t = t + "<strong>Saving Throws:</strong> " + classTraits[theClass][0].savt + "<br>";
-  }
-
-  document.getElementById("classInfo").innerHTML = t;
-
-  calcPoints()
-}
-
-function updateTrait() {
-  var i1, i2;
-  var t1 = "Default";
-  var t2 = "Default";
-  var e = document.getElementById("backgrnd");
-  var theBkGrnd = e.selectedIndex ;
-
-  i1 = (Math.floor(Math.random() * (bgDetails[theBkGrnd-1].personality).length));
-  t1 = ((bgDetails[theBkGrnd-1]).personality)[i1];
-  document.getElementById("ptrait1").value = t1;
-
-  if ((bgDetails[theBkGrnd-1].personality).length > 1) {
-    i2 = i1;
-    while (i2 == i1) {
-      i2 = (Math.floor(Math.random() * (bgDetails[theBkGrnd-1].personality).length));
-    }
-    t2 = ((bgDetails[theBkGrnd-1]).personality)[i2];
-  }
-  document.getElementById("ptrait2").value = t2;
-
-  i1 = (Math.floor(Math.random() * (bgDetails[theBkGrnd-1].ideal).length));
-  t1 = ((bgDetails[theBkGrnd-1]).ideal)[i1];
-  document.getElementById("ideal").value = t1;
-
-  i1 = (Math.floor(Math.random() * (bgDetails[theBkGrnd-1].bond).length));
-  t1 = ((bgDetails[theBkGrnd-1]).bond)[i1];
-  document.getElementById("bond").value = t1;
-
-  i1 = (Math.floor(Math.random() * (bgDetails[theBkGrnd-1].flaw).length));
-  t1 = ((bgDetails[theBkGrnd-1]).flaw)[i1];
-  document.getElementById("flaw").value = t1;
-
-  if (typeof bgDetails[theBkGrnd-1].bgspec !== "undefined") {
-    i1 = (Math.floor(Math.random() * (bgDetails[theBkGrnd-1].bgspec).length));
-    t1 = ((bgDetails[theBkGrnd-1]).bgspec)[i1];
-    t2 = (bgDetails[theBkGrnd-1]).specdesc;
-    t1 = t2 + ": <input type=\"text\" class=\"sentence\" value=\"" + t1 + "\"> <\/input>";
-    document.getElementById("backInfo").innerHTML = t1;
-  }
-  else {
-    document.getElementById("backInfo").innerHTML = "";
-  }
-
-}
-
-function genBack() {
-  var i, t;
-  var e = document.getElementById("backgrnd");
-  i = Math.floor(Math.random() * bgDetails.length);
-  t = (bgDetails[i]).name;
-  e.selectedIndex = i+1;
-  updateTrait();
-}
-
-
-var t_open = "<table border=3>";
-var t_close = "<\/table>";
-
-var tr_open_head = "<tr class=\"head\">";
-var tr_open_body = "<tr class=\"body\">";
-var tr_close = "<\/tr>";
-
-var td_open = "<td>";
-var td_open_120 = "<td width=\"120px\">";
-var td_open_100 = "<td width=\"100px\">";
-var td_close = "<\/td>";
-
-
-var genTypes=[ "3d6", "4d6 - 1", "5d6 - 2", "Non-Elite Array", "Elite Array", "Basic Stats", "Max Stats" ];
+var genTypes=[ "3d6", "4d6 - 1", "5d6 - 2", 
+               "Non-Elite Array", "Elite Array", 
+               "Basic Stats", "Max Stats" ];
 var genType3d6=0;
 var genType4d6=1;
 var genType5d6=2;
@@ -814,39 +12,97 @@ var genTypeMax=6;
 
 var statTypes=[ "str", "dex", "con", "int", "wis", "cha" ];
 
-var raceTypes= [ 
-  ["Dragonborn" ],
-  ["Dwarf", "Hill Dwarf", "Mountain Dwarf" ],
-  ["Elf", "Dark Elf", "Eladrin", "High Elf", "Wood Elf" ],
-  ["Gnome", "Forest Gnome", "Rock Gnome" ],
-  ["Halfling", "Lightfoot Halfling", "Stout Halfling" ],
-  ["Half-Elf", "Half Wood Elf", "Half Moon/Sun Elf" ],
-  ["Half-Orc" ],
-  ["Human" ],
-  ["Tiefling" ]
-];
+    var raceTypes = [
+         {id: 0, race: "Dragonborn", subr: "Dragonborn" },
+         {id: 1, race: "Dwarf", subr: "Dwarf" }, 
+         {id: 2, race: "Dwarf", subr: "Hill Dwarf" },
+         {id: 3, race: "Dwarf", subr: "Mountain Dwarf" },
+         {id: 4, race: "Elf", subr: "Elf" }, 
+         {id: 5, race: "Elf", subr: "Dark Elf" },
+         {id: 6, race: "Elf", subr: "Eladrin Elf" },
+         {id: 7, race: "Elf", subr: "High Elf" },
+         {id: 8, race: "Elf", subr: "Wood Elf" },
+         {id: 9, race: "Gnome", subr: "Gnome" },
+         {id: 10, race: "Gnome", subr: "Rock Gnome" },
+         {id: 11, race: "Halfling", subr: "Halfling" }, 
+         {id: 12, race: "Halfling", subr: "Lightfoot Halfling" },
+         {id: 13, race: "Halfling", subr: "Stout Halfling" },
+         {id: 14, race: "Half-Elf", subr: "Half-Elf" }, 
+         {id: 15, race: "Half-Elf", subr: "Half Wood Elf" },
+         {id: 16, race: "Half-Elf", subr: "Half Moon/Sun Elf" },
+         {id: 17, race: "Half-Orc", subr: "Half-Orc" },
+         {id: 18, race: "Human", subr: "Human" },
+         {id: 19, race: "Tiefling", subr: "Tiefling" }
+      ];
 
-var classTypes= [
-  ["Barbarian", "Berserker", "Totem" ],
-  ["Bard", "Lore", "Valor" ],
-  ["Cleric", "Knowledge", "Life", "Light", "Nature", "Tempest", "Trickery", "War", "Death" ],
-  ["Druid", "Land", "Moon" ],
-  ["Fighter", "Champion", "Battle Master", "Eldritch Knight" ],
-  ["Monk", "Open Hand", "Shadow", "Four Elements" ],
-  ["Paladin", "Devotion", "Ancients", "Vengeance", "Oath-Breaker" ],
-  ["Ranger", "Hunter", "Beast Master" ],
-  ["Rogue", "Thief", "Assassin", "Arcane Trickster", "Swashbuckler" ],
-  ["Sorcerer", "Draconic", "Wild Magic", "Favoured Soul", "Storm" ],
-  ["Warlock", "Arch-Fey", "Fiend", "GOO" ],
-  ["Wizard", "Abjuration", "Conjuration", "Divination", "Enchantment", "Evocation", "Illusion", "Necromancy", "Transmutation", "Artificer" ]
-];
+    var classTypes = [
+         {id: 0, class: "Barbarian", subc: "Barbarian" },
+         {id: 1, class: "Barbarian", subc: "Berserker" },
+         {id: 2, class: "Barbarian", subc: "Totem" },
+         {id: 3, class: "Bard", subc: "Bard" }, 
+         {id: 4, class: "Bard", subc: "Lore" }, 
+         {id: 5, class: "Bard", subc: "Valor" }, 
+         {id: 6, class: "Cleric", subc: "Cleric" }, 
+         {id: 7, class: "Cleric", subc: "Knowledge" }, 
+         {id: 8, class: "Cleric", subc: "Life" }, 
+         {id: 9, class: "Cleric", subc: "Light" }, 
+         {id: 10, class: "Cleric", subc: "Nature" }, 
+         {id: 11, class: "Cleric", subc: "Tempest" }, 
+         {id: 12, class: "Cleric", subc: "Trickery" }, 
+         {id: 13, class: "Cleric", subc: "War" }, 
+         {id: 14, class: "Cleric", subc: "Death" }, 
+         {id: 15, class: "Druid", subc: "Druid" }, 
+         {id: 16, class: "Druid", subc: "Land" }, 
+         {id: 17, class: "Druid", subc: "Moon" }, 
+         {id: 18, class: "Fighter", subc: "Fighter" }, 
+         {id: 19, class: "Fighter", subc: "Champion" }, 
+         {id: 20, class: "Fighter", subc: "Battle Master" }, 
+         {id: 21, class: "Fighter", subc: "Eldritch Knight" }, 
+         {id: 22, class: "Monk", subc: "Monk" }, 
+         {id: 23, class: "Monk", subc: "Open Hand" }, 
+         {id: 24, class: "Monk", subc: "Shadow" }, 
+         {id: 25, class: "Monk", subc: "Four Elements" }, 
+         {id: 26, class: "Paladin", subc: "Paladin" }, 
+         {id: 27, class: "Paladin", subc: "Devotion" }, 
+         {id: 28, class: "Paladin", subc: "Ancients" }, 
+         {id: 29, class: "Paladin", subc: "Vengeance" }, 
+         {id: 30, class: "Paladin", subc: "Oath-Breaker" }, 
+         {id: 31, class: "Ranger", subc: "Ranger" }, 
+         {id: 32, class: "Ranger", subc: "Hunter" }, 
+         {id: 33, class: "Ranger", subc: "Beast Master" }, 
+         {id: 34, class: "Rogue", subc: "Rogue" }, 
+         {id: 35, class: "Rogue", subc: "Thief" }, 
+         {id: 36, class: "Rogue", subc: "Assassin" }, 
+         {id: 37, class: "Rogue", subc: "Arcane Trickster" }, 
+         {id: 38, class: "Rogue", subc: "Swashbuckler" }, 
+         {id: 39, class: "Sorcerer", subc: "Sorcerer" }, 
+         {id: 40, class: "Sorcerer", subc: "Draconic" }, 
+         {id: 41, class: "Sorcerer", subc: "Wild Magic" }, 
+         {id: 42, class: "Sorcerer", subc: "Favoured Soul" }, 
+         {id: 43, class: "Sorcerer", subc: "Storm" }, 
+         {id: 44, class: "Warlock", subc: "Warlock" }, 
+         {id: 45, class: "Warlock", subc: "Arch-Fey" }, 
+         {id: 46, class: "Warlock", subc: "Fiend" }, 
+         {id: 47, class: "Warlock", subc: "GOO" }, 
+         {id: 48, class: "Wizard", subc: "Wizard" }, 
+         {id: 49, class: "Wizard", subc: "Abjuration" }, 
+         {id: 50, class: "Wizard", subc: "Conjuration" }, 
+         {id: 51, class: "Wizard", subc: "Divination" }, 
+         {id: 52, class: "Wizard", subc: "Enchantment" }, 
+         {id: 53, class: "Wizard", subc: "Evocation" }, 
+         {id: 54, class: "Wizard", subc: "Illusion" }, 
+         {id: 55, class: "Wizard", subc: "Necromancy" }, 
+         {id: 56, class: "Wizard", subc: "Transmutation" }, 
+         {id: 57, class: "Wizard", subc: "Artificer" }
+      ];
+
 
 var raceTraits = [ 
  [ { race:"Dragonborn", 
            str:2, 
            cha:1, 
            size:"Medium", 
-           /* height:"well over 6\'", weight:"\~250 lbs", */
+           // height:"well over 6\'", weight:"\~250 lbs", 
            height:66,
            weight:175,
            heightdice:"2d8",
@@ -858,7 +114,7 @@ var raceTraits = [
  [ { race:"Dwarf", 
            con:2, 
            size:"Medium",
-           /*height:"4\' to 5\'", weight:"\~150 lbs",*/
+           // height:"4\' to 5\'", weight:"\~150 lbs",
            height:44,
            weight:115,
            heightdice:"2d4",
@@ -876,7 +132,7 @@ var raceTraits = [
  [ { race:"Elf", 
            dex:2, 
            size:"Medium",
-           /*height:"less than 5\' to just over 6\'", weight:"\~150 lbs",*/
+           //height:"less than 5\' to just over 6\'", weight:"\~150 lbs",
            height:54,
            weight:90,
            heightdice:"2d10",
@@ -902,7 +158,7 @@ var raceTraits = [
  [ { race:"Gnome", 
            int:2, 
            size:"Small", 
-           /*height:"3\' to 4\'", weight:"\~40 lbs",*/
+           //height:"3\' to 4\'", weight:"\~40 lbs",
            height:35,
            weight:35,
            heightdice:"2d4",
@@ -920,7 +176,7 @@ var raceTraits = [
  [ { race:"Halfling", 
            dex:2, 
            size:"Small", 
-           /*height:"\~3\'", weight:"\~40 lbs",*/
+           //height:"\~3\'", weight:"\~40 lbs",
            height:31,
            weight:35,
            heightdice:"2d4",
@@ -938,7 +194,7 @@ var raceTraits = [
  [ { race:"Half-Elf", 
            cha:2, 
            size:"Medium", 
-           /*height:"5\' to 6\'", weight:"\~175 lbs",*/
+           //height:"5\' to 6\'", weight:"\~175 lbs",
            height:57,
            weight:110,
            heightdice:"2d8",
@@ -955,7 +211,7 @@ var raceTraits = [
            str:2, 
            con:1, 
            size:"Medium", 
-           /*height:"5\' to well over 6\'", weight:"\~175 lbs",*/
+           //height:"5\' to well over 6\'", weight:"\~175 lbs",
            height:58,
            weight:140,
            heightdice:"2d10",
@@ -972,7 +228,7 @@ var raceTraits = [
            wis:1, 
            cha:1, 
            size:"Medium", 
-           /*height:"5\' to well over 6\'", weight:"\~180 lbs",*/
+           //height:"5\' to well over 6\'", weight:"\~180 lbs",
            height:56,
            weight:110,
            heightdice:"2d10",
@@ -980,13 +236,13 @@ var raceTraits = [
            age:"90 years",
            speed:"30", 
            lang:"Common, +1 language"
-           /* , special:"" */ 
+           // , special:"" 
            } ],
  [ { race:"Tiefling", 
            int:1, 
            cha:2, 
            size:"Medium", 
-           /*height:"5\' to well over 6\'", weight:"\~180 lbs",*/
+           //height:"5\' to well over 6\'", weight:"\~180 lbs",
            height:57,
            weight:110,
            heightdice:"2d8",
