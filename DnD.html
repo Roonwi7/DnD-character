@@ -38,7 +38,8 @@
 
     <div class="charmain">
       <p id="test"> </p>
-      <p ng-model="dndChar.test" > {{dndChar.test}} </p>
+      <!-- <p ng-model="dndChar.test" > {{dndChar.test}} </p> -->
+      <p> {{dndChar.test}} </p>
       <span ng-show="dndChar.error"> Error Error </span>
       <h2> Character Identity </h2>
       <p> Player  Name: <input type="text" ng-model="dndChar.playName" placeholder="Enter your name"> </p>
@@ -65,6 +66,20 @@
             <td width="120px"> Modifier </td>
             <td width="100px"> Stat Total </td>
             <td width="100px"> Base Stat </td>
+            <td width="100px"> Base Stat Modifier </td>
+          </tr>
+          <tr ng-repeat="att in dndChar.attributes">
+            <td> {{att.attr}} </td>
+            <td> {{att.mod}} </td>
+            <td> {{att.total}} </td>
+            <td> 
+              <input ng-model="att.base" 
+                     ng-change="dndChar.calcPoints()" 
+                     type="number" min="3" max="18" 
+              > 
+              </input> 
+            </td>
+            <td> {{att.basemod}} </td>
           </tr>
         </table>
 

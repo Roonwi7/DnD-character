@@ -13,6 +13,13 @@ angular
     dndCtlr.curGenType = genType3d6;
     dndCtlr.genType = genTypes[dndCtlr.curGenType];
     dndCtlr.points = 27;
+    dndCtlr.attributes = [];
+    dndCtlr.strength;
+    dndCtlr.dexterity;
+    dndCtlr.constitution;
+    dndCtlr.wisdom;
+    dndCtlr.intelligence;
+    dndCtlr.charisma;
 
     dndCtlr.raceTypes = raceTypes;
     dndCtlr.raceSelect = dndCtlr.raceTypes[0];
@@ -32,9 +39,11 @@ angular
     dndCtlr.genAll = genAll;
     dndCtlr.genRaceClass = genRaceClass;
     dndCtlr.genStats = genStats;
+    dndCtlr.initStats = initStats;
     dndCtlr.changeGen = changeGen;
     dndCtlr.updateRace = updateRace;
     dndCtlr.updateClass = updateClass;
+    dndCtlr.calcPoints = calcPoints;
 
 
     function changeGen()
@@ -224,7 +233,7 @@ function determineClassTraits() {
     function genAll()
     {
       dndCtlr.genRaceClass();
-      //dndCtlr.genStats();
+      dndCtlr.genStats();
       //genBack();
 
     }
@@ -244,6 +253,105 @@ function determineClassTraits() {
     function genStats()
     {
       dndCtlr.error = !(dndCtlr.error);
+      dndCtlr.initStats();
+      dndCtlr.attributes = [];
+      dndCtlr.attributes.push(dndCtlr.strength);
+      dndCtlr.attributes.push(dndCtlr.dexterity);
+      dndCtlr.attributes.push(dndCtlr.constitution);
+      dndCtlr.attributes.push(dndCtlr.wisdom);
+      dndCtlr.attributes.push(dndCtlr.intelligence);
+      dndCtlr.attributes.push(dndCtlr.charisma);
+      dndCtlr.calcPoints();
+    }
+
+    function initStats()
+    {
+      dndCtlr.strength = 
+            { attr:"Strength",
+              mod:"0",
+              total:"8",
+              base:"8",
+              basemod:"0" };
+      dndCtlr.dexterity = 
+            { attr:"Dexterity",
+              mod:"0",
+              total:"8",
+              base:"8",
+              basemod:"0" };
+      dndCtlr.constitution = 
+            { attr:"Constitution",
+              mod:"0",
+              total:"8",
+              base:"8",
+              basemod:"0" };
+      dndCtlr.wisdom = 
+            { attr:"Wisdom",
+              mod:"0",
+              total:"8",
+              base:"8",
+              basemod:"0" };
+      dndCtlr.intelligence = 
+            { attr:"Intelligence",
+              mod:"0",
+              total:"8",
+              base:"8",
+              basemod:"0" };
+      dndCtlr.charisma = 
+            { attr:"Charisma",
+              mod:"0",
+              total:"8",
+              base:"8",
+              basemod:"0" };
+    }
+
+    function calcPoints() {
+      var pnts = 0;
+      dndCtlr.test = "Str: " + dndCtlr.attributes[0].base 
+                 + ", Dex: " + dndCtlr.attributes[1].base 
+                 + ", Con: " + dndCtlr.attributes[2].base 
+                 + ", Wis: " + dndCtlr.attributes[3].base 
+                 + ", Int: " + dndCtlr.attributes[4].base 
+                 + ", Cha: " + dndCtlr.attributes[5].base ;
+
+      for (i=0; i<dndCtlr.attributes.length; i++) {
+        switch (dndCtlr.attributes[i].total) {
+          case "9":
+            pnts += 1;
+            break;
+          case "10":
+            pnts += 2;
+            break;
+          case "11":
+            pnts += 3;
+            break;
+          case "12":
+            pnts += 4;
+            break;
+          case "13":
+            pnts += 5;
+            break;
+          case "14":
+            pnts += 7;
+            break;
+          case "15":
+            pnts += 9;
+            break;
+          case "16":
+            pnts += 12;
+            break;
+          case "17":
+            pnts += 15;
+            break;
+          case "18":
+            pnts += 19;
+            break;
+          default:
+            pnts += 0;
+            break;
+        }
+      }
+      dndCtlr.points = pnts;
+      //sumAttributes();
     }
 
   }
@@ -458,58 +566,6 @@ function generateStat(attribute) {
   }
 
   document.getElementById(statTypes[attribute]).value = total;
-}
-
-function calcPoints() {
-  var a = [];
-  var pnts = 0;
-  a.push( document.getElementById("str").value);
-  a.push( document.getElementById("con").value);
-  a.push( document.getElementById("dex").value);
-  a.push( document.getElementById("int").value);
-  a.push( document.getElementById("wis").value);
-  a.push( document.getElementById("cha").value);
-  for (i=0; i<a.length; i++) {
-    switch (a[i]) {
-      case "9":
-        pnts += 1;
-        break;
-      case "10":
-        pnts += 2;
-        break;
-      case "11":
-        pnts += 3;
-        break;
-      case "12":
-        pnts += 4;
-        break;
-      case "13":
-        pnts += 5;
-        break;
-      case "14":
-        pnts += 7;
-        break;
-      case "15":
-        pnts += 9;
-        break;
-      case "16":
-        pnts += 12;
-        break;
-      case "17":
-        pnts += 15;
-        break;
-      case "18":
-        pnts += 19;
-        break;
-      default:
-        pnts += 0;
-        break;
-    }
-  }
-  document.getElementById("pnts").innerHTML = pnts;
-  sumAttributes();
-
-  return (pnts);
 }
 
 function sumAttributes() {
