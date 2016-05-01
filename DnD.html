@@ -33,21 +33,17 @@
       <button type="button" ng-click="dndChar.genAll()"> Generate All </button>
     </nav>
 
-    <nav class="right">
-    </nav>
+    <nav class="right"> </nav>
 
     <div class="charmain">
-      <p id="test"> </p>
-      <!-- <p ng-model="dndChar.test" > {{dndChar.test}} </p> -->
       <p> {{dndChar.test}} </p>
-      <span ng-show="dndChar.error"> Error Error </span>
-      <h2> Character Identity </h2>
+      <h2> {{dndChar.playName}} Character Identity </h2>
       <p> Player  Name: <input type="text" ng-model="dndChar.playName" placeholder="Enter your name"> </p>
       <p> Character Name: <input type="text" ng-model="dndChar.charName" placeholder="Enter a character name"> </p>
 
 
       <div class="char">
-        <h2 id="name"> Character Attributes </h2>
+        <h2 id="name"> {{dndChar.charName}} Character Attributes </h2>
         <button type="button" ng-click="dndChar.genStats()" > Roll Stats </button>
         <button type="button" ng-click="dndChar.changeGen()" > {{ dndChar.genType }} </button>
 
@@ -66,7 +62,7 @@
             <td width="120px"> Modifier </td>
             <td width="100px"> Stat Total </td>
             <td width="100px"> Base Stat </td>
-            <td width="100px"> Base Stat Modifier </td>
+            <td width="100px"> Race Modifiers </td>
           </tr>
           <tr ng-repeat="att in dndChar.attributes">
             <td> {{att.attr}} </td>
@@ -74,7 +70,7 @@
             <td> {{att.total}} </td>
             <td> 
               <input ng-model="att.base" 
-                     ng-change="dndChar.calcPoints()" 
+                     ng-change="dndChar.calcTotal()" 
                      type="number" min="3" max="18" 
               > 
               </input> 
@@ -86,16 +82,11 @@
       </div>
 
       <div class="char">
-        <h2 id="racechar"> Racial Characteristics </h2>
+        <h2 id="racechar" ng-model="dndChar.raceTitle"> {{dndChar.raceTitle}} </h2>
         <p> Race: 
-          <select 
-            ng-model="dndChar.raceSelect"
-            ng-options="raceType.subr 
-                        group by raceType.race 
-                        for raceType in dndChar.raceTypes"
-            ng-change="dndChar.updateRace()"
-          >
-          </select>
+          <select ng-model="dndChar.raceSelect"
+            ng-options="raceType.subr group by raceType.race for raceType in dndChar.raceTypes"
+            ng-change="dndChar.updateRace()" > </select>
         </p>
 
         <table border=3>
@@ -114,17 +105,13 @@
       </div>
 
       <div class="char">
-        <h2 id="classchar"> Class Characteristics </h2>
+        <h2 id="classchar"> {{dndChar.classTitle}} </h2>
         <p> {{dndChar.classDesc}} </p>
         <p> Class: 
-          <select 
-            ng-model="dndChar.classSelect"
+          <select ng-model="dndChar.classSelect"
             ng-options="classType.class+': '+ classType.subc 
-                        group by classType.class 
-                        for classType in dndChar.classTypes"
-            ng-change="dndChar.updateClass()"
-          >
-          </select>
+                        group by classType.class for classType in dndChar.classTypes"
+            ng-change="dndChar.updateClass()" > </select>
         </p>
 
         <table border=3>
@@ -142,122 +129,32 @@
         </p>
       </div>
 
+      <div class="char">
+        <h2 id="charback"> {{dndChar.charBgTitle}} </h2>
+        <p> {{dndChar.charBgDesc}} </p>
+        <button type="button" ng-click="dndChar.genCharBg()" > Change </button>
+        <p> Background: 
+          <select ng-model="dndChar.charBgSelect"
+            ng-options="backgrnd.name for backgrnd in dndChar.charBackgrounds"
+            ng-change="dndChar.updateCharBg()" > </select>
+        </p>
 
-    </div>
+        <p id="backSpec" ng-show="dndChar.charBgSpShow"> {{dndChar.charBgSpLbl}} 
+            <input type="text" class="sentence" id="special" ng-model="dndChar.charBgSp"> </input> </p>
+        <p> Personality Trait One: 
+            <input type="text" class="sentence" id="ptrait1" ng-model="dndChar.charBgT1"> </input> </p>
+        <p> Personality Trait Two: 
+            <input type="text" class="sentence" id="ptrait2" ng-model="dndChar.charBgT2"> </input> </p>
+        <p> Ideal: <input type="text" class="sentence" id="ideal" ng-model="dndChar.charBgI"> </input> </p>
+        <p> Bond: <input type="text" class="sentence" id="bond" ng-model="dndChar.charBgB"> </input> </p>
+        <p> Flaw: <input type="text" class="sentence" id="flaw" ng-model="dndChar.charBgF"> </input> </p>
 
-  </body>
-</html>
-
-<!--
-      <table border=3 >
-        <tr class="head">
-          <td width="120px"> Attribute </td>
-          <td width="120px"> Modifier </td>
-          <td width="100px"> Stat Total </td>
-          <td width="100px"> Base Stat </td>
-        </tr>
-
-        <tr class="body" >
-          <td > Strength </td>
-          <td> <b class="MOD" id="strmod2" >0</b> </td>
-          <td id="strtot" > 0 </td>
-          <td> 
-          <table>  <tr> <td>
-                <input type="number" id="str" min="3" max="18" onchange="calcPoints()" > </input> 
-          </td> <td>
-                <b class="MOD" id="strmod" > </b>
-          </td> </tr> </table> 
-          </td> 
-        </tr>
-
-        <tr class="body" >
-          <td > Dexterity </td>
-          <td> <b class="MOD" id="dexmod2" >0</b> </td>
-          <td id="dextot" > 0 </td>
-          <td> 
-          <table>  <tr> <td>
-                <input type="number" id="dex" min="3" max="18" onchange="calcPoints()" > </input> 
-          </td> <td>
-                <b class="MOD" id="dexmod" > </b>
-          </td> </tr> </table> 
-          </td> 
-        </tr>
-
-        <tr class="body" >
-          <td > Constitution </td>
-          <td> <b class="MOD" id="conmod2" >0</b> </td>
-          <td id="contot" > 0 </td>
-          <td> 
-          <table>  <tr> <td>
-                <input type="number" id="con" min="3" max="18" onchange="calcPoints()" > </input> 
-          </td> <td>
-                <b class="MOD" id="conmod" > </b>
-          </td> </tr> </table> 
-          </td> 
-        </tr>
-
-        <tr class="body" >
-          <td > Intelligence </td>
-          <td> <b class="MOD" id="intmod2" >0</b> </td>
-          <td id="inttot" > 0 </td>
-          <td> 
-          <table>  <tr> <td>
-                <input type="number" id="int" min="3" max="18" onchange="calcPoints()" > </input> 
-          </td> <td>
-                <b class="MOD" id="intmod" > </b>
-          </td> </tr> </table> 
-          </td> 
-        </tr>
-
-        <tr class="body" >
-          <td > Wisdom </td>
-          <td> <b class="MOD" id="wismod2" >0</b> </td>
-          <td id="wistot" > 0 </td>
-          <td> 
-          <table>  <tr> <td>
-                <input type="number" id="wis" min="3" max="18" onchange="calcPoints()" > </input> 
-          </td> <td>
-                <b class="MOD" id="wismod" > </b>
-          </td> </tr> </table> 
-          </td> 
-        </tr>
-
-        <tr class="body" >
-          <td > Charisma </td>
-          <td> <b class="MOD" id="chamod2" >0</b> </td>
-          <td id="chatot" > 0 </td>
-          <td> 
-          <table>  <tr> <td>
-                <input type="number" id="cha" min="3" max="18" onchange="calcPoints()" > </input> 
-          </td> <td>
-                <b class="MOD" id="chamod" > </b>
-          </td> </tr> </table> 
-          </td> 
-        </tr>
-      </table>
-
-    </div>
-
-    <div class="char">
-      <h2> Character Background </h2>
-      <button type="button" onclick="genBack()"> Change </button>
-      <p> Background: <select id="backgrnd" onchange="updateTrait()" > </select> </p>
-      <p id="backInfo"> </p>
-      <p> Personality Trait One: <input type="text" class="sentence" id="ptrait1"> </input> </p>
-      <p> Personality Trait Two: <input type="text" class="sentence" id="ptrait2"> </input> </p>
-      <p> Ideal: <input type="text" class="sentence" id="ideal"> </input> </p>
-      <p> Bond: <input type="text" class="sentence" id="bond"> </input> </p>
-      <p> Flaw: <input type="text" class="sentence" id="flaw"> </input> </p>
-    </div>
-
+      </div>
     </div>
 
     <footer>
       <h1> <b class="red"> Warning: Information may be copyrighted </b> </h1>
     </footer>
 
-
   </body>
-
 </html>
--->
