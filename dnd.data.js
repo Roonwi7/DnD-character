@@ -19,7 +19,7 @@ var statTypes=[ "str", "dex", "con", "int", "wis", "cha" ];
          {id: 3, race: "Dwarf", subr: "Mountain Dwarf" },
          {id: 4, race: "Elf", subr: "Elf" }, 
          {id: 5, race: "Elf", subr: "Dark Elf" },
-         {id: 6, race: "Elf", subr: "Eladrin Elf" },
+         {id: 6, race: "Elf", subr: "Eladrin" },
          {id: 7, race: "Elf", subr: "High Elf" },
          {id: 8, race: "Elf", subr: "Wood Elf" },
          {id: 9, race: "Gnome", subr: "Gnome" },

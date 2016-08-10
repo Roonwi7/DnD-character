@@ -14,6 +14,7 @@ div { border-style: ridge; border-width: thick; }
 /* Child div will only have top ridge */
 div > div { border-style: ridge none none none; border-width: thick; }
 div.charmain { position: fixed; top: 50px; left: 130px; right: 130px; bottom: 50px; text-align: justify; overflow: auto; }
+div.sub { border-style: none }
 div table { margin: 5px; }
 div p { padding-left: 15px; }
 button { font-size: 22px; width: 120px; border-width: medium; }

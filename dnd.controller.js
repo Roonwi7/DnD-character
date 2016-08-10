@@ -1,9 +1,13 @@
-angular
-  .module('DnDApp')
-  .controller('DnDController', DnDCtlr);
+angular.module('DnDApp')
+  .controller('DnDController', ['$q', 'dndDataService', function($q, dndDataService) {
 
-  //dndCtlr.test=theSubRace;
-  //if (isNaN(x.innerHTML)) {
+    var dndController = this;
+
+    dndController.setTest = setTest;
+    function setTest()
+    {
+      dndController.test="Hi: " + JSON.stringify( dndDataService.getAll() );
+    }
 
 //  TODO:
 //    figure out if TODO below is needed anymore
@@ -17,95 +21,112 @@ angular
 //    Add Name Generator
 //    Add more info under character backgrounds
 //    Add Spell selections
+//dndController.test=theSubRace;
+//if (isNaN(x.innerHTML)) 
 
+    dndController.curGenType = genType3d6;
+    dndController.genType = genTypes[dndController.curGenType];
+    dndController.points = 27;
+    dndController.attributes = [];
+    dndController.strength;
+    dndController.dexterity;
+    dndController.constitution;
+    dndController.wisdom;
+    dndController.intelligence;
+    dndController.charisma;
+    dndController.hasChar = false;
+    dndController.hasRace = false;
+    dndController.hasClass = false;
+    dndController.hasBg = false;
 
-  function DnDCtlr()
-  {
-    var dndCtlr = this;
+    dndController.raceTitle = "Racial Characteristics";
+    dndController.raceTypes = raceTypes;
+// JMG: TODO create raceTypes from dataservice, not from hard-coded values
+    dndController.raceSelect = null;
+    dndController.raceTable = null;
+    dndController.raceInfo = [];
 
-    dndCtlr.curGenType = genType3d6;
-    dndCtlr.genType = genTypes[dndCtlr.curGenType];
-    dndCtlr.points = 27;
-    dndCtlr.attributes = [];
-    dndCtlr.strength;
-    dndCtlr.dexterity;
-    dndCtlr.constitution;
-    dndCtlr.wisdom;
-    dndCtlr.intelligence;
-    dndCtlr.charisma;
+    dndController.classTitle = "Class Characteristics";
+    dndController.classDesc = "";
+    dndController.classTypes = classTypes;
+    dndController.classSelect = null;
+    dndController.classTable = null;
+    dndController.classInfo = [];
 
-    dndCtlr.raceTitle = "Racial Characteristics";
-    dndCtlr.raceTypes = raceTypes;
-    dndCtlr.raceSelect = dndCtlr.raceTypes[0];
-    dndCtlr.raceTable = [];
-    dndCtlr.raceInfo = [];
-
-    dndCtlr.classTitle = "Class Characteristics";
-    dndCtlr.classDesc = "";
-    dndCtlr.classTypes = classTypes;
-    dndCtlr.classSelect = dndCtlr.classTypes[0];
-    dndCtlr.classTable = [];
-    dndCtlr.classInfo = [];
-
-    dndCtlr.charBgTitle = "Character Background";
-    dndCtlr.charBgSelect = bgDetails[0];
-    dndCtlr.charBackgrounds = bgDetails;
+    dndController.charBgTitle = "Character Background";
+    dndController.charBgSelect = null;
+    dndController.charBackgrounds = bgDetails;
 
     // Functions
-    dndCtlr.initialize = initialize;
-    dndCtlr.createAtts = createAtts;
-    dndCtlr.genAll = genAll;
-    dndCtlr.genRaceClass = genRaceClass;
-    dndCtlr.genStats = genStats;
-    dndCtlr.generateStat = generateStat;
-    dndCtlr.genCharBg = genCharBg;
-    dndCtlr.updateCharBg = updateCharBg;
-    dndCtlr.changeGen = changeGen;
-    dndCtlr.updateRace = updateRace;
-    dndCtlr.updateClass = updateClass;
-    dndCtlr.calcTotal = calcTotal;
-    dndCtlr.calcPoints = calcPoints;
+    dndController.initialize = initialize;
+    dndController.createAtts = createAtts;
+    dndController.genAll = genAll;
+    dndController.genRaceClass = genRaceClass;
+    dndController.genStats = genStats;
+    dndController.generateStat = generateStat;
+    dndController.genCharBg = genCharBg;
+    dndController.updateCharBg = updateCharBg;
+    dndController.changeGen = changeGen;
+    dndController.updateRace = updateRace;
+    dndController.updateClass = updateClass;
+    dndController.calcTotal = calcTotal;
+    dndController.calcPoints = calcPoints;
 
-    dndCtlr.initialize();
+    dndController.initialize();
 
     function initialize()
     {
-      dndCtlr.createAtts();
-      dndCtlr.attributes.push(dndCtlr.strength);
-      dndCtlr.attributes.push(dndCtlr.dexterity);
-      dndCtlr.attributes.push(dndCtlr.constitution);
-      dndCtlr.attributes.push(dndCtlr.wisdom);
-      dndCtlr.attributes.push(dndCtlr.intelligence);
-      dndCtlr.attributes.push(dndCtlr.charisma);
+      dndController.createAtts();
+      dndController.attributes.push(dndController.strength);
+      dndController.attributes.push(dndController.dexterity);
+      dndController.attributes.push(dndController.constitution);
+      dndController.attributes.push(dndController.wisdom);
+      dndController.attributes.push(dndController.intelligence);
+      dndController.attributes.push(dndController.charisma);
+//dndDataService.getRaceTraits("Half-Elf")
+//dndDataService.getRaces()
+//dndDataService.getSubRaces("Half-Elf")
+      dndDataService.init()
+        .then(
+          function(result) { 
+                   //dndController.test="Initial test subject";
+                   //dndController.test="Hi: " + JSON.stringify(result);
+                   //dndController.test="Hi: " + result.race + ". I see you speak " + result.lang + "."; 
+          },
+          function(result) {
+                   console.log("Failed to initialize data: " + result);
+          });
     }
 
     function changeGen()
     {
-      dndCtlr.curGenType = dndCtlr.curGenType + 1;
-      if (dndCtlr.curGenType > genTypeMax)
+      dndController.curGenType = dndController.curGenType + 1;
+      if (dndController.curGenType > genTypeMax)
       {
-        dndCtlr.curGenType = genType3d6;
+        dndController.curGenType = genType3d6;
       }
-      dndCtlr.genType = genTypes[dndCtlr.curGenType];
+      dndController.genType = genTypes[dndController.curGenType];
     }
 
     function genAll()
     {
-      dndCtlr.genRaceClass();
-      dndCtlr.genStats();
-      dndCtlr.genCharBg();
+      dndController.genRaceClass();
+      dndController.genStats();
+      dndController.genCharBg();
     }
 
     function genRaceClass() 
     {
       var randIndex = 0;
 
-      randIndex = Math.floor(Math.random() * dndCtlr.raceTypes.length);
-      dndCtlr.raceSelect = dndCtlr.raceTypes[randIndex];
+      randIndex = Math.floor(Math.random() * dndController.raceTypes.length);
+      dndController.raceSelect = dndController.raceTypes[randIndex];
+      //dndController.raceSelect = dndDataService.getRandomRace();
+//console.log("JMG: raceSelect = "+JSON.stringify(dndController.raceSelect));
       updateRace();
 
-      randIndex = Math.floor(Math.random() * dndCtlr.classTypes.length);
-      dndCtlr.classSelect = dndCtlr.classTypes[randIndex];
+      randIndex = Math.floor(Math.random() * dndController.classTypes.length);
+      dndController.classSelect = dndController.classTypes[randIndex];
       updateClass();
     }
 
@@ -113,26 +134,27 @@ angular
     {
       for (i in statTypes)
       {
-        (dndCtlr.attributes[i]).base = dndCtlr.generateStat(Number(i));
+        (dndController.attributes[i]).base = dndController.generateStat(Number(i));
       }
-      dndCtlr.calcTotal();
+      dndController.calcTotal();
+      dndController.hasChar = true;
     }
 
     function createAtts()
     {
-      dndCtlr.strength = { attr:"Strength", mod:"0", total:"8", base:"8", basemod:"0" };
-      dndCtlr.dexterity = { attr:"Dexterity", mod:"0", total:"8", base:"8", basemod:"0" };
-      dndCtlr.constitution = { attr:"Constitution", mod:"0", total:"8", base:"8", basemod:"0" };
-      dndCtlr.wisdom = { attr:"Wisdom", mod:"0", total:"8", base:"8", basemod:"0" };
-      dndCtlr.intelligence = { attr:"Intelligence", mod:"0", total:"8", base:"8", basemod:"0" };
-      dndCtlr.charisma = { attr:"Charisma", mod:"0", total:"8", base:"8", basemod:"0" };
+      dndController.strength = { attr:"Strength", mod:0, total:8, base:8, basemod:0 };
+      dndController.dexterity = { attr:"Dexterity", mod:0, total:8, base:8, basemod:0 };
+      dndController.constitution = { attr:"Constitution", mod:0, total:8, base:8, basemod:0 };
+      dndController.wisdom = { attr:"Wisdom", mod:0, total:8, base:8, basemod:0 };
+      dndController.intelligence = { attr:"Intelligence", mod:0, total:8, base:8, basemod:0 };
+      dndController.charisma = { attr:"Charisma", mod:0, total:8, base:8, basemod:0 };
     }
 
     function generateStat(attribute)
     {
       var d1, d2, d3, d4, total;
       var pts = [];
-      var type = dndCtlr.curGenType;
+      var type = dndController.curGenType;
       pts.push (Math.floor((Math.random() * 6) + 1));
       pts.push (Math.floor((Math.random() * 6) + 1));
       pts.push (Math.floor((Math.random() * 6) + 1));
@@ -212,21 +234,21 @@ angular
 
     function calcTotal()
     {
-      for (i=0; i<dndCtlr.attributes.length; i++) {
-        (dndCtlr.attributes[i]).total = 
-          Number((dndCtlr.attributes[i]).base) 
-          + Number((dndCtlr.attributes[i]).basemod);
-        (dndCtlr.attributes[i]).mod = calcModifier((dndCtlr.attributes[i]).total);
+      for (i=0; i<dndController.attributes.length; i++) {
+        (dndController.attributes[i]).total = 
+          Number((dndController.attributes[i]).base) 
+          + Number((dndController.attributes[i]).basemod);
+        (dndController.attributes[i]).mod = calcModifier((dndController.attributes[i]).total);
       }
-      dndCtlr.calcPoints();
+      dndController.calcPoints();
     }
 
     function calcPoints()
     {
       var pnts = 0;
 
-      for (i=0; i<dndCtlr.attributes.length; i++) {
-        switch (dndCtlr.attributes[i].base) {
+      for (i=0; i<dndController.attributes.length; i++) {
+        switch (dndController.attributes[i].base) {
           case 9:
             pnts += 1;
             break;
@@ -262,24 +284,31 @@ angular
             break;
         }
       }
-      dndCtlr.points = pnts;
+      dndController.points = pnts;
       //JMG: TODO: ??  sumAttributes();
     }
 
     function updateRace()
     {
       // Clear race information
-      dndCtlr.raceTable = [];
-      dndCtlr.raceInfo = [];
+      dndController.raceTable = [];
+      dndController.raceInfo = [];
 
-      var theRace = findRace(dndCtlr.raceSelect.race);
-      var theSubRace = findSubRace(theRace, dndCtlr.raceSelect.subr);
+      var theRace = findRace(dndController.raceSelect.race);
+      var theSubRace = findSubRace(theRace, dndController.raceSelect.subr);
 
       // Set title for racial characteristics
-      dndCtlr.raceTitle = raceTraits[theRace][theSubRace].race + " Racial Characteristics";
-
-      // Add Size race trait
-      dndCtlr.raceTable.push({attr:"Size",value:raceTraits[theRace][0].size});
+      //dndController.raceTitle = raceTraits[theRace][theSubRace].race + " Racial Characteristics";
+      dndController.raceTitle = dndController.raceSelect.subr + " Racial Characteristics";
+      
+      dndDataService.getRaceTraits(dndController.raceSelect.subr)
+        .then(
+          function(result) { 
+//dndController.test="Title: " +dndController.raceTitle+ ";  " + JSON.stringify(result);
+//JMG 
+            // Add Size race trait
+            //JMG dndController.raceTable.push({attr:"Size",value:result[0].size});
+            dndController.raceTable.push({attr:"Size",value:result.size});
 
       // Add Speed race trait
       if (typeof raceTraits[theRace][0].speed !== "undefined") {
@@ -287,7 +316,7 @@ angular
         if (theSubRace > 0 && typeof (raceTraits[theRace][theSubRace]).speed !== "undefined") {
           speed = speed + (raceTraits[theRace][theSubRace]).speed;
         }
-        dndCtlr.raceTable.push({attr:"Speed",value:speed});
+        dndController.raceTable.push({attr:"Speed",value:speed});
       }
 
       // Calculate and add Height race trait
@@ -295,11 +324,11 @@ angular
       var inches = raceTraits[theRace][0].height + addinches;
       var feet = Math.floor(inches / 12);
       inches = inches - (feet * 12);
-      dndCtlr.raceTable.push({attr:"Height",value:feet+" ft, "+inches+" in"});
+      dndController.raceTable.push({attr:"Height",value:feet+" ft, "+inches+" in"});
 
       // Calculate and add Weight race trait
       var pounds = calcWeight(theRace, addinches) + raceTraits[theRace][0].weight;
-      dndCtlr.raceTable.push({attr:"Weight",value:pounds+" lbs"});
+      dndController.raceTable.push({attr:"Weight",value:pounds+" lbs"});
 
       // Add Languages race trait
       if (typeof raceTraits[theRace][0].lang !== "undefined") {
@@ -307,7 +336,7 @@ angular
         if (theSubRace > 0 && typeof (raceTraits[theRace][theSubRace]).lang !== "undefined") {
           langs = langs + (raceTraits[theRace][theSubRace]).lang;
         }
-        dndCtlr.raceInfo.push({lbl:"Languages:",val:langs});
+        dndController.raceInfo.push({lbl:"Languages:",val:langs});
       }
 
       // Add Specials race trait
@@ -317,7 +346,7 @@ angular
             typeof (raceTraits[theRace][theSubRace]).special !== "undefined") {
           spec = spec + (raceTraits[theRace][theSubRace]).special;
         }
-        dndCtlr.raceInfo.push({lbl:"Special Traits:",val:spec});
+        dndController.raceInfo.push({lbl:"Special Traits:",val:spec});
       }
 
       // Add Attribute Modifiers race trait
@@ -325,39 +354,45 @@ angular
       {
         if (typeof raceTraits[theRace][0][statTypes[i]] !== "undefined")
         {
-          (dndCtlr.attributes[i]).basemod = Number(raceTraits[theRace][0][statTypes[i]]);
+          (dndController.attributes[i]).basemod = Number(raceTraits[theRace][0][statTypes[i]]);
         } else {
-          (dndCtlr.attributes[i]).basemod = 0;
+          (dndController.attributes[i]).basemod = 0;
         }
         if (theSubRace > 0 && typeof (raceTraits[theRace][theSubRace])[statTypes[i]] !== "undefined")
         {
-          (dndCtlr.attributes[i]).basemod = 
+          (dndController.attributes[i]).basemod = 
                       Number(raceTraits[theRace][theSubRace][statTypes[i]])
-                    + Number((dndCtlr.attributes[i]).basemod);
+                    + Number((dndController.attributes[i]).basemod);
         }
       }
 
-      dndCtlr.calcTotal();
+      dndController.calcTotal();
+      dndController.hasRace = true;
+      dndController.hasChar = true;
+          },
+          function(result) {
+                   console.log("Failed to get race info: " + JSON.stringify(result));
+          });
     }
 
     function updateClass() 
     {
       // Clear class information
-      dndCtlr.classTable = [];
-      dndCtlr.classInfo = [];
+      dndController.classTable = [];
+      dndController.classInfo = [];
 
-      var theClass = findClass(dndCtlr.classSelect.class);
-      var theSubClass = findSubClass(theClass, dndCtlr.classSelect.subc);
+      var theClass = findClass(dndController.classSelect.class);
+      var theSubClass = findSubClass(theClass, dndController.classSelect.subc);
 
       // Set title for racial characteristics
-      dndCtlr.classTitle = classTraits[theClass][0].class + " ("
+      dndController.classTitle = classTraits[theClass][0].class + " ("
                          + classTraits[theClass][theSubClass].class +")"
                          + " Class Characteristics";
 
-      dndCtlr.classDesc = classTraits[theClass][0].desc;
+      dndController.classDesc = classTraits[theClass][0].desc;
 
-      dndCtlr.classTable.push({attr:"Wealth",value: calcWealth(theClass) + " gp" });
-      dndCtlr.classTable.push({attr:"Hit Die",value:classTraits[theClass][0].hitd}); 
+      dndController.classTable.push({attr:"Wealth",value: calcWealth(theClass) + " gp" });
+      dndController.classTable.push({attr:"Hit Die",value:classTraits[theClass][0].hitd}); 
 
       if (typeof classTraits[theClass][0].armr !== "undefined") {
         var armr = classTraits[theClass][0].armr;
@@ -365,7 +400,7 @@ angular
             typeof (classTraits[theClass][theSubClass]).armr !== "undefined") {
           armr = armr + (classTraits[theClass][theSubClass]).armr;
         }
-        dndCtlr.classTable.push({attr:"Armor",value:armr});
+        dndController.classTable.push({attr:"Armor",value:armr});
       }
 
       if (typeof classTraits[theClass][0].weap !== "undefined") {
@@ -374,7 +409,7 @@ angular
             typeof (classTraits[theClass][theSubClass]).weap !== "undefined") {
           wpn = wpn + (classTraits[theClass][theSubClass]).weap;
         }
-        dndCtlr.classTable.push({attr:"Weapon",value:wpn});
+        dndController.classTable.push({attr:"Weapon",value:wpn});
       }
 
       if (typeof classTraits[theClass][0].prim !== "undefined") {
@@ -383,57 +418,58 @@ angular
             typeof (classTraits[theClass][theSubClass]).prim !== "undefined") {
           primary = primary + (classTraits[theClass][theSubClass]).prim;
         }
-        dndCtlr.classInfo.push({lbl:"Primary Abilities:",val:primary});
+        dndController.classInfo.push({lbl:"Primary Abilities:",val:primary});
       }
 
       if (typeof classTraits[theClass][0].savt !== "undefined") {
         var saveThrow = classTraits[theClass][0].savt; 
-        dndCtlr.classInfo.push({lbl:"Saving Throws:",val:saveThrow});
+        dndController.classInfo.push({lbl:"Saving Throws:",val:saveThrow});
       }
+      dndController.hasClass = true;
     }
 
     function genCharBg() 
     {
-      randIndex = Math.floor(Math.random() * dndCtlr.charBackgrounds.length);
-      dndCtlr.charBgSelect = dndCtlr.charBackgrounds[randIndex];
+      randIndex = Math.floor(Math.random() * dndController.charBackgrounds.length);
+      dndController.charBgSelect = dndController.charBackgrounds[randIndex];
       updateCharBg();
     }
 
     function updateCharBg() 
     {
-      dndCtlr.charBgSpShow = false;
-      dndCtlr.charBgSpLbl = "";
-      dndCtlr.charBgSp = "";
+      dndController.charBgSpShow = false;
+      dndController.charBgSpLbl = "";
+      dndController.charBgSp = "";
 
-      dndCtlr.charBgTitle = dndCtlr.charBgSelect.name + " Character Background";
+      dndController.charBgTitle = dndController.charBgSelect.name + " Character Background";
 
-      var theBkGrnd = findBg(dndCtlr.charBgSelect.name);
+      var theBkGrnd = findBg(dndController.charBgSelect.name);
       var index = (Math.floor(Math.random() * (bgDetails[theBkGrnd].personality).length));
-      dndCtlr.charBgT1 = ((bgDetails[theBkGrnd]).personality)[index];
+      dndController.charBgT1 = ((bgDetails[theBkGrnd]).personality)[index];
       var index2 = index;
       while (index2 == index) {
         index2 = (Math.floor(Math.random() * (bgDetails[theBkGrnd].personality).length));
       }
-      dndCtlr.charBgT2 = ((bgDetails[theBkGrnd]).personality)[index2];
+      dndController.charBgT2 = ((bgDetails[theBkGrnd]).personality)[index2];
 
       index = (Math.floor(Math.random() * (bgDetails[theBkGrnd].ideal).length));
-      dndCtlr.charBgI = ((bgDetails[theBkGrnd]).ideal)[index];
+      dndController.charBgI = ((bgDetails[theBkGrnd]).ideal)[index];
 
       index = (Math.floor(Math.random() * (bgDetails[theBkGrnd].bond).length));
-      dndCtlr.charBgB = ((bgDetails[theBkGrnd]).bond)[index];
+      dndController.charBgB = ((bgDetails[theBkGrnd]).bond)[index];
 
       index = (Math.floor(Math.random() * (bgDetails[theBkGrnd].flaw).length));
-      dndCtlr.charBgF = ((bgDetails[theBkGrnd]).flaw)[index];
+      dndController.charBgF = ((bgDetails[theBkGrnd]).flaw)[index];
 
       if (typeof bgDetails[theBkGrnd].bgspec !== "undefined") {
         index = (Math.floor(Math.random() * (bgDetails[theBkGrnd].bgspec).length));
-        dndCtlr.charBgSpShow = true;
-        dndCtlr.charBgSpLbl = (bgDetails[theBkGrnd]).specdesc;
-        dndCtlr.charBgSp = ((bgDetails[theBkGrnd]).bgspec)[index];
+        dndController.charBgSpShow = true;
+        dndController.charBgSpLbl = (bgDetails[theBkGrnd]).specdesc;
+        dndController.charBgSp = ((bgDetails[theBkGrnd]).bgspec)[index];
       }
+      dndController.hasBg = true;
     }
 
-  }
 
 function findRace(race) {
       var theRace = 0;
@@ -538,53 +574,54 @@ function calcModifier(point) {
   var mod;
   switch (point) {
     case 1:
-        mod = "-5";
+        mod = -5;
       break;
     case 2:
     case 3:
-        mod = "-4";
+        mod = -4;
       break;
     case 4:
     case 5:
-        mod = "-3";
+        mod = -3;
       break;
     case 6:
     case 7:
-        mod = "-2";
+        mod = -2;
       break;
     case 8:
     case 9:
-        mod = "-1";
+        mod = -1;
       break;
     case 10:
     case 11:
-        mod = "0";
+        mod = 0;
       break;
     case 12:
     case 13:
-        mod = "+1";
+        mod = 1;
       break;
     case 14:
     case 15:
-        mod = "+2";
+        mod = 2;
       break;
     case 16:
     case 17:
-        mod = "+3";
+        mod = 3;
       break;
     case 18:
     case 19:
-        mod = "+4";
+        mod = 4;
       break;
     case 20:
     case 21:
-        mod = "+5";
+        mod = 5;
       break;
     case 22:
     case 23:
-        mod = "+6";
+        mod = 6;
       break;
   }
   return (mod);
 }
 
+}]);

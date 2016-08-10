@@ -11,12 +11,17 @@
     <![endif]-->
 
     <!-- The following adds support for AngularJS -->
-    <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.5.3/angular.min.js"></script>
+    <!-- Temporary copy angularJS to local for use when internet is down
+    <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.5.3/angular.min.js" ></script> 
+    -->
+    <script src="angular.min.js"></script>
 
     <!-- This is the javascript for this specific html -->
     <script src="dnd.data.js"> </script>
     <script src="dnd.module.js"> </script>
     <script src="dnd.controller.js"> </script>
+    <script src="dnd.factory.js"> </script>
+    <script src="dnd.dataservice.js"> </script>
 
     <!-- The Cascading Style Sheet (CSS) file DnD.css is where I set colors, fonts, 
          spacing etc. - what is called "style". HTML is for "content".  -->
@@ -30,7 +35,8 @@
     </header>
 
     <nav class="left">
-      <button type="button" ng-click="dndChar.genAll()"> Generate All </button>
+      <button type="button" ng-click="dndChar.genAll()"> Random All </button>
+      <button type="button" ng-click="dndChar.setTest()"> Test </button>
     </nav>
 
     <nav class="right"> </nav>
@@ -47,6 +53,7 @@
         <button type="button" ng-click="dndChar.genStats()" > Roll Stats </button>
         <button type="button" ng-click="dndChar.changeGen()" > {{ dndChar.genType }} </button>
 
+        <div class="sub" ng-show="dndChar.hasChar">
         <table border=3>
           <tr class="head">
             <td width="120px"> Point Total </td>
@@ -62,7 +69,7 @@
             <td width="120px"> Modifier </td>
             <td width="100px"> Stat Total </td>
             <td width="100px"> Base Stat </td>
-            <td width="100px"> Race Modifiers </td>
+            <td width="100px"> Race Additions </td>
           </tr>
           <tr ng-repeat="att in dndChar.attributes">
             <td> {{att.attr}} </td>
@@ -88,8 +95,13 @@
             ng-options="raceType.subr group by raceType.race for raceType in dndChar.raceTypes"
             ng-change="dndChar.updateRace()" > </select>
         </p>
+<!-- JMG: 
+            ng-options="raceType.subr group by raceType.race for raceType in dndChar.raceTypes"
+-->
 
-        <table border=3>
+        <div class="sub" ng-show="dndChar.hasRace">
+
+        <table border=3 ng-show="dndChar.raceTable">
           <tr class="head">
             <td width="120px"> Item </td>
             <td width="100px"> Value </td>
@@ -99,9 +111,13 @@
             <td> {{att.value}} </td>
           </tr>
         </table> 
+
         <p ng-repeat="line in dndChar.raceInfo">
           <strong> {{line.lbl}} </strong> {{line.val}} 
         </p>
+
+        </div>
+
       </div>
 
       <div class="char">
@@ -114,7 +130,8 @@
             ng-change="dndChar.updateClass()" > </select>
         </p>
 
-        <table border=3>
+        <div class="sub" ng-show="dndChar.hasClass">
+        <table border=3 ng-show="dndChar.classTable">
           <tr class="head">
             <td width="120px"> Item </td>
             <td width="100px"> Value </td>
@@ -127,27 +144,33 @@
         <p ng-repeat="line in dndChar.classInfo">
           <strong> {{line.lbl}} </strong> {{line.val}} 
         </p>
+        </div>
       </div>
 
       <div class="char">
         <h2 id="charback"> {{dndChar.charBgTitle}} </h2>
         <p> {{dndChar.charBgDesc}} </p>
-        <button type="button" ng-click="dndChar.genCharBg()" > Change </button>
+        <button type="button" ng-click="dndChar.genCharBg()" > Random </button>
         <p> Background: 
           <select ng-model="dndChar.charBgSelect"
             ng-options="backgrnd.name for backgrnd in dndChar.charBackgrounds"
             ng-change="dndChar.updateCharBg()" > </select>
         </p>
 
+        <div class="sub" ng-show="dndChar.hasBg">
         <p id="backSpec" ng-show="dndChar.charBgSpShow"> {{dndChar.charBgSpLbl}} 
             <input type="text" class="sentence" id="special" ng-model="dndChar.charBgSp"> </input> </p>
-        <p> Personality Trait One: 
+        <p ng-show="dndChar.charBgT1"> Personality Trait One: 
             <input type="text" class="sentence" id="ptrait1" ng-model="dndChar.charBgT1"> </input> </p>
-        <p> Personality Trait Two: 
+        <p ng-show="dndChar.charBgT2"> Personality Trait Two: 
             <input type="text" class="sentence" id="ptrait2" ng-model="dndChar.charBgT2"> </input> </p>
-        <p> Ideal: <input type="text" class="sentence" id="ideal" ng-model="dndChar.charBgI"> </input> </p>
-        <p> Bond: <input type="text" class="sentence" id="bond" ng-model="dndChar.charBgB"> </input> </p>
-        <p> Flaw: <input type="text" class="sentence" id="flaw" ng-model="dndChar.charBgF"> </input> </p>
+        <p ng-show="dndChar.charBgI"> Ideal: 
+            <input type="text" class="sentence" id="ideal" ng-model="dndChar.charBgI"> </input> </p>
+        <p ng-show="dndChar.charBgB"> Bond: 
+            <input type="text" class="sentence" id="bond" ng-model="dndChar.charBgB"> </input> </p>
+        <p ng-show="dndChar.charBgF"> Flaw: 
+            <input type="text" class="sentence" id="flaw" ng-model="dndChar.charBgF"> </input> </p>
+        </div>
 
       </div>
     </div>
