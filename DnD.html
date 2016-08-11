@@ -92,12 +92,9 @@
         <h2 id="racechar" ng-model="dndChar.raceTitle"> {{dndChar.raceTitle}} </h2>
         <p> Race: 
           <select ng-model="dndChar.raceSelect"
-            ng-options="raceType.subr group by raceType.race for raceType in dndChar.raceTypes"
+            ng-options="raceType.subrace group by raceType.race for raceType in dndChar.raceTypes"
             ng-change="dndChar.updateRace()" > </select>
         </p>
-<!-- JMG: 
-            ng-options="raceType.subr group by raceType.race for raceType in dndChar.raceTypes"
--->
 
         <div class="sub" ng-show="dndChar.hasRace">
 
@@ -125,7 +122,7 @@
         <p> {{dndChar.classDesc}} </p>
         <p> Class: 
           <select ng-model="dndChar.classSelect"
-            ng-options="classType.class+': '+ classType.subc 
+            ng-options="classType.class+': '+ classType.subclass 
                         group by classType.class for classType in dndChar.classTypes"
             ng-change="dndChar.updateClass()" > </select>
         </p>

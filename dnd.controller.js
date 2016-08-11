@@ -40,15 +40,14 @@ angular.module('DnDApp')
     dndController.hasBg = false;
 
     dndController.raceTitle = "Racial Characteristics";
-    dndController.raceTypes = raceTypes;
-// JMG: TODO create raceTypes from dataservice, not from hard-coded values
+    dndController.raceTypes = null;
     dndController.raceSelect = null;
     dndController.raceTable = null;
     dndController.raceInfo = [];
 
     dndController.classTitle = "Class Characteristics";
     dndController.classDesc = "";
-    dndController.classTypes = classTypes;
+    dndController.classTypes = null;
     dndController.classSelect = null;
     dndController.classTable = null;
     dndController.classInfo = [];
@@ -69,6 +68,8 @@ angular.module('DnDApp')
     dndController.changeGen = changeGen;
     dndController.updateRace = updateRace;
     dndController.updateClass = updateClass;
+    dndController.getCurrentRaceInfo = getCurrentRaceInfo;
+    dndController.getCurrentClassInfo = getCurrentClassInfo;
     dndController.calcTotal = calcTotal;
     dndController.calcPoints = calcPoints;
 
@@ -83,15 +84,11 @@ angular.module('DnDApp')
       dndController.attributes.push(dndController.wisdom);
       dndController.attributes.push(dndController.intelligence);
       dndController.attributes.push(dndController.charisma);
-//dndDataService.getRaceTraits("Half-Elf")
-//dndDataService.getRaces()
-//dndDataService.getSubRaces("Half-Elf")
       dndDataService.init()
         .then(
           function(result) { 
-                   //dndController.test="Initial test subject";
-                   //dndController.test="Hi: " + JSON.stringify(result);
-                   //dndController.test="Hi: " + result.race + ". I see you speak " + result.lang + "."; 
+                   dndController.raceTypes = dndDataService.getRaceList();
+                   dndController.classTypes = dndDataService.getClassList();
           },
           function(result) {
                    console.log("Failed to initialize data: " + result);
@@ -119,14 +116,10 @@ angular.module('DnDApp')
     {
       var randIndex = 0;
 
-      randIndex = Math.floor(Math.random() * dndController.raceTypes.length);
-      dndController.raceSelect = dndController.raceTypes[randIndex];
-      //dndController.raceSelect = dndDataService.getRandomRace();
-//console.log("JMG: raceSelect = "+JSON.stringify(dndController.raceSelect));
+      dndController.raceSelect = dndDataService.getRandomRace();
       updateRace();
 
-      randIndex = Math.floor(Math.random() * dndController.classTypes.length);
-      dndController.classSelect = dndController.classTypes[randIndex];
+      dndController.classSelect = dndDataService.getRandomClass();
       updateClass();
     }
 
@@ -288,91 +281,140 @@ angular.module('DnDApp')
       //JMG: TODO: ??  sumAttributes();
     }
 
+    function getCurrentRaceInfo()
+    {
+      var deferred = $q.defer();
+
+      dndDataService.getRaceTraits(dndController.raceSelect.race)
+        .then(
+          function(result1) {
+            if (dndController.raceSelect.subrace != dndController.raceSelect.race) {
+              dndDataService.getRaceTraits(dndController.raceSelect.subrace)
+                .then(
+                  function(result2) {
+                    deferred.resolve({main:result1, sub:result2});
+                  },
+                  function(response, status) {
+                    console.log("Failed to get subrace traits. Response: "+JSON.stringify(response)+"; Status: "+status);
+                    deferred.reject(response);
+                  });
+            } else {
+              deferred.resolve({main:result1, sub:{} });
+            }
+          },
+          function(response, status) {
+            console.log("Failed to get race traits. Response: "+JSON.stringify(response)+"; Status: "+status);
+            deferred.reject(response);
+          });
+
+      return deferred.promise;
+    }
+
     function updateRace()
     {
       // Clear race information
       dndController.raceTable = [];
       dndController.raceInfo = [];
 
-      var theRace = findRace(dndController.raceSelect.race);
-      var theSubRace = findSubRace(theRace, dndController.raceSelect.subr);
-
       // Set title for racial characteristics
-      //dndController.raceTitle = raceTraits[theRace][theSubRace].race + " Racial Characteristics";
-      dndController.raceTitle = dndController.raceSelect.subr + " Racial Characteristics";
-      
-      dndDataService.getRaceTraits(dndController.raceSelect.subr)
+      dndController.raceTitle = dndController.raceSelect.subrace + " Racial Characteristics";
+
+      dndController.getCurrentRaceInfo()
         .then(
           function(result) { 
-//dndController.test="Title: " +dndController.raceTitle+ ";  " + JSON.stringify(result);
-//JMG 
             // Add Size race trait
-            //JMG dndController.raceTable.push({attr:"Size",value:result[0].size});
-            dndController.raceTable.push({attr:"Size",value:result.size});
+            if (result.main.size != null) {
+              dndController.raceTable.push({attr:"Size",value:result.main.size});
+            }
 
-      // Add Speed race trait
-      if (typeof raceTraits[theRace][0].speed !== "undefined") {
-        var speed = raceTraits[theRace][0].speed;
-        if (theSubRace > 0 && typeof (raceTraits[theRace][theSubRace]).speed !== "undefined") {
-          speed = speed + (raceTraits[theRace][theSubRace]).speed;
-        }
-        dndController.raceTable.push({attr:"Speed",value:speed});
-      }
+            // Add Speed race trait
+            if (result.main.speed != null) {
+              var speed = result.main.speed;
+              if (result.sub.speed != null) {
+                speed = speed + result.sub.speed;
+              }
+              dndController.raceTable.push({attr:"Speed",value:speed});
+            }
 
-      // Calculate and add Height race trait
-      var addinches = calcHeight(theRace);
-      var inches = raceTraits[theRace][0].height + addinches;
-      var feet = Math.floor(inches / 12);
-      inches = inches - (feet * 12);
-      dndController.raceTable.push({attr:"Height",value:feet+" ft, "+inches+" in"});
+            // Calculate and add Height race trait
+            var addinches = Number(calcHeight(result.main.heightdice));
+            var inches = Number(result.main.height) + Number(addinches);
+            var feet = Number(Math.floor(inches / 12));
+            inches = Number(inches - (feet * 12));
+            dndController.raceTable.push({attr:"Height",value:feet+" ft, "+inches+" in"});
 
-      // Calculate and add Weight race trait
-      var pounds = calcWeight(theRace, addinches) + raceTraits[theRace][0].weight;
-      dndController.raceTable.push({attr:"Weight",value:pounds+" lbs"});
+            // Calculate and add Weight race trait
+            var pounds = Number(calcWeight(result.main.weightdice, addinches)) + Number(result.main.weight);
+            dndController.raceTable.push({attr:"Weight",value:pounds+" lbs"});
 
-      // Add Languages race trait
-      if (typeof raceTraits[theRace][0].lang !== "undefined") {
-        var langs = raceTraits[theRace][0].lang;
-        if (theSubRace > 0 && typeof (raceTraits[theRace][theSubRace]).lang !== "undefined") {
-          langs = langs + (raceTraits[theRace][theSubRace]).lang;
-        }
-        dndController.raceInfo.push({lbl:"Languages:",val:langs});
-      }
+            // Add Languages race trait
+            if (typeof result.main.lang !== "undefined") {
+              var langs = result.main.lang;
+              if (typeof result.sub.lang !== "undefined") {
+                langs = langs + result.sub.lang;
+              }
+              dndController.raceInfo.push({lbl:"Languages:",val:langs});
+            }
 
-      // Add Specials race trait
-      if (typeof raceTraits[theRace][0].special !== "undefined") {
-        var spec = raceTraits[theRace][0].special;
-        if (theSubRace > 0 && 
-            typeof (raceTraits[theRace][theSubRace]).special !== "undefined") {
-          spec = spec + (raceTraits[theRace][theSubRace]).special;
-        }
-        dndController.raceInfo.push({lbl:"Special Traits:",val:spec});
-      }
+            // Add Specials race trait
+            if (typeof result.main.special !== "undefined") {
+              var spec = result.main.special;
+              if (typeof result.sub.special !== "undefined") {
+                spec = spec + result.sub.special;
+              }
+              dndController.raceInfo.push({lbl:"Special Traits:",val:spec});
+            }
 
-      // Add Attribute Modifiers race trait
-      for (i=0; i<statTypes.length; i++)
-      {
-        if (typeof raceTraits[theRace][0][statTypes[i]] !== "undefined")
-        {
-          (dndController.attributes[i]).basemod = Number(raceTraits[theRace][0][statTypes[i]]);
-        } else {
-          (dndController.attributes[i]).basemod = 0;
-        }
-        if (theSubRace > 0 && typeof (raceTraits[theRace][theSubRace])[statTypes[i]] !== "undefined")
-        {
-          (dndController.attributes[i]).basemod = 
-                      Number(raceTraits[theRace][theSubRace][statTypes[i]])
-                    + Number((dndController.attributes[i]).basemod);
-        }
-      }
+            // Add Attribute Modifiers race trait
+            for (i=0; i<statTypes.length; i++)
+            {
+              if (typeof result.main[statTypes[i]] !== "undefined")
+              {
+                (dndController.attributes[i]).basemod = Number(result.main[statTypes[i]]);
+              } else {
+                (dndController.attributes[i]).basemod = 0;
+              }
+              if (typeof result.sub[statTypes[i]] !== "undefined")
+              {
+                (dndController.attributes[i]).basemod = 
+                            Number(result.sub[statTypes[i]])
+                          + Number((dndController.attributes[i]).basemod);
+              }
+            }
 
-      dndController.calcTotal();
-      dndController.hasRace = true;
-      dndController.hasChar = true;
-          },
-          function(result) {
-                   console.log("Failed to get race info: " + JSON.stringify(result));
+            dndController.calcTotal();
+            dndController.hasRace = true;
+            dndController.hasChar = true;
+
           });
+    }
+
+    function getCurrentClassInfo()
+    {
+      var deferred = $q.defer();
+
+      dndDataService.getClassTraits(dndController.classSelect.class)
+        .then(
+          function(result1) {
+            if (dndController.classSelect.subclass != dndController.classSelect.class) {
+              dndDataService.getClassTraits(dndController.classSelect.subclass)
+                .then(
+                  function(result2) {
+                    deferred.resolve({main:result1, sub:result2});
+                  },
+                  function(response, status) {
+                    console.log("Failed to get subclass traits. Response: "+JSON.stringify(response)+"; Status: "+status);
+                    deferred.reject(response);
+                  });
+            } else {
+              deferred.resolve({main:result1, sub:{} });
+            }
+          },
+          function(response, status) {
+            console.log("Failed to get class traits. Response: "+JSON.stringify(response)+"; Status: "+status);
+            deferred.reject(response);
+          });
+      return deferred.promise;
     }
 
     function updateClass() 
@@ -381,50 +423,49 @@ angular.module('DnDApp')
       dndController.classTable = [];
       dndController.classInfo = [];
 
-      var theClass = findClass(dndController.classSelect.class);
-      var theSubClass = findSubClass(theClass, dndController.classSelect.subc);
-
       // Set title for racial characteristics
-      dndController.classTitle = classTraits[theClass][0].class + " ("
-                         + classTraits[theClass][theSubClass].class +")"
+      dndController.classTitle = dndController.classSelect.class + " ("
+                         + dndController.classSelect.subclass +")"
                          + " Class Characteristics";
 
-      dndController.classDesc = classTraits[theClass][0].desc;
+      dndController.getCurrentClassInfo()
+        .then(
+          function(result) {
+              dndController.classDesc = result.main.desc;
 
-      dndController.classTable.push({attr:"Wealth",value: calcWealth(theClass) + " gp" });
-      dndController.classTable.push({attr:"Hit Die",value:classTraits[theClass][0].hitd}); 
+              dndController.classTable.push({attr:"Hit Die",value: result.main.hitd}); 
 
-      if (typeof classTraits[theClass][0].armr !== "undefined") {
-        var armr = classTraits[theClass][0].armr;
-        if (theSubClass > 0 && 
-            typeof (classTraits[theClass][theSubClass]).armr !== "undefined") {
-          armr = armr + (classTraits[theClass][theSubClass]).armr;
-        }
-        dndController.classTable.push({attr:"Armor",value:armr});
-      }
+              if (typeof result.main.armr !== "undefined") {
+                var armr = result.main.armr;
+                if (typeof result.sub.armr !== "undefined") {
+                  armr = armr + result.sub.armr;
+                }
+                dndController.classTable.push({attr:"Armor",value:armr});
+              }
 
-      if (typeof classTraits[theClass][0].weap !== "undefined") {
-        var wpn =  classTraits[theClass][0].weap;
-        if (theSubClass > 0 && 
-            typeof (classTraits[theClass][theSubClass]).weap !== "undefined") {
-          wpn = wpn + (classTraits[theClass][theSubClass]).weap;
-        }
-        dndController.classTable.push({attr:"Weapon",value:wpn});
-      }
+              if (typeof result.main.weap !== "undefined") {
+                var wpn =  result.main.weap;
+                if (typeof result.sub.weap !== "undefined") {
+                  wpn = wpn + result.sub.weap;
+                }
+                dndController.classTable.push({attr:"Weapon",value:wpn});
+              }
 
-      if (typeof classTraits[theClass][0].prim !== "undefined") {
-        var primary = classTraits[theClass][0].prim;
-        if (theSubClass > 0 && 
-            typeof (classTraits[theClass][theSubClass]).prim !== "undefined") {
-          primary = primary + (classTraits[theClass][theSubClass]).prim;
-        }
-        dndController.classInfo.push({lbl:"Primary Abilities:",val:primary});
-      }
+              dndController.classTable.push({attr:"Wealth",value: calcWealth(result.main.wealth) + " gp" });
 
-      if (typeof classTraits[theClass][0].savt !== "undefined") {
-        var saveThrow = classTraits[theClass][0].savt; 
-        dndController.classInfo.push({lbl:"Saving Throws:",val:saveThrow});
-      }
+              if (typeof result.main.prim !== "undefined") {
+                var primary = result.main.prim;
+                if (typeof result.sub.prim !== "undefined") {
+                  primary = primary + result.sub.prim;
+                }
+                dndController.classInfo.push({lbl:"Primary Abilities:",val:primary});
+              }
+
+              if (typeof result.main.savt !== "undefined") {
+                var saveThrow = result.main.savt;
+                dndController.classInfo.push({lbl:"Saving Throws:",val:saveThrow});
+              }
+        });
       dndController.hasClass = true;
     }
 
@@ -522,11 +563,11 @@ function findBg(bgName) {
       return theBg;
 }
 
-function calcHeight(theRace) {
+function calcHeight(heightdice) {
   var inches = 0;
   var dice, numdie, valdie;
-  if (typeof raceTraits[theRace][0].heightdice !== "undefined") {
-    dice = raceTraits[theRace][0].heightdice;
+  if (typeof heightdice !== "undefined") {
+    dice = heightdice;
     numdie = Number(dice[0]);
     if (dice.length == 3) {
       valdie = Number(dice[2]);
@@ -540,10 +581,10 @@ function calcHeight(theRace) {
   return (inches);
 }
 
-function calcWeight(theRace, inches) {
+function calcWeight(weightdice, inches) {
   var pounds = 0;
-  if (typeof raceTraits[theRace][0].weightdice !== "undefined") {
-    var dice = raceTraits[theRace][0].weightdice;
+  if (typeof weightdice !== "undefined") {
+    var dice = weightdice;
     var numdie = Number(dice[0]);
     var valdie = Number(dice[2]);
     for (i=0; i<numdie; i++) {
@@ -554,10 +595,10 @@ function calcWeight(theRace, inches) {
   return (pounds);
 }
 
-function calcWealth(theClass) {
+function calcWealth(wealth) {
   var gold = 0;
-  if (typeof classTraits[theClass][0].wealth !== "undefined") {
-    var dice = classTraits[theClass][0].wealth;
+  if (typeof wealth !== "undefined") {
+    var dice = wealth;
 
     var numdie = Number(dice[0]);
     var valdie = Number(dice[2]);

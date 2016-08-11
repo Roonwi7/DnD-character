@@ -29,11 +29,13 @@ angular.module('DnDApp')
       dndDataService.myData.racetraits = {};
       dndDataService.myData.classes = {};
       dndDataService.myData.classtraits = {};
+      dndDataService.myData.raceList = [];
+      dndDataService.myData.classList = [];
 
       dndDataService.initRaces()
         .then(
           function(result) {
-//console.log("\n\nSUCCESS RACE SUCCESS RACE SUCCESS RACE SUCCESS \n\n");
+            dndDataService.genRaceList();
             return dndDataService.initClasses();
           },
           function(result, status) {
@@ -42,7 +44,7 @@ angular.module('DnDApp')
           })
         .then(
           function(result) {
-//console.log("\n\nSUCCESS CLASS SUCCESS CLASS SUCCESS CLASS SUCCESS \n\n");
+            dndDataService.genClassList();
             deferred.resolve(dndDataService.myData);
           },
           function(result, status) {
@@ -53,35 +55,28 @@ angular.module('DnDApp')
       return deferred.promise;
     }
 
+
+
+
+
     dndDataService.initRaces = function () {
       var deferred = $q.defer();
 
-//console.log("calling getRaces on Factory");
       dndFactory.getRaces()
         .success(function(result) {
           dndDataService.myData.races = result.races;
-//console.log("getRaces successful: "+JSON.stringify(result));
 
           var traitCalls = [];
-
           for (race in result.races) {
             var racename = dndDataService.myData.races[race]["main"];
-//console.log("getting race traits for "+racename);
             traitCalls.push(dndDataService.getRaceTraits(racename));
             for (subrace in dndDataService.myData.races[race]["sub"]) {
               var subracename = dndDataService.myData.races[race]["sub"][subrace];
-//console.log("getting race traits for "+subracename);
               traitCalls.push(dndDataService.getRaceTraits( subracename ));
             }
 
             $q.all(traitCalls)
               .then(function(traitresult){
-//console.log("All getRaceTraits successful. Returned "+traitresult.length+" items.");
-//console.log("sum of getRaceTraits successful: "+JSON.stringify(traitresult));
-//                       dndDataService.myData.racetraits[(traitresult["race"])] = traitresult;
-//                delete dndDataService.myData.racetraits[(traitresult["race"])]._id;
-//                delete dndDataService.myData.racetraits[(traitresult["race"])]._rev;
-//console.log("JMG: "+JSON.stringify(dndDataService.myData));
                     deferred.resolve(dndDataService.myData);
                });
            }
@@ -94,11 +89,32 @@ angular.module('DnDApp')
       return deferred.promise;
     };
 
+    dndDataService.genRaceList = function() {
+      dndDataService.myData.raceList = [];
+      for (race in dndDataService.myData.races) {
+        var r = {
+                  "race":(dndDataService.myData.races[race].main), 
+                  "subrace":(dndDataService.myData.races[race].main) };
+        dndDataService.myData.raceList.push(r);
+        for (subrace in dndDataService.myData.races[race].sub) {
+          r = {
+                "race":(dndDataService.myData.races[race].main), 
+                "subrace":(dndDataService.myData.races[race].sub[subrace]) };
+          dndDataService.myData.raceList.push(r);
+        }
+      }
+    }
+
+    dndDataService.getRaceList = function() {
+      return dndDataService.myData.raceList;
+    }
+
+
     dndDataService.initClasses = function () {
       var deferred = $q.defer();
+
       dndFactory.getClasses()
         .success(function(result) {
-//console.log("getClasses successful: "+JSON.stringify(result));
           dndDataService.myData.classes = result.classes;
           deferred.resolve(dndDataService.myData);
         })
@@ -108,6 +124,26 @@ angular.module('DnDApp')
         });
       return deferred.promise;
     };
+
+    dndDataService.genClassList = function() {
+      dndDataService.myData.classList = [];
+      for (cls in dndDataService.myData.classes) {
+        var c = {
+                  "class":(dndDataService.myData.classes[cls].main), 
+                  "subclass":(dndDataService.myData.classes[cls].main) };
+        dndDataService.myData.classList.push(c);
+        for (subclass in dndDataService.myData.classes[cls].sub) {
+          c = {
+                "class":(dndDataService.myData.classes[cls].main), 
+                "subclass":(dndDataService.myData.classes[cls].sub[subclass]) };
+          dndDataService.myData.classList.push(c);
+        }
+      }
+    }
+
+    dndDataService.getClassList = function() {
+      return dndDataService.myData.classList;
+    }
 
 
 //Loop over races 
@@ -138,8 +174,6 @@ angular.module('DnDApp')
     dndDataService.getRaces = function () {
       if (dndDataService.myData.length === 0) {
         dndDataService.init();
-      } else {
-        //console.log("Already have dndDataService.myData.");
       }
       return(dndDataService.myData.races);
     };
@@ -149,7 +183,6 @@ angular.module('DnDApp')
         dndDataService.getRaces()
           .then(function(result) {
              var subRace = dndDataService.parseSubRaces(theRace);
-             //console.log("The getSubRaces request succeeded. Result: "+subRace);
              deferred.resolve(subRace);
           },
           function(response, status) {
@@ -181,7 +214,6 @@ angular.module('DnDApp')
       theDbRace = theDbRace.replace(/-/g, '_');
       theDbRace = theDbRace.replace(/ /g, '_');
       theDbRace = theDbRace.replace(/\//g, '_');
-console.log("getRaceTraits("+theRace+") ~ ("+theDbRace+")");
 
       if (typeof dndDataService.myData.racetraits[theRace] == "undefined") {
         dndFactory.getRaceTraits(theDbRace)
@@ -189,7 +221,6 @@ console.log("getRaceTraits("+theRace+") ~ ("+theDbRace+")");
              dndDataService.myData.racetraits[theRace] = result;
              delete dndDataService.myData.racetraits[theRace]._id;
              delete dndDataService.myData.racetraits[theRace]._rev;
-//console.log("getRaceTraits("+theRace+") = "+JSON.stringify(dndDataService.myData.racetraits[theRace]));
              deferred.resolve(dndDataService.myData.racetraits[theRace]);
           })
           .error(function(response, status) {
@@ -197,22 +228,49 @@ console.log("getRaceTraits("+theRace+") ~ ("+theDbRace+")");
              deferred.reject(response);
           });
       } else {
-        console.log("Already have dndDataService.myData.traits.");
-//console.log("getRaceTraits("+theRace+") = "+JSON.stringify(dndDataService.myData.racetraits[theRace]));
         deferred.resolve(dndDataService.myData.racetraits[theRace]);
       }
       return deferred.promise;
     };
 
     dndDataService.getClassTraits = function (theClass) {
-      return dndFactory.getClassTraits(theClass);
+      var deferred = $q.defer();
+      var theDbClass = theClass.toLowerCase();
+      theDbClass = theDbClass.replace(/-/g, '_');
+      theDbClass = theDbClass.replace(/ /g, '_');
+      theDbClass = theDbClass.replace(/\//g, '_');
+
+      if (typeof dndDataService.myData.classtraits[theClass] == "undefined") {
+        dndFactory.getClassTraits(theDbClass)
+          .success(function(result) {
+             dndDataService.myData.classtraits[theClass] = result;
+             delete dndDataService.myData.classtraits[theClass]._id;
+             delete dndDataService.myData.classtraits[theClass]._rev;
+             deferred.resolve(dndDataService.myData.classtraits[theClass]);
+          })
+          .error(function(response, status) {
+             console.log("The request failed. Response: "+JSON.stringify(response)+"; Status: " + status);
+             deferred.reject(response);
+          });
+      } else {
+        deferred.resolve(dndDataService.myData.classtraits[theClass]);
+      }
+      return deferred.promise;
+
     };
 
     dndDataService.getRandomRace = function () {
-      var raceKeys = Object.keys(dndDataService.myData.racetraits);
+      var raceKeys = Object.keys(dndDataService.myData.raceList);
       var rdmIndx = Math.floor(Math.random() * raceKeys.length);
       var rdmRace = raceKeys[rdmIndx];
-      return (dndDataService.myData.racetraits[rdmRace]);
+      return (dndDataService.myData.raceList[rdmRace]);
+    };
+
+    dndDataService.getRandomClass = function () {
+      var classKeys = Object.keys(dndDataService.myData.classList);
+      var rdmIndx = Math.floor(Math.random() * classKeys.length);
+      var rdmClass = classKeys[rdmIndx];
+      return (dndDataService.myData.classList[rdmClass]);
     };
 
 

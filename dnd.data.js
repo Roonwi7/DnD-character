@@ -12,6 +12,7 @@ var genTypeMax=6;
 
 var statTypes=[ "str", "dex", "con", "int", "wis", "cha" ];
 
+/*
     var raceTypes = [
          {id: 0, race: "Dragonborn", subr: "Dragonborn" },
          {id: 1, race: "Dwarf", subr: "Dwarf" }, 
@@ -34,7 +35,9 @@ var statTypes=[ "str", "dex", "con", "int", "wis", "cha" ];
          {id: 18, race: "Human", subr: "Human" },
          {id: 19, race: "Tiefling", subr: "Tiefling" }
       ];
+*/
 
+/*
     var classTypes = [
          {id: 0, class: "Barbarian", subc: "Barbarian" },
          {id: 1, class: "Barbarian", subc: "Berserker" },
@@ -95,8 +98,9 @@ var statTypes=[ "str", "dex", "con", "int", "wis", "cha" ];
          {id: 56, class: "Wizard", subc: "Transmutation" }, 
          {id: 57, class: "Wizard", subc: "Artificer" }
       ];
+*/
 
-
+/*
 var raceTraits = [ 
  [ { race:"Dragonborn", 
            str:2, 
@@ -252,7 +256,9 @@ var raceTraits = [
            lang:"Common, Infernal", 
            special:"Darkvision, Hellish Resistance, Infernal Legacy" } ]
 ];
+*/
 
+/*
 var classTraits = [ 
  [ { class:"Barbarian",
           desc:"A fierce warrior of primitive background who can enter a battle rage.",
@@ -413,6 +419,7 @@ var classTraits = [
    {   class:"Transmutation" },
    {   class:"Artificer" } ]
 ];
+*/
 
 var bgDetails = [  
   { name:"Acolyte",
