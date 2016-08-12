@@ -25,12 +25,18 @@ angular.module('DnDApp')
       var deferred = $q.defer();
 
       dndDataService.myData = {};
+
       dndDataService.myData.races = {};
-      dndDataService.myData.racetraits = {};
-      dndDataService.myData.classes = {};
-      dndDataService.myData.classtraits = {};
+      dndDataService.myData.raceTraits = {};
       dndDataService.myData.raceList = [];
+
+      dndDataService.myData.classes = {};
+      dndDataService.myData.classTraits = {};
       dndDataService.myData.classList = [];
+
+      dndDataService.myData.backgrounds = [];
+      dndDataService.myData.backgroundTraits = {};
+      //dndDataService.myData.backgroundList = [];
 
       dndDataService.initRaces()
         .then(
@@ -45,10 +51,19 @@ angular.module('DnDApp')
         .then(
           function(result) {
             dndDataService.genClassList();
-            deferred.resolve(dndDataService.myData);
+            return dndDataService.initBackgrounds();
           },
           function(result, status) {
             console.log("Could not initialize class. Response: "+response+"; Status: " + status);
+            deferred.reject(response);
+          })
+        .then(
+          function(result) {
+            //dndDataService.genBackgroundList();
+            deferred.resolve(dndDataService.myData);
+          },
+          function(result, status) {
+            console.log("Could not initialize backgrounds. Response: "+response+"; Status: " + status);
             deferred.reject(response);
           });
 
@@ -74,12 +89,12 @@ angular.module('DnDApp')
               var subracename = dndDataService.myData.races[race]["sub"][subrace];
               traitCalls.push(dndDataService.getRaceTraits( subracename ));
             }
+          }
 
-            $q.all(traitCalls)
-              .then(function(traitresult){
-                    deferred.resolve(dndDataService.myData);
-               });
-           }
+          $q.all(traitCalls)
+            .then(function(traitresult){
+                  deferred.resolve(dndDataService.myData);
+             });
         })
         .error(function(response, status) {
            console.log("Could not get races. Response: "+response+"; Status: " + status);
@@ -143,6 +158,48 @@ angular.module('DnDApp')
 
     dndDataService.getClassList = function() {
       return dndDataService.myData.classList;
+    }
+
+    dndDataService.initBackgrounds = function () {
+      var deferred = $q.defer();
+
+      dndFactory.getBackgrounds()
+        .success(function(result) {
+          dndDataService.myData.backgrounds = result.backgrounds;
+
+          var traitCalls = [];
+          for (background in result.backgrounds) {
+            var backgroundname = dndDataService.myData.backgrounds[background];
+            traitCalls.push(dndDataService.getBackgroundTraits(backgroundname));
+          }
+
+          $q.all(traitCalls)
+            .then(function(traitresult){
+                  deferred.resolve(dndDataService.myData);
+             });
+        })
+        .error(function(response, status) {
+           console.log("Could not get backgrounds. Response: "+response+"; Status: " + status);
+           deferred.reject(response);
+        });
+
+      return deferred.promise;
+    };
+
+/*
+    dndDataService.genBackgroundList = function() {
+      dndDataService.myData.backgroundList = [];
+      for (background in dndDataService.myData.backgrounds) {
+        var r = {
+                  "background":(dndDataService.myData.backgrounds[background].main), 
+                  "subbackground":(dndDataService.myData.backgrounds[background].main) };
+        dndDataService.myData.backgroundList.push(r);
+      }
+    }
+*/
+
+    dndDataService.getBackgrounds = function() {
+      return dndDataService.myData.backgrounds;
     }
 
 
@@ -215,20 +272,20 @@ angular.module('DnDApp')
       theDbRace = theDbRace.replace(/ /g, '_');
       theDbRace = theDbRace.replace(/\//g, '_');
 
-      if (typeof dndDataService.myData.racetraits[theRace] == "undefined") {
+      if (typeof dndDataService.myData.raceTraits[theRace] == "undefined") {
         dndFactory.getRaceTraits(theDbRace)
           .success(function(result) {
-             dndDataService.myData.racetraits[theRace] = result;
-             delete dndDataService.myData.racetraits[theRace]._id;
-             delete dndDataService.myData.racetraits[theRace]._rev;
-             deferred.resolve(dndDataService.myData.racetraits[theRace]);
+             dndDataService.myData.raceTraits[theRace] = result;
+             delete dndDataService.myData.raceTraits[theRace]._id;
+             delete dndDataService.myData.raceTraits[theRace]._rev;
+             deferred.resolve(dndDataService.myData.raceTraits[theRace]);
           })
           .error(function(response, status) {
              console.log("The request failed. Response: "+JSON.stringify(response)+"; Status: " + status);
              deferred.reject(response);
           });
       } else {
-        deferred.resolve(dndDataService.myData.racetraits[theRace]);
+        deferred.resolve(dndDataService.myData.raceTraits[theRace]);
       }
       return deferred.promise;
     };
@@ -240,20 +297,46 @@ angular.module('DnDApp')
       theDbClass = theDbClass.replace(/ /g, '_');
       theDbClass = theDbClass.replace(/\//g, '_');
 
-      if (typeof dndDataService.myData.classtraits[theClass] == "undefined") {
+      if (typeof dndDataService.myData.classTraits[theClass] == "undefined") {
         dndFactory.getClassTraits(theDbClass)
           .success(function(result) {
-             dndDataService.myData.classtraits[theClass] = result;
-             delete dndDataService.myData.classtraits[theClass]._id;
-             delete dndDataService.myData.classtraits[theClass]._rev;
-             deferred.resolve(dndDataService.myData.classtraits[theClass]);
+             dndDataService.myData.classTraits[theClass] = result;
+             delete dndDataService.myData.classTraits[theClass]._id;
+             delete dndDataService.myData.classTraits[theClass]._rev;
+             deferred.resolve(dndDataService.myData.classTraits[theClass]);
           })
           .error(function(response, status) {
              console.log("The request failed. Response: "+JSON.stringify(response)+"; Status: " + status);
              deferred.reject(response);
           });
       } else {
-        deferred.resolve(dndDataService.myData.classtraits[theClass]);
+        deferred.resolve(dndDataService.myData.classTraits[theClass]);
+      }
+      return deferred.promise;
+
+    };
+
+    dndDataService.getBackgroundTraits = function (theBackground) {
+      var deferred = $q.defer();
+      var theDbBackground = theBackground.toLowerCase();
+      theDbBackground = theDbBackground.replace(/-/g, '_');
+      theDbBackground = theDbBackground.replace(/ /g, '_');
+      theDbBackground = theDbBackground.replace(/\//g, '_');
+
+      if (typeof dndDataService.myData.backgroundTraits[theBackground] == "undefined") {
+        dndFactory.getBackgroundTraits(theDbBackground)
+          .success(function(result) {
+             dndDataService.myData.backgroundTraits[theBackground] = result;
+             delete dndDataService.myData.backgroundTraits[theBackground]._id;
+             delete dndDataService.myData.backgroundTraits[theBackground]._rev;
+             deferred.resolve(dndDataService.myData.backgroundTraits[theBackground]);
+          })
+          .error(function(response, status) {
+             console.log("The request failed. Response: "+JSON.stringify(response)+"; Status: " + status);
+             deferred.reject(response);
+          });
+      } else {
+        deferred.resolve(dndDataService.myData.backgroundTraits[theBackground]);
       }
       return deferred.promise;
 

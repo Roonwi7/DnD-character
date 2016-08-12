@@ -9,7 +9,22 @@ angular.module('DnDApp')
       dndController.test="Hi: " + JSON.stringify( dndDataService.getAll() );
     }
 
+var genTypes=[ "3d6", "4d6 - 1", "5d6 - 2", 
+               "Non-Elite Array", "Elite Array", 
+               "Basic Stats", "Max Stats" ];
+var genType3d6=0;
+var genType4d6=1;
+var genType5d6=2;
+var genTypeNonEl=3;
+var genTypeElite=4;
+var genTypeBasic=5;
+var genTypeMax=6;
+
+var statTypes=[ "str", "dex", "con", "int", "wis", "cha" ];
+
+
 //  TODO:
+//    update to use background from database
 //    figure out if TODO below is needed anymore
 //    Add Armor Class
 //    Add Hit Points
@@ -54,7 +69,7 @@ angular.module('DnDApp')
 
     dndController.charBgTitle = "Character Background";
     dndController.charBgSelect = null;
-    dndController.charBackgrounds = bgDetails;
+    dndController.charBackgrounds = null;
 
     // Functions
     dndController.initialize = initialize;
@@ -89,6 +104,7 @@ angular.module('DnDApp')
           function(result) { 
                    dndController.raceTypes = dndDataService.getRaceList();
                    dndController.classTypes = dndDataService.getClassList();
+                   dndController.charBackgrounds = dndDataService.getBackgrounds();
           },
           function(result) {
                    console.log("Failed to initialize data: " + result);
@@ -482,36 +498,48 @@ angular.module('DnDApp')
       dndController.charBgSpLbl = "";
       dndController.charBgSp = "";
 
-      dndController.charBgTitle = dndController.charBgSelect.name + " Character Background";
+      dndController.charBgTitle = dndController.charBgSelect + " Character Background";
 
-      var theBkGrnd = findBg(dndController.charBgSelect.name);
-      var index = (Math.floor(Math.random() * (bgDetails[theBkGrnd].personality).length));
-      dndController.charBgT1 = ((bgDetails[theBkGrnd]).personality)[index];
+      dndDataService.getBackgroundTraits(dndController.charBgSelect)
+        .then(
+          function(result) {
+
+      var index = (Math.floor(Math.random() * (result.personality).length));
+      dndController.charBgT1 = (result.personality)[index];
+
       var index2 = index;
       while (index2 == index) {
-        index2 = (Math.floor(Math.random() * (bgDetails[theBkGrnd].personality).length));
+        index2 = (Math.floor(Math.random() * (result.personality).length));
       }
-      dndController.charBgT2 = ((bgDetails[theBkGrnd]).personality)[index2];
+      dndController.charBgT2 = (result.personality)[index2];
 
-      index = (Math.floor(Math.random() * (bgDetails[theBkGrnd].ideal).length));
-      dndController.charBgI = ((bgDetails[theBkGrnd]).ideal)[index];
+      index = (Math.floor(Math.random() * (result.ideal).length));
+      dndController.charBgI = (result.ideal)[index];
 
-      index = (Math.floor(Math.random() * (bgDetails[theBkGrnd].bond).length));
-      dndController.charBgB = ((bgDetails[theBkGrnd]).bond)[index];
+      index = (Math.floor(Math.random() * (result.bond).length));
+      dndController.charBgB = (result.bond)[index];
 
-      index = (Math.floor(Math.random() * (bgDetails[theBkGrnd].flaw).length));
-      dndController.charBgF = ((bgDetails[theBkGrnd]).flaw)[index];
+      index = (Math.floor(Math.random() * (result.flaw).length));
+      dndController.charBgF = (result.flaw)[index];
 
-      if (typeof bgDetails[theBkGrnd].bgspec !== "undefined") {
-        index = (Math.floor(Math.random() * (bgDetails[theBkGrnd].bgspec).length));
+      if (typeof result.special !== "undefined") {
+        index = (Math.floor(Math.random() * (result.special).length));
         dndController.charBgSpShow = true;
-        dndController.charBgSpLbl = (bgDetails[theBkGrnd]).specdesc;
-        dndController.charBgSp = ((bgDetails[theBkGrnd]).bgspec)[index];
+        dndController.charBgSpLbl = result.specialTitle;
+        dndController.charBgSp = (result.special)[index];
       }
+
       dndController.hasBg = true;
+
+          },
+          function(response, status) {
+            console.log("Failed to get race traits. Response: "+JSON.stringify(response)+"; Status: "+status);
+            deferred.reject(response);
+          });
     }
 
 
+/*
 function findRace(race) {
       var theRace = 0;
       for (var i=0; i<raceTraits.length; i++)
@@ -553,15 +581,21 @@ function findSubClass(theClass, subc) {
       if (theSubClass >= classTraits[theClass].length) { theSubClass = 0; }
       return theSubClass;
 }
+
+//function findBg(bgName) {
 function findBg(bgName) {
       var theBg = 0;
-      for (var i=0; i<bgDetails.length; i++)
+      //for (var i=0; i<bgDetails.length; i++)
+      for (var i=0; i<dndController.charBackgrounds.length; i++)
       { theBg = i; 
-        if (bgDetails[i].name === bgName) { break; } 
+        //if (bgDetails[i].name === bgName) { break; } 
+        if (dndController.charBackgrounds[i].name === bgName) { break; } 
       }
-      if (theBg >= bgDetails.length) { theBg = 0; }
+      //if (theBg >= bgDetails.length) { theBg = 0; }
+      if (theBg >= dndController.charBackgrounds.length) { theBg = 0; }
       return theBg;
 }
+*/
 
 function calcHeight(heightdice) {
   var inches = 0;
@@ -613,6 +647,8 @@ function calcWealth(wealth) {
 
 function calcModifier(point) {
   var mod;
+// JMG TODO
+// mod = Floor(point/2) - 5;
   switch (point) {
     case 1:
         mod = -5;

@@ -19,6 +19,14 @@ angular.module('DnDApp')
       return $http.get(DND_5E_DB + theClass.toLowerCase() + "_class_traits");
     };
 
+    dndFactory.getBackgrounds = function () {
+      return $http.get(DND_5E_DB + "backgrounds");
+    };
+
+    dndFactory.getBackgroundTraits = function (theBackground) {
+      return $http.get(DND_5E_DB + "background_" + theBackground.toLowerCase() );
+    };
+
     return dndFactory;
 
 }]);

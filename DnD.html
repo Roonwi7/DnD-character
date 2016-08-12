@@ -17,7 +17,6 @@
     <script src="angular.min.js"></script>
 
     <!-- This is the javascript for this specific html -->
-    <script src="dnd.data.js"> </script>
     <script src="dnd.module.js"> </script>
     <script src="dnd.controller.js"> </script>
     <script src="dnd.factory.js"> </script>
@@ -150,9 +149,9 @@
         <button type="button" ng-click="dndChar.genCharBg()" > Random </button>
         <p> Background: 
           <select ng-model="dndChar.charBgSelect"
-            ng-options="backgrnd.name for backgrnd in dndChar.charBackgrounds"
-            ng-change="dndChar.updateCharBg()" > </select>
-        </p>
+            ng-change="dndChar.updateCharBg()" >
+          <option ng-repeat="backgrnd in dndChar.charBackgrounds">{{backgrnd}}</option>
+         </select> </p>
 
         <div class="sub" ng-show="dndChar.hasBg">
         <p id="backSpec" ng-show="dndChar.charBgSpShow"> {{dndChar.charBgSpLbl}} 
