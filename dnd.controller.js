@@ -24,8 +24,6 @@ var statTypes=[ "str", "dex", "con", "int", "wis", "cha" ];
 
 
 //  TODO:
-//    update to use background from database
-//    figure out if TODO below is needed anymore
 //    Add Armor Class
 //    Add Hit Points
 //    Add Proficiency for Saving Throws & Skills (checklist)
@@ -36,8 +34,6 @@ var statTypes=[ "str", "dex", "con", "int", "wis", "cha" ];
 //    Add Name Generator
 //    Add more info under character backgrounds
 //    Add Spell selections
-//dndController.test=theSubRace;
-//if (isNaN(x.innerHTML)) 
 
     dndController.curGenType = genType3d6;
     dndController.genType = genTypes[dndController.curGenType];
@@ -137,6 +133,9 @@ var statTypes=[ "str", "dex", "con", "int", "wis", "cha" ];
 
       dndController.classSelect = dndDataService.getRandomClass();
       updateClass();
+
+      dndController.charBgSelect = dndDataService.getRandomBackground();
+      updateCharBg();
     }
 
     function genStats()
@@ -294,7 +293,6 @@ var statTypes=[ "str", "dex", "con", "int", "wis", "cha" ];
         }
       }
       dndController.points = pnts;
-      //JMG: TODO: ??  sumAttributes();
     }
 
     function getCurrentRaceInfo()
@@ -487,8 +485,7 @@ var statTypes=[ "str", "dex", "con", "int", "wis", "cha" ];
 
     function genCharBg() 
     {
-      randIndex = Math.floor(Math.random() * dndController.charBackgrounds.length);
-      dndController.charBgSelect = dndController.charBackgrounds[randIndex];
+      dndController.charBgSelect = dndDataService.getRandomBackground();
       updateCharBg();
     }
 
@@ -539,64 +536,6 @@ var statTypes=[ "str", "dex", "con", "int", "wis", "cha" ];
     }
 
 
-/*
-function findRace(race) {
-      var theRace = 0;
-      for (var i=0; i<raceTraits.length; i++)
-      { theRace = i; 
-        if (raceTraits[i][0].race === race) { break; } 
-      }
-      if (theRace >= raceTraits.length) { theRace = 0; }
-      return theRace;
-}
-
-function findSubRace(theRace, subr) {
-      var theSubRace = 0;
-      for (var i=0; i<raceTraits[theRace].length; i++)
-      { theSubRace = i; 
-        if (raceTraits[theRace][i].race === subr) { break; } 
-        theSubRace++;
-      }
-      if (theSubRace >= raceTraits[theRace].length) { theSubRace = 0; }
-      return theSubRace;
-}
-
-function findClass(aClass) {
-      var theClass = 0;
-      for (var i=0; i<classTraits.length; i++)
-      { theClass = i; 
-        if (classTraits[i][0].class === aClass) { break; } 
-      }
-      if (theClass >= classTraits.length) { theClass = 0; }
-      return theClass;
-}
-
-function findSubClass(theClass, subc) {
-      var theSubClass = 0;
-      for (var i=0; i<classTraits[theClass].length; i++)
-      { theSubClass = i; 
-        if (classTraits[theClass][i].class === subc) { break; } 
-        theSubClass++;
-      }
-      if (theSubClass >= classTraits[theClass].length) { theSubClass = 0; }
-      return theSubClass;
-}
-
-//function findBg(bgName) {
-function findBg(bgName) {
-      var theBg = 0;
-      //for (var i=0; i<bgDetails.length; i++)
-      for (var i=0; i<dndController.charBackgrounds.length; i++)
-      { theBg = i; 
-        //if (bgDetails[i].name === bgName) { break; } 
-        if (dndController.charBackgrounds[i].name === bgName) { break; } 
-      }
-      //if (theBg >= bgDetails.length) { theBg = 0; }
-      if (theBg >= dndController.charBackgrounds.length) { theBg = 0; }
-      return theBg;
-}
-*/
-
 function calcHeight(heightdice) {
   var inches = 0;
   var dice, numdie, valdie;
@@ -646,58 +585,7 @@ function calcWealth(wealth) {
 }
 
 function calcModifier(point) {
-  var mod;
-// JMG TODO
-// mod = Floor(point/2) - 5;
-  switch (point) {
-    case 1:
-        mod = -5;
-      break;
-    case 2:
-    case 3:
-        mod = -4;
-      break;
-    case 4:
-    case 5:
-        mod = -3;
-      break;
-    case 6:
-    case 7:
-        mod = -2;
-      break;
-    case 8:
-    case 9:
-        mod = -1;
-      break;
-    case 10:
-    case 11:
-        mod = 0;
-      break;
-    case 12:
-    case 13:
-        mod = 1;
-      break;
-    case 14:
-    case 15:
-        mod = 2;
-      break;
-    case 16:
-    case 17:
-        mod = 3;
-      break;
-    case 18:
-    case 19:
-        mod = 4;
-      break;
-    case 20:
-    case 21:
-        mod = 5;
-      break;
-    case 22:
-    case 23:
-        mod = 6;
-      break;
-  }
+  var mod = Math.floor(point/2) - 5;
   return (mod);
 }
 

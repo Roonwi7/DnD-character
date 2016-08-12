@@ -1,7 +1,3 @@
-           //delete dndDataService.myData._id;
-           //delete dndDataService.myData._rev;
-
-//TODO: combine all calls into one promise for init
 
 angular.module('DnDApp')
   .service('dndDataService', ['$q', 'dndFactory', function($q, dndFactory) {
@@ -36,7 +32,6 @@ angular.module('DnDApp')
 
       dndDataService.myData.backgrounds = [];
       dndDataService.myData.backgroundTraits = {};
-      //dndDataService.myData.backgroundList = [];
 
       dndDataService.initRaces()
         .then(
@@ -186,47 +181,9 @@ angular.module('DnDApp')
       return deferred.promise;
     };
 
-/*
-    dndDataService.genBackgroundList = function() {
-      dndDataService.myData.backgroundList = [];
-      for (background in dndDataService.myData.backgrounds) {
-        var r = {
-                  "background":(dndDataService.myData.backgrounds[background].main), 
-                  "subbackground":(dndDataService.myData.backgrounds[background].main) };
-        dndDataService.myData.backgroundList.push(r);
-      }
-    }
-*/
-
     dndDataService.getBackgrounds = function() {
       return dndDataService.myData.backgrounds;
     }
-
-
-//Loop over races 
-//  get traits of main race
-//  If sub races defined, loop over sub races
-//    get traits of sub race
-
-// var promise1 = $http({method: 'GET', url: '/api-one-url', cache: 'true'});
-// var promise2 = $http({method: 'GET', url: '/api-two-url', cache: 'true'});
-// $q.all([promise1, promise2]).then(function(data){console.log(data[0], data[1]);});
-
-// Or maybe (if it works)
-// $.when (
-//    // Get the HTML
-//    $.get("/feature/", function(html) { globalStore.html = html;}),
-//    // Get the CSS
-//    $.get("/assets/feature.css", function(css) { globalStore.css = css;}),
-//    // Get the JS
-//    $.get("/assets/feature.js")
-// ).then(function() {
-//    // All is ready now, so ...
-//    // Add css to page
-//   $("<style />").html(globalStore.css).appendTo("head");
-//    // Add HTML to page
-//   $("body").append(globalStore.html);
-// });
 
     dndDataService.getRaces = function () {
       if (dndDataService.myData.length === 0) {
@@ -354,6 +311,11 @@ angular.module('DnDApp')
       var rdmIndx = Math.floor(Math.random() * classKeys.length);
       var rdmClass = classKeys[rdmIndx];
       return (dndDataService.myData.classList[rdmClass]);
+    };
+
+    dndDataService.getRandomBackground = function () {
+      var rdmIndx = Math.floor(Math.random() * dndDataService.myData.backgrounds.length);
+      return (dndDataService.myData.backgrounds[rdmIndx]);
     };
 
 
