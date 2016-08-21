@@ -36,15 +36,20 @@
     <nav class="left">
       <button type="button" ng-click="dndChar.genAll()"> Random All </button>
       <button type="button" ng-click="dndChar.setTest()"> Test </button>
+<!--
+-->
     </nav>
 
     <nav class="right"> </nav>
 
     <div class="charmain">
       <p> {{dndChar.test}} </p>
-      <h2> {{dndChar.playName}} Character Identity </h2>
-      <p> Player  Name: <input type="text" ng-model="dndChar.playName" placeholder="Enter your name"> </p>
-      <p> Character Name: <input type="text" ng-model="dndChar.charName" placeholder="Enter a character name"> </p>
+      <p> {{dndChar.currentLanguage}} </p>
+<!--
+-->
+      <h2> Character Identity by {{dndChar.playName}} </h2>
+      <p> Player  Name: <input type="text" ng-model="dndChar.playName" placeholder="Enter your name" /> </p>
+      <p> Character Name: <input type="text" ng-model="dndChar.charName" placeholder="Enter a character name" /> </p>
 
 
       <div class="char">
@@ -77,9 +82,7 @@
             <td> 
               <input ng-model="att.base" 
                      ng-change="dndChar.calcTotal()" 
-                     type="number" min="3" max="18" 
-              > 
-              </input> 
+                     type="number" min="3" max="18" /> 
             </td>
             <td> {{att.basemod}} </td>
           </tr>
@@ -144,28 +147,73 @@
       </div>
 
       <div class="char">
-        <h2 id="charback"> {{dndChar.charBgTitle}} </h2>
-        <p> {{dndChar.charBgDesc}} </p>
-        <button type="button" ng-click="dndChar.genCharBg()" > Random </button>
+        <h2 id="charback"> {{dndChar.backgroundTitle}} </h2>
+        <p> {{dndChar.backgroundDesc}} </p>
         <p> Background: 
-          <select ng-model="dndChar.charBgSelect"
-            ng-change="dndChar.updateCharBg()" >
-          <option ng-repeat="backgrnd in dndChar.charBackgrounds">{{backgrnd}}</option>
+          <select ng-model="dndChar.backgroundSelect"
+            ng-change="dndChar.updateBackground()" >
+          <option ng-repeat="backgrnd in dndChar.backgrounds">{{backgrnd}}</option>
          </select> </p>
 
-        <div class="sub" ng-show="dndChar.hasBg">
-        <p id="backSpec" ng-show="dndChar.charBgSpShow"> {{dndChar.charBgSpLbl}} 
-            <input type="text" class="sentence" id="special" ng-model="dndChar.charBgSp"> </input> </p>
-        <p ng-show="dndChar.charBgT1"> Personality Trait One: 
-            <input type="text" class="sentence" id="ptrait1" ng-model="dndChar.charBgT1"> </input> </p>
-        <p ng-show="dndChar.charBgT2"> Personality Trait Two: 
-            <input type="text" class="sentence" id="ptrait2" ng-model="dndChar.charBgT2"> </input> </p>
-        <p ng-show="dndChar.charBgI"> Ideal: 
-            <input type="text" class="sentence" id="ideal" ng-model="dndChar.charBgI"> </input> </p>
-        <p ng-show="dndChar.charBgB"> Bond: 
-            <input type="text" class="sentence" id="bond" ng-model="dndChar.charBgB"> </input> </p>
-        <p ng-show="dndChar.charBgF"> Flaw: 
-            <input type="text" class="sentence" id="flaw" ng-model="dndChar.charBgF"> </input> </p>
+        <div class="sub" ng-show="dndChar.hasBackground">
+        <p id="backSpec" ng-show="dndChar.backgroundSpShow"> {{dndChar.backgroundSpLbl}} 
+            <input type="text" class="sentence" id="special" ng-model="dndChar.backgroundSp"/> </p>
+        <p ng-show="dndChar.backgroundT1"> Personality Trait One: 
+            <input type="text" class="sentence" id="ptrait1" ng-model="dndChar.backgroundT1"/> </p>
+        <p ng-show="dndChar.backgroundT2"> Personality Trait Two: 
+            <input type="text" class="sentence" id="ptrait2" ng-model="dndChar.backgroundT2"/> </p>
+        <p ng-show="dndChar.backgroundI"> Ideal: 
+            <input type="text" class="sentence" id="ideal" ng-model="dndChar.backgroundI"/> </p>
+        <p ng-show="dndChar.backgroundB"> Bond: 
+            <input type="text" class="sentence" id="bond" ng-model="dndChar.backgroundB"/> </p>
+        <p ng-show="dndChar.backgroundF"> Flaw: 
+            <input type="text" class="sentence" id="flaw" ng-model="dndChar.backgroundF"/> </p>
+
+        <table border=3 ng-show="dndChar.backgroundTable">
+          <tr class="head">
+            <td width="120px"> Item </td>
+            <td width="100px"> Value </td>
+          </tr>
+          <tr ng-repeat="att in dndChar.backgroundTable">
+            <td> {{att.attr}} </td>
+            <td> {{att.value}} </td>
+          </tr>
+        </table> 
+
+        </div>
+      </div>
+
+      <div class="lang">
+        <h2> Languages </h2>
+        <p> Available to Select: 
+              <input ng-model="dndChar.languageAvail" 
+                     ng-readonly="true"
+                     type="number" /> 
+        </p> 
+        <p> Standard: 
+          <label ng-repeat="language in dndChar.languageList.Standard">
+            <input 
+              name="language.language"
+              type="checkbox"
+              ng-change="dndChar.languageSelected(language.selected)"
+              value="{{language.selected}}"
+              ng-model="language.selected" />
+              {{language.language}}
+          </label>
+        </p>
+        <p> Exotic: 
+          <label ng-repeat="language in dndChar.languageList.Exotic">
+            <input 
+              name="language.language"
+              type="checkbox"
+              ng-change="dndChar.languageSelected(language.selected)"
+              value="{{language.selected}}"
+              ng-model="language.selected" />
+              {{language.language}}
+          </label>
+        </p>
+
+        <div class="sub" ng-show="dndChar.hasBackground">
         </div>
 
       </div>

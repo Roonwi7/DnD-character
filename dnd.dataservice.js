@@ -13,6 +13,11 @@ angular.module('DnDApp')
     //           str, dex, con, int, wis, cha
 
 
+    //JMG: for testing purposes
+    dndDataService.getAll = function () {
+      return dndDataService.myData;
+    }
+
 
     // ----------------------------------------
     // Initialization Function
@@ -22,25 +27,36 @@ angular.module('DnDApp')
 
       dndDataService.myData = {};
 
+      dndDataService.myData.attributes = [];
+      dndDataService.myData.raceList = [];
+      dndDataService.myData.classList = [];
+      dndDataService.myData.backgrounds = [];
+      dndDataService.myData.languages = [];
+
       dndDataService.myData.races = {};
       dndDataService.myData.raceTraits = {};
-      dndDataService.myData.raceList = [];
 
       dndDataService.myData.classes = {};
       dndDataService.myData.classTraits = {};
-      dndDataService.myData.classList = [];
 
-      dndDataService.myData.backgrounds = [];
       dndDataService.myData.backgroundTraits = {};
 
-      dndDataService.initRaces()
+      dndDataService.initAttributes()
+        .then(
+          function(result) {
+            return dndDataService.initRaces();
+          },
+          function(result, status) {
+            console.log("Could not initialize attributes. Response: "+JSON.stringify(response)+"; Status: " + status);
+            deferred.reject(response);
+          })
         .then(
           function(result) {
             dndDataService.genRaceList();
             return dndDataService.initClasses();
           },
           function(result, status) {
-            console.log("Could not initialize race. Response: "+response+"; Status: " + status);
+            console.log("Could not initialize race. Response: "+JSON.stringify(response)+"; Status: " + status);
             deferred.reject(response);
           })
         .then(
@@ -49,16 +65,23 @@ angular.module('DnDApp')
             return dndDataService.initBackgrounds();
           },
           function(result, status) {
-            console.log("Could not initialize class. Response: "+response+"; Status: " + status);
+            console.log("Could not initialize class. Response: "+JSON.stringify(response)+"; Status: " + status);
             deferred.reject(response);
           })
         .then(
           function(result) {
-            //dndDataService.genBackgroundList();
+            return dndDataService.initLanguages();
+          },
+          function(result, status) {
+            console.log("Could not initialize backgrounds. Response: "+JSON.stringify(response)+"; Status: " + status);
+            deferred.reject(response);
+          })
+        .then(
+          function(result) {
             deferred.resolve(dndDataService.myData);
           },
           function(result, status) {
-            console.log("Could not initialize backgrounds. Response: "+response+"; Status: " + status);
+            console.log("Could not initialize languages. Response: "+JSON.stringify(response)+"; Status: " + status);
             deferred.reject(response);
           });
 
@@ -92,7 +115,7 @@ angular.module('DnDApp')
              });
         })
         .error(function(response, status) {
-           console.log("Could not get races. Response: "+response+"; Status: " + status);
+           console.log("Could not get races. Response: "+JSON.stringify(response)+"; Status: " + status);
            deferred.reject(response);
         });
 
@@ -115,10 +138,6 @@ angular.module('DnDApp')
       }
     }
 
-    dndDataService.getRaceList = function() {
-      return dndDataService.myData.raceList;
-    }
-
 
     dndDataService.initClasses = function () {
       var deferred = $q.defer();
@@ -129,7 +148,7 @@ angular.module('DnDApp')
           deferred.resolve(dndDataService.myData);
         })
         .error(function(response, status) {
-           console.log("Could not get classes. Response: "+response+"; Status: " + status);
+           console.log("Could not get classes. Response: "+JSON.stringify(response)+"; Status: " + status);
            deferred.reject(response);
         });
       return deferred.promise;
@@ -151,10 +170,6 @@ angular.module('DnDApp')
       }
     }
 
-    dndDataService.getClassList = function() {
-      return dndDataService.myData.classList;
-    }
-
     dndDataService.initBackgrounds = function () {
       var deferred = $q.defer();
 
@@ -174,16 +189,43 @@ angular.module('DnDApp')
              });
         })
         .error(function(response, status) {
-           console.log("Could not get backgrounds. Response: "+response+"; Status: " + status);
+           console.log("Could not get backgrounds. Response: "+JSON.stringify(response)+"; Status: " + status);
            deferred.reject(response);
         });
 
       return deferred.promise;
     };
 
-    dndDataService.getBackgrounds = function() {
-      return dndDataService.myData.backgrounds;
-    }
+    dndDataService.initAttributes = function () {
+      var deferred = $q.defer();
+
+      dndFactory.getAttributes()
+        .success(function(result) {
+          dndDataService.myData.attributes = result.attributes;
+          deferred.resolve(dndDataService.myData);
+        })
+        .error(function(response, status) {
+           console.log("Could not get attributes. Response: "+JSON.stringify(response)+"; Status: " + status);
+           deferred.reject(response);
+        });
+      return deferred.promise;
+    };
+
+    dndDataService.initLanguages = function () {
+      var deferred = $q.defer();
+
+      dndFactory.getLanguages()
+        .success(function(result) {
+          dndDataService.myData.languages = result;
+          deferred.resolve(dndDataService.myData);
+        })
+        .error(function(response, status) {
+           console.log("Could not get languages. Response: "+JSON.stringify(response)+"; Status: " + status);
+           deferred.reject(response);
+        });
+      return deferred.promise;
+    };
+
 
     dndDataService.getRaces = function () {
       if (dndDataService.myData.length === 0) {
@@ -200,7 +242,7 @@ angular.module('DnDApp')
              deferred.resolve(subRace);
           },
           function(response, status) {
-             console.log("The request failed. Response: "+response+"; Status: " + status);
+             console.log("The request failed. Response: "+JSON.stringify(response)+"; Status: " + status);
              deferred.reject(response);
           });
       return deferred.promise;
@@ -216,11 +258,6 @@ angular.module('DnDApp')
       }
       return (subRaces);
     };
-
-    //JMG: for testing purposes
-    dndDataService.getAll = function () {
-      return dndDataService.myData;
-    }
 
     dndDataService.getRaceTraits = function (theRace) {
       var deferred = $q.defer();
@@ -298,6 +335,28 @@ angular.module('DnDApp')
       return deferred.promise;
 
     };
+
+
+    dndDataService.getAttributes = function() {
+      return dndDataService.myData.attributes;
+    }
+
+    dndDataService.getLanguages = function() {
+      return dndDataService.myData.languages;
+    }
+
+    dndDataService.getRaceList = function() {
+      return dndDataService.myData.raceList;
+    }
+
+    dndDataService.getClassList = function() {
+      return dndDataService.myData.classList;
+    }
+
+    dndDataService.getBackgrounds = function() {
+      return dndDataService.myData.backgrounds;
+    }
+
 
     dndDataService.getRandomRace = function () {
       var raceKeys = Object.keys(dndDataService.myData.raceList);

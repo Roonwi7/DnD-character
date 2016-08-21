@@ -7,20 +7,21 @@ angular.module('DnDApp')
     function setTest()
     {
       dndController.test="Hi: " + JSON.stringify( dndDataService.getAll() );
+      //dndController.test="Hi: " + JSON.stringify( dndController.languageList );
     }
 
-var genTypes=[ "3d6", "4d6 - 1", "5d6 - 2", 
-               "Non-Elite Array", "Elite Array", 
-               "Basic Stats", "Max Stats" ];
-var genType3d6=0;
-var genType4d6=1;
-var genType5d6=2;
-var genTypeNonEl=3;
-var genTypeElite=4;
-var genTypeBasic=5;
-var genTypeMax=6;
-
-var statTypes=[ "str", "dex", "con", "int", "wis", "cha" ];
+    var genTypes=[ "3d6", "4d6 - 1", "5d6 - 2", 
+                   "Non-Elite Array", "Elite Array", 
+                   "Basic Stats", "Max Stats" ];
+    var genTypeEliteArray = [8,10,12,13,14,15];
+    var genTypeNonEliteArray = [8,9,10,11,12,13];
+    var genType3d6=0;
+    var genType4d6=1;
+    var genType5d6=2;
+    var genTypeNonElite=3;
+    var genTypeElite=4;
+    var genTypeBasic=5;
+    var genTypeMax=6;
 
 
 //  TODO:
@@ -38,23 +39,24 @@ var statTypes=[ "str", "dex", "con", "int", "wis", "cha" ];
     dndController.curGenType = genType3d6;
     dndController.genType = genTypes[dndController.curGenType];
     dndController.points = 27;
+
     dndController.attributes = [];
-    dndController.strength;
-    dndController.dexterity;
-    dndController.constitution;
-    dndController.wisdom;
-    dndController.intelligence;
-    dndController.charisma;
+    dndController.attributeList = [];
+    dndController.attributeInfo = [];
+
+    dndController.languageList = [];
+    dndController.languageAvail = 0;
+    dndController.languageToSelectRace = 0;
+    dndController.languageToSelectBackground = 0;
+
     dndController.hasChar = false;
-    dndController.hasRace = false;
-    dndController.hasClass = false;
-    dndController.hasBg = false;
 
     dndController.raceTitle = "Racial Characteristics";
     dndController.raceTypes = null;
     dndController.raceSelect = null;
     dndController.raceTable = null;
     dndController.raceInfo = [];
+    dndController.hasRace = false;
 
     dndController.classTitle = "Class Characteristics";
     dndController.classDesc = "";
@@ -62,10 +64,13 @@ var statTypes=[ "str", "dex", "con", "int", "wis", "cha" ];
     dndController.classSelect = null;
     dndController.classTable = null;
     dndController.classInfo = [];
+    dndController.hasClass = false;
 
-    dndController.charBgTitle = "Character Background";
-    dndController.charBgSelect = null;
-    dndController.charBackgrounds = null;
+    dndController.backgroundTitle = "Character Background";
+    dndController.backgroundSelect = null;
+    dndController.backgrounds = null;
+    dndController.backgroundTable = null;
+    dndController.hasBackground = false;
 
     // Functions
     dndController.initialize = initialize;
@@ -74,8 +79,8 @@ var statTypes=[ "str", "dex", "con", "int", "wis", "cha" ];
     dndController.genRaceClass = genRaceClass;
     dndController.genStats = genStats;
     dndController.generateStat = generateStat;
-    dndController.genCharBg = genCharBg;
-    dndController.updateCharBg = updateCharBg;
+    dndController.genBackground = genBackground;
+    dndController.updateBackground = updateBackground;
     dndController.changeGen = changeGen;
     dndController.updateRace = updateRace;
     dndController.updateClass = updateClass;
@@ -83,27 +88,27 @@ var statTypes=[ "str", "dex", "con", "int", "wis", "cha" ];
     dndController.getCurrentClassInfo = getCurrentClassInfo;
     dndController.calcTotal = calcTotal;
     dndController.calcPoints = calcPoints;
+    dndController.setLanguage = setLanguage;
+    dndController.resetLanguage = resetLanguage;
+    dndController.recalcLanguageAvail = recalcLanguageAvail;
+    dndController.languageSelected = languageSelected;
 
     dndController.initialize();
 
     function initialize()
     {
-      dndController.createAtts();
-      dndController.attributes.push(dndController.strength);
-      dndController.attributes.push(dndController.dexterity);
-      dndController.attributes.push(dndController.constitution);
-      dndController.attributes.push(dndController.wisdom);
-      dndController.attributes.push(dndController.intelligence);
-      dndController.attributes.push(dndController.charisma);
       dndDataService.init()
         .then(
           function(result) { 
+                   dndController.attributeList = dndDataService.getAttributes();
+                   dndController.languageList = dndDataService.getLanguages();
                    dndController.raceTypes = dndDataService.getRaceList();
                    dndController.classTypes = dndDataService.getClassList();
-                   dndController.charBackgrounds = dndDataService.getBackgrounds();
+                   dndController.backgrounds = dndDataService.getBackgrounds();
+                   dndController.createAtts();
           },
           function(result) {
-                   console.log("Failed to initialize data: " + result);
+                   console.log("Failed to initialize data: " + JSON.stringify(result));
           });
     }
 
@@ -121,7 +126,7 @@ var statTypes=[ "str", "dex", "con", "int", "wis", "cha" ];
     {
       dndController.genRaceClass();
       dndController.genStats();
-      dndController.genCharBg();
+      dndController.genBackground();
     }
 
     function genRaceClass() 
@@ -134,13 +139,13 @@ var statTypes=[ "str", "dex", "con", "int", "wis", "cha" ];
       dndController.classSelect = dndDataService.getRandomClass();
       updateClass();
 
-      dndController.charBgSelect = dndDataService.getRandomBackground();
-      updateCharBg();
+      dndController.backgroundSelect = dndDataService.getRandomBackground();
+      updateBackground();
     }
 
     function genStats()
     {
-      for (i in statTypes)
+      for (i in dndController.attributeList)
       {
         (dndController.attributes[i]).base = dndController.generateStat(Number(i));
       }
@@ -150,12 +155,11 @@ var statTypes=[ "str", "dex", "con", "int", "wis", "cha" ];
 
     function createAtts()
     {
-      dndController.strength = { attr:"Strength", mod:0, total:8, base:8, basemod:0 };
-      dndController.dexterity = { attr:"Dexterity", mod:0, total:8, base:8, basemod:0 };
-      dndController.constitution = { attr:"Constitution", mod:0, total:8, base:8, basemod:0 };
-      dndController.wisdom = { attr:"Wisdom", mod:0, total:8, base:8, basemod:0 };
-      dndController.intelligence = { attr:"Intelligence", mod:0, total:8, base:8, basemod:0 };
-      dndController.charisma = { attr:"Charisma", mod:0, total:8, base:8, basemod:0 };
+      var attributes = dndController.attributeList;
+      for (var attribute in dndController.attributeList ) {
+        attributeName = dndController.attributeList[attribute];
+        dndController.attributes.push({ attr:attributeName, mod:0, total:8, base:8, basemod:0 });
+      }
     }
 
     function generateStat(attribute)
@@ -183,51 +187,11 @@ var statTypes=[ "str", "dex", "con", "int", "wis", "cha" ];
           pts.sort(function(a,b) {return b-a;});
           total = pts[0]+pts[1]+pts[2];
           break;
-        case genTypeNonEl:
-               switch (attribute) {
-                 case 0:
-                   total = 13;
-                   break;
-                 case 1:
-                   total = 12;
-                   break;
-                 case 2:
-                   total = 11;
-                   break;
-                 case 3:
-                   total = 10;
-                   break;
-                 case 4:
-                   total = 9;
-                   break;
-                 case 5:
-                 default:
-                   total = 8;
-                   break;
-               }
+        case genTypeNonElite:
+          total = genTypeNonEliteArray[attribute];
           break;
         case genTypeElite:
-               switch (attribute) {
-                 case 0:
-                   total = 15;
-                   break;
-                 case 1:
-                   total = 14;
-                   break;
-                 case 2:
-                   total = 13;
-                   break;
-                 case 3:
-                   total = 12;
-                   break;
-                 case 4:
-                   total = 10;
-                   break;
-                 case 5:
-                 default:
-                   total = 8;
-                   break;
-               }
+          total = genTypeEliteArray[attribute];
           break;
         case genTypeMax:
           total = 18;
@@ -256,40 +220,15 @@ var statTypes=[ "str", "dex", "con", "int", "wis", "cha" ];
       var pnts = 0;
 
       for (i=0; i<dndController.attributes.length; i++) {
-        switch (dndController.attributes[i].base) {
-          case 9:
-            pnts += 1;
-            break;
-          case 10:
-            pnts += 2;
-            break;
-          case 11:
-            pnts += 3;
-            break;
-          case 12:
-            pnts += 4;
-            break;
-          case 13:
-            pnts += 5;
-            break;
-          case 14:
-            pnts += 7;
-            break;
-          case 15:
-            pnts += 9;
-            break;
-          case 16:
-            pnts += 12;
-            break;
-          case 17:
-            pnts += 15;
-            break;
-          case 18:
-            pnts += 19;
-            break;
-          default:
-            pnts += 0;
-            break;
+        pnts += dndController.attributes[i].base - 8;
+        if (dndController.attributes[i].base > 13) {
+          pnts += (dndController.attributes[i].base - 13);
+        }
+        if (dndController.attributes[i].base > 15) {
+          pnts += (dndController.attributes[i].base - 15);
+        }
+        if (dndController.attributes[i].base > 17) {
+          pnts += (dndController.attributes[i].base - 17);
         }
       }
       dndController.points = pnts;
@@ -326,16 +265,18 @@ var statTypes=[ "str", "dex", "con", "int", "wis", "cha" ];
 
     function updateRace()
     {
-      // Clear race information
-      dndController.raceTable = [];
-      dndController.raceInfo = [];
-
-      // Set title for racial characteristics
-      dndController.raceTitle = dndController.raceSelect.subrace + " Racial Characteristics";
-
       dndController.getCurrentRaceInfo()
         .then(
           function(result) { 
+
+            // Clear race information
+            dndController.raceTable = [];
+            dndController.raceInfo = [];
+            dndController.resetLanguage();
+
+            // Set title for racial characteristics
+            dndController.raceTitle = dndController.raceSelect.subrace + " Racial Characteristics";
+
             // Add Size race trait
             if (result.main.size != null) {
               dndController.raceTable.push({attr:"Size",value:result.main.size});
@@ -361,14 +302,37 @@ var statTypes=[ "str", "dex", "con", "int", "wis", "cha" ];
             var pounds = Number(calcWeight(result.main.weightdice, addinches)) + Number(result.main.weight);
             dndController.raceTable.push({attr:"Weight",value:pounds+" lbs"});
 
-            // Add Languages race trait
+            // Add Languages for race trait
+            dndController.languageToSelectRace = 0;
             if (typeof result.main.lang !== "undefined") {
-              var langs = result.main.lang;
-              if (typeof result.sub.lang !== "undefined") {
-                langs = langs + result.sub.lang;
+              for (var lang in result.main.lang) {
+                if (result.main.lang[lang] == "1") {
+                  dndController.languageToSelectRace += 1;
+                }
+                else if (result.main.lang[lang] == "2") {
+                  dndController.languageToSelectRace += 2;
+                }
+                else {
+                  dndController.languageToSelectRace += 1;
+                  dndController.setLanguage(result.main.lang[lang], true);
+                }
               }
-              dndController.raceInfo.push({lbl:"Languages:",val:langs});
+              if (typeof result.sub.lang !== "undefined") {
+                for (var lang in result.sub.lang) {
+                  if (result.sub.lang[lang] == "1") {
+                    dndController.languageToSelectRace += 1;
+                  }
+                  else if (result.sub.lang[lang] == "2") {
+                    dndController.languageToSelectRace += 2;
+                  }
+                  else {
+                    dndController.languageToSelectRace += 1;
+                    dndController.setLanguage(result.sub.lang[lang], true);
+                  }
+                }
+              }
             }
+            dndController.recalcLanguageAvail();
 
             // Add Specials race trait
             if (typeof result.main.special !== "undefined") {
@@ -380,18 +344,19 @@ var statTypes=[ "str", "dex", "con", "int", "wis", "cha" ];
             }
 
             // Add Attribute Modifiers race trait
-            for (i=0; i<statTypes.length; i++)
+            var attributes = dndController.attributeList;
+            for (i=0; i<attributes.length; i++)
             {
-              if (typeof result.main[statTypes[i]] !== "undefined")
+              if (typeof result.main[attributes[i]] !== "undefined")
               {
-                (dndController.attributes[i]).basemod = Number(result.main[statTypes[i]]);
+                (dndController.attributes[i]).basemod = Number(result.main[attributes[i]]);
               } else {
                 (dndController.attributes[i]).basemod = 0;
               }
-              if (typeof result.sub[statTypes[i]] !== "undefined")
+              if (typeof result.sub[attributes[i]] !== "undefined")
               {
                 (dndController.attributes[i]).basemod = 
-                            Number(result.sub[statTypes[i]])
+                            Number(result.sub[attributes[i]])
                           + Number((dndController.attributes[i]).basemod);
               }
             }
@@ -483,56 +448,138 @@ var statTypes=[ "str", "dex", "con", "int", "wis", "cha" ];
       dndController.hasClass = true;
     }
 
-    function genCharBg() 
+    function genBackground() 
     {
-      dndController.charBgSelect = dndDataService.getRandomBackground();
-      updateCharBg();
+      dndController.backgroundSelect = dndDataService.getRandomBackground();
+      updateBackground();
     }
 
-    function updateCharBg() 
+                
+    function updateBackground() 
     {
-      dndController.charBgSpShow = false;
-      dndController.charBgSpLbl = "";
-      dndController.charBgSp = "";
 
-      dndController.charBgTitle = dndController.charBgSelect + " Character Background";
-
-      dndDataService.getBackgroundTraits(dndController.charBgSelect)
+      dndDataService.getBackgroundTraits(dndController.backgroundSelect)
         .then(
           function(result) {
 
-      var index = (Math.floor(Math.random() * (result.personality).length));
-      dndController.charBgT1 = (result.personality)[index];
+            dndController.backgroundSpShow = false;
+            dndController.backgroundSpLbl = "";
+            dndController.backgroundSp = "";
+            dndController.backgroundTitle = dndController.backgroundSelect + " Character Background";
 
-      var index2 = index;
-      while (index2 == index) {
-        index2 = (Math.floor(Math.random() * (result.personality).length));
-      }
-      dndController.charBgT2 = (result.personality)[index2];
+            var index = (Math.floor(Math.random() * (result.personality).length));
+            dndController.backgroundT1 = (result.personality)[index];
 
-      index = (Math.floor(Math.random() * (result.ideal).length));
-      dndController.charBgI = (result.ideal)[index];
+            var index2 = index;
+            while (index2 == index) {
+              index2 = (Math.floor(Math.random() * (result.personality).length));
+            }
+            dndController.backgroundT2 = (result.personality)[index2];
 
-      index = (Math.floor(Math.random() * (result.bond).length));
-      dndController.charBgB = (result.bond)[index];
+            index = (Math.floor(Math.random() * (result.ideal).length));
+            dndController.backgroundI = (result.ideal)[index];
 
-      index = (Math.floor(Math.random() * (result.flaw).length));
-      dndController.charBgF = (result.flaw)[index];
+            index = (Math.floor(Math.random() * (result.bond).length));
+            dndController.backgroundB = (result.bond)[index];
 
-      if (typeof result.special !== "undefined") {
-        index = (Math.floor(Math.random() * (result.special).length));
-        dndController.charBgSpShow = true;
-        dndController.charBgSpLbl = result.specialTitle;
-        dndController.charBgSp = (result.special)[index];
-      }
+            index = (Math.floor(Math.random() * (result.flaw).length));
+            dndController.backgroundF = (result.flaw)[index];
 
-      dndController.hasBg = true;
+            if (typeof result.special !== "undefined") {
+              index = (Math.floor(Math.random() * (result.special).length));
+              dndController.backgroundSpShow = true;
+              dndController.backgroundSpLbl = result.specialTitle;
+              dndController.backgroundSp = (result.special)[index];
+            }
+
+            dndController.languageToSelectBackground = 0;
+            if (typeof result.benefits.Languages !== "undefined") {
+              if (result.benefits.Languages == "1") {
+                dndController.languageToSelectBackground += 1;
+              }
+              else if (result.benefits.Languages == "2") {
+                dndController.languageToSelectBackground += 2;
+              }
+              else {
+                dndController.languageToSelectBackground += 1;
+                dndController.setLanguage(result.benefits.Languages, true);
+              }
+            }
+            dndController.recalcLanguageAvail();
+
+
+            dndController.backgroundTable = [];
+            if (typeof result.benefits.skillprof !== "undefined") {
+              dndController.backgroundTable.push({attr:"Skill Proficiencies",value: result.benefits.skillprof}); 
+            }
+
+            if (typeof result.benefits.toolprof !== "undefined") {
+              dndController.backgroundTable.push({attr:"Tool Proficiencies",value: result.benefits.toolprof}); 
+            }
+
+            for (var equip in result.benefits.equipment) {
+              if (equip > 0) {
+                dndController.backgroundTable.push({attr:"",value: result.benefits.equipment[equip]}); 
+              } else {
+                dndController.backgroundTable.push({attr:"Equipment",value: result.benefits.equipment[equip]}); 
+              }
+            }
+
+            dndController.hasBackground = true;
 
           },
           function(response, status) {
             console.log("Failed to get race traits. Response: "+JSON.stringify(response)+"; Status: "+status);
             deferred.reject(response);
           });
+    }
+
+    function setLanguage(inLanguage, inSelected)
+    {
+      for (var lang in dndController.languageList.Standard) {
+        if (inLanguage == dndController.languageList.Standard[lang].language) {
+          dndController.languageList.Standard[lang].selected = inSelected;
+        }
+      }
+      for (var lang in dndController.languageList.Exotic) {
+        if (inLanguage == dndController.languageList.Exotic[lang].language) {
+          dndController.languageList.Exotic[lang].selected = inSelected;
+        }
+      }
+    }
+
+    function resetLanguage()
+    {
+      for (var lang in dndController.languageList.Standard) {
+        dndController.languageList.Standard[lang].selected = false;
+      }
+      for (var lang in dndController.languageList.Exotic) {
+        dndController.languageList.Exotic[lang].selected = false;
+      }
+    }
+
+    function recalcLanguageAvail()
+    {
+      dndController.languageAvail = dndController.languageToSelectRace + dndController.languageToSelectBackground;
+      for (var lang in dndController.languageList.Standard) {
+        if (dndController.languageList.Standard[lang].selected == true) {
+          dndController.languageAvail -= 1;
+        }
+      }
+      for (var lang in dndController.languageList.Exotic) {
+        if (dndController.languageList.Exotic[lang].selected == true) {
+          dndController.languageAvail -= 1;
+        }
+      }
+    }
+
+    function languageSelected (langState)
+    {
+      if (langState) {
+        dndController.languageAvail -= 1;
+      } else {
+        dndController.languageAvail += 1;
+      }
     }
 
 

@@ -27,6 +27,14 @@ angular.module('DnDApp')
       return $http.get(DND_5E_DB + "background_" + theBackground.toLowerCase() );
     };
 
+    dndFactory.getAttributes = function () {
+      return $http.get(DND_5E_DB + "attributes");
+    };
+
+    dndFactory.getLanguages = function () {
+      return $http.get(DND_5E_DB + "languages");
+    };
+
     return dndFactory;
 
 }]);
