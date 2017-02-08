@@ -1,12 +1,42 @@
 angular.module('DnDApp')
-  .controller('DnDController', ['$q', 'dndDataService', function($q, dndDataService) {
+  //.controller('DnDController', [ '$q', 'dndDataService', function( $q, dndDataService ) {
+  .controller('DnDController', [ '$q', 'dndDataService', '$uibModal', function( $q, dndDataService, $uibModal) {
 
     var dndController = this;
 
     dndController.setTest = setTest;
+    dndController.opts = {};
     function setTest()
     {
-      dndController.test="Hi: " + JSON.stringify( dndDataService.getAll() );
+
+      const modalInstance = $uibModal.open ({ 
+        templateUrl: 'modal.html',
+        resolve: {
+          items: function() {
+            return ({abc:'Hello'});
+          }
+        }
+      });
+
+      var myText = {};
+      modalInstance.result.then(function (selectedItem) {
+        myText = selectedItem;
+      }, function() {
+        console.log('JMG: modal dismissed at: ' + new Date());
+      });
+      dndController.test="Hi: " + JSON.stringify( myText );
+
+      //const modalInstance = $uibModal.open ({ 'template': '<div><h1>Hello, this is template.</h1></div>'});
+/*
+      var r = confirm("Press a button");
+      if (r == true) {
+        x = "You pressed OK!";
+      } else {
+        x = "You pressed Cancel!";
+      }
+      dndController.test="Hi: " + JSON.stringify( x );
+*/
+      //dndController.test="Hi: " + JSON.stringify( dndDataService.getAll() );
       //dndController.test="Hi: " + JSON.stringify( dndController.languageList );
     }
 
@@ -22,6 +52,13 @@ angular.module('DnDApp')
     var genTypeElite=4;
     var genTypeBasic=5;
     var genTypeMax=6;
+
+    dndController.users = [ {"id": 1, "name": "Ali" },
+                            {"id": 2, "name": "Sara" },
+                            {"id": 3, "name": "Babak" },
+                            {"id": 4, "name": "Sanaz" },
+                            {"id": 5, "name": "Dariush" }, ];
+    dndController.selectedUserIds = [3, 5];
 
 
 //  TODO:
@@ -45,6 +82,7 @@ angular.module('DnDApp')
     dndController.attributeInfo = [];
 
     dndController.languageList = [];
+    dndController.languageList1 = [];
     dndController.languageAvail = 0;
     dndController.languageToSelectRace = 0;
     dndController.languageToSelectBackground = 0;
@@ -536,41 +574,31 @@ angular.module('DnDApp')
 
     function setLanguage(inLanguage, inSelected)
     {
-      for (var lang in dndController.languageList.Standard) {
-        if (inLanguage == dndController.languageList.Standard[lang].language) {
-          dndController.languageList.Standard[lang].selected = inSelected;
-        }
-      }
-      for (var lang in dndController.languageList.Exotic) {
-        if (inLanguage == dndController.languageList.Exotic[lang].language) {
-          dndController.languageList.Exotic[lang].selected = inSelected;
+      for (var lang in dndController.languageList) {
+        if (inLanguage == dndController.languageList[lang].language) {
+          dndController.languageList[lang].selected = inSelected;
         }
       }
     }
 
     function resetLanguage()
     {
-      for (var lang in dndController.languageList.Standard) {
-        dndController.languageList.Standard[lang].selected = false;
-      }
-      for (var lang in dndController.languageList.Exotic) {
-        dndController.languageList.Exotic[lang].selected = false;
+      for (var lang in dndController.languageList) {
+        dndController.languageList[lang].selected = false;
       }
     }
 
     function recalcLanguageAvail()
     {
       dndController.languageAvail = dndController.languageToSelectRace + dndController.languageToSelectBackground;
-      for (var lang in dndController.languageList.Standard) {
-        if (dndController.languageList.Standard[lang].selected == true) {
+console.log("JMG: total languageAvail = "+dndController.languageAvail);
+      for (var lang in dndController.languageList) {
+        if (dndController.languageList[lang].selected == true) {
           dndController.languageAvail -= 1;
+console.log("JMG: updated languageAvail = "+dndController.languageAvail);
         }
       }
-      for (var lang in dndController.languageList.Exotic) {
-        if (dndController.languageList.Exotic[lang].selected == true) {
-          dndController.languageAvail -= 1;
-        }
-      }
+console.log("JMG: final languageAvail = "+dndController.languageAvail);
     }
 
     function languageSelected (langState)

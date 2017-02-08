@@ -1,6 +1,7 @@
 (function() {
   'use strict';
-  angular.module('DnDApp', [])
+  //angular.module('DnDApp', [])
+  angular.module('DnDApp', ['ui.bootstrap.modal'])
 }) ();
 
   angular.module('DnDApp')

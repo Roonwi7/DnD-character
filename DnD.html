@@ -11,14 +11,30 @@
     <![endif]-->
 
     <!-- The following adds support for AngularJS -->
-    <!-- Temporary copy angularJS to local for use when internet is down
+    <!-- 
     <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.5.3/angular.min.js" ></script> 
     -->
+    <!-- Temporary copy angularJS to local for use when internet is down -->
     <script src="angular.min.js"></script>
+
+    <!-- JQuery is needed by Bootstrap -->
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.js" ></script> 
+
+    <!-- Bootstrap http://getbootstrap.com -->
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
+    <!-- 
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
+    <script src="bootstrap.min.js"></script>
+    -->
+    <!-- Temporary copy angularJS to local for use when internet is down -->
+    <script src="ui-bootstrap-tpls-2.4.0.min.js"></script>
+
+
 
     <!-- This is the javascript for this specific html -->
     <script src="dnd.module.js"> </script>
     <script src="dnd.controller.js"> </script>
+    <script src="dnd.directive.js"> </script>
     <script src="dnd.factory.js"> </script>
     <script src="dnd.dataservice.js"> </script>
 
@@ -36,13 +52,14 @@
     <nav class="left">
       <button type="button" ng-click="dndChar.genAll()"> Random All </button>
       <button type="button" ng-click="dndChar.setTest()"> Test </button>
+
 <!--
 -->
     </nav>
 
     <nav class="right"> </nav>
 
-    <div class="charmain">
+    <div class="charmain border">
       <p> {{dndChar.test}} </p>
       <p> {{dndChar.currentLanguage}} </p>
 <!--
@@ -52,7 +69,7 @@
       <p> Character Name: <input type="text" ng-model="dndChar.charName" placeholder="Enter a character name" /> </p>
 
 
-      <div class="char">
+      <div class="char border">
         <h2 id="name"> {{dndChar.charName}} Character Attributes </h2>
         <button type="button" ng-click="dndChar.genStats()" > Roll Stats </button>
         <button type="button" ng-click="dndChar.changeGen()" > {{ dndChar.genType }} </button>
@@ -90,7 +107,7 @@
 
       </div>
 
-      <div class="char">
+      <div class="char border">
         <h2 id="racechar" ng-model="dndChar.raceTitle"> {{dndChar.raceTitle}} </h2>
         <p> Race: 
           <select ng-model="dndChar.raceSelect"
@@ -119,7 +136,7 @@
 
       </div>
 
-      <div class="char">
+      <div class="char border">
         <h2 id="classchar"> {{dndChar.classTitle}} </h2>
         <p> {{dndChar.classDesc}} </p>
         <p> Class: 
@@ -146,7 +163,7 @@
         </div>
       </div>
 
-      <div class="char">
+      <div class="char border">
         <h2 id="charback"> {{dndChar.backgroundTitle}} </h2>
         <p> {{dndChar.backgroundDesc}} </p>
         <p> Background: 
@@ -156,18 +173,18 @@
          </select> </p>
 
         <div class="sub" ng-show="dndChar.hasBackground">
-        <p id="backSpec" ng-show="dndChar.backgroundSpShow"> {{dndChar.backgroundSpLbl}} 
-            <input type="text" class="sentence" id="special" ng-model="dndChar.backgroundSp"/> </p>
-        <p ng-show="dndChar.backgroundT1"> Personality Trait One: 
-            <input type="text" class="sentence" id="ptrait1" ng-model="dndChar.backgroundT1"/> </p>
-        <p ng-show="dndChar.backgroundT2"> Personality Trait Two: 
-            <input type="text" class="sentence" id="ptrait2" ng-model="dndChar.backgroundT2"/> </p>
-        <p ng-show="dndChar.backgroundI"> Ideal: 
-            <input type="text" class="sentence" id="ideal" ng-model="dndChar.backgroundI"/> </p>
-        <p ng-show="dndChar.backgroundB"> Bond: 
-            <input type="text" class="sentence" id="bond" ng-model="dndChar.backgroundB"/> </p>
-        <p ng-show="dndChar.backgroundF"> Flaw: 
-            <input type="text" class="sentence" id="flaw" ng-model="dndChar.backgroundF"/> </p>
+        <p id="backSpec" ng-show="dndChar.backgroundSpShow"> {{dndChar.backgroundSpLbl}}: <br>
+            <input type="text" class="sentence" id="special" ng-model="dndChar.backgroundSp"/> </br> </p>
+        <p ng-show="dndChar.backgroundT1"> Personality Trait One: <br>
+            <input type="text" class="sentence" id="ptrait1" ng-model="dndChar.backgroundT1"/> </br> </p>
+        <p ng-show="dndChar.backgroundT2"> Personality Trait Two: <br>
+            <input type="text" class="sentence" id="ptrait2" ng-model="dndChar.backgroundT2"/> </br> </p>
+        <p ng-show="dndChar.backgroundI"> Ideal: <br>
+            <input type="text" class="sentence" id="ideal" ng-model="dndChar.backgroundI"/> </br> </p>
+        <p ng-show="dndChar.backgroundB"> Bond: <br>
+            <input type="text" class="sentence" id="bond" ng-model="dndChar.backgroundB"/> </br> </p>
+        <p ng-show="dndChar.backgroundF"> Flaw: <br>
+            <input type="text" class="sentence" id="flaw" ng-model="dndChar.backgroundF"/> </br> </p>
 
         <table border=3 ng-show="dndChar.backgroundTable">
           <tr class="head">
@@ -183,15 +200,29 @@
         </div>
       </div>
 
-      <div class="lang">
+      <div class="lang border">
         <h2> Languages </h2>
         <p> Available to Select: 
-              <input ng-model="dndChar.languageAvail" 
+              <input class="readonly" ng-model="dndChar.languageAvail" 
                      ng-readonly="true"
                      type="number" /> 
         </p> 
+        <p> 
+          <div class="container">
+            <div class="row">
+              <div class="col-xs-6">
+                <dropdown-multiselect options="dndChar.languageList"> </dropdown-multiselect>
+              </div>
+              <div class="col-xs-6">
+                <ul>
+                  <li data-ng-repeat="item in dndChar.languageList | filter: {selected:true}"> {{ item.language }} </li>
+                </ul>
+              </div>
+            </div>
+          </div>
+        </p> 
         <p> Standard: 
-          <label ng-repeat="language in dndChar.languageList.Standard">
+          <label ng-repeat="language in dndChar.languageList | filter: {type:'Standard'}">
             <input 
               name="language.language"
               type="checkbox"
@@ -202,7 +233,7 @@
           </label>
         </p>
         <p> Exotic: 
-          <label ng-repeat="language in dndChar.languageList.Exotic">
+          <label ng-repeat="language in dndChar.languageList | filter: {type:'Exotic'}">
             <input 
               name="language.language"
               type="checkbox"

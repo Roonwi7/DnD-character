@@ -216,7 +216,7 @@ angular.module('DnDApp')
 
       dndFactory.getLanguages()
         .success(function(result) {
-          dndDataService.myData.languages = result;
+          dndDataService.myData.languages = result.list;
           deferred.resolve(dndDataService.myData);
         })
         .error(function(response, status) {
