@@ -53,21 +53,13 @@ angular.module('DnDApp')
     var genTypeBasic=5;
     var genTypeMax=6;
 
-    dndController.users = [ {"id": 1, "name": "Ali" },
-                            {"id": 2, "name": "Sara" },
-                            {"id": 3, "name": "Babak" },
-                            {"id": 4, "name": "Sanaz" },
-                            {"id": 5, "name": "Dariush" }, ];
-    dndController.selectedUserIds = [3, 5];
-
-
 //  TODO:
 //    Add Armor Class
 //    Add Hit Points
 //    Add Proficiency for Saving Throws & Skills (checklist)
 //    Add Alignment
 //    Allow selection of Ideal based on Alignment
-//    Add picklist for Languages
+//    Create directive for language picklist so it doesn't put last comma and shows None if no language selected
 //    Add Age/Sex/Eyes/Skin/Hair
 //    Add Name Generator
 //    Add more info under character backgrounds
@@ -591,14 +583,11 @@ angular.module('DnDApp')
     function recalcLanguageAvail()
     {
       dndController.languageAvail = dndController.languageToSelectRace + dndController.languageToSelectBackground;
-console.log("JMG: total languageAvail = "+dndController.languageAvail);
       for (var lang in dndController.languageList) {
         if (dndController.languageList[lang].selected == true) {
           dndController.languageAvail -= 1;
-console.log("JMG: updated languageAvail = "+dndController.languageAvail);
         }
       }
-console.log("JMG: final languageAvail = "+dndController.languageAvail);
     }
 
     function languageSelected (langState)

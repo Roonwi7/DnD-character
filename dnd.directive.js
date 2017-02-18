@@ -4,6 +4,7 @@ angular.module('DnDApp')
                 restrict: 'E',
                 scope: {
                     options: '=',
+                    update: '=',
                 },
                 template:
 '<div class="btn-group" data-ng-class="{open: open}">' +

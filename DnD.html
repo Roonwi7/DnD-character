@@ -71,37 +71,45 @@
 
       <div class="char border">
         <h2 id="name"> {{dndChar.charName}} Character Attributes </h2>
-        <button type="button" ng-click="dndChar.genStats()" > Roll Stats </button>
-        <button type="button" ng-click="dndChar.changeGen()" > {{ dndChar.genType }} </button>
+        <div class="container">
+          <div class="row">
+            <div class="col-xs-6">
+              <button type="button" ng-click="dndChar.genStats()" > Roll Stats </button>
+              <button type="button" ng-click="dndChar.changeGen()" > {{ dndChar.genType }} </button>
+            </div>
+            <div class="col-xs-6">
+              <table border=3>
+                <tr class="head">
+                  <td width="120px"> Point Total </td>
+                </tr>
+                <tr class="body">
+                  <td > {{dndChar.points}} </td>
+                </tr>
+              </table>
+            </div>
+          </div>
+        </div>
+
 
         <div class="sub" ng-show="dndChar.hasChar">
-        <table border=3>
-          <tr class="head">
-            <td width="120px"> Point Total </td>
-          </tr>
-          <tr class="body">
-            <td > {{dndChar.points}} </td>
-          </tr>
-        </table>
-
         <table border=3 >
           <tr class="head">
             <td width="120px"> Attribute </td>
-            <td width="120px"> Modifier </td>
-            <td width="100px"> Stat Total </td>
             <td width="100px"> Base Stat </td>
             <td width="100px"> Race Additions </td>
+            <td width="100px"> Stat Total </td>
+            <td width="120px"> Modifier </td>
           </tr>
           <tr ng-repeat="att in dndChar.attributes">
             <td> {{att.attr}} </td>
-            <td> {{att.mod}} </td>
-            <td> {{att.total}} </td>
             <td> 
               <input ng-model="att.base" 
                      ng-change="dndChar.calcTotal()" 
                      type="number" min="3" max="18" /> 
             </td>
             <td> {{att.basemod}} </td>
+            <td> {{att.total}} </td>
+            <td> {{att.mod}} </td>
           </tr>
         </table>
 
@@ -117,23 +125,28 @@
 
         <div class="sub" ng-show="dndChar.hasRace">
 
-        <table border=3 ng-show="dndChar.raceTable">
-          <tr class="head">
-            <td width="120px"> Item </td>
-            <td width="100px"> Value </td>
-          </tr>
-          <tr ng-repeat="att in dndChar.raceTable">
-            <td> {{att.attr}} </td>
-            <td> {{att.value}} </td>
-          </tr>
-        </table> 
+          <div class="container">
+            <div class="row">
+              <div class="col-md-4">
+                <table border=3 ng-show="dndChar.raceTable">
+                  <tr class="head">
+                    <td width="120px"> Item </td>
+                    <td width="100px"> Value </td>
+                  </tr>
+                  <tr ng-repeat="att in dndChar.raceTable">
+                    <td> {{att.attr}} </td>
+                    <td> {{att.value}} </td>
+                  </tr>
+                </table> 
 
-        <p ng-repeat="line in dndChar.raceInfo">
-          <strong> {{line.lbl}} </strong> {{line.val}} 
-        </p>
+              </div>
+              <div class="col-md-4">
+                <p ng-repeat="line in dndChar.raceInfo"> <strong> {{line.lbl}} </strong> {{line.val}} </p>
+            </div>
+          </div>
+
 
         </div>
-
       </div>
 
       <div class="char border">
@@ -147,20 +160,53 @@
         </p>
 
         <div class="sub" ng-show="dndChar.hasClass">
-        <table border=3 ng-show="dndChar.classTable">
-          <tr class="head">
-            <td width="120px"> Item </td>
-            <td width="100px"> Value </td>
-          </tr>
-          <tr ng-repeat="att in dndChar.classTable">
-            <td> {{att.attr}} </td>
-            <td> {{att.value}} </td>
-          </tr>
-        </table> 
-        <p ng-repeat="line in dndChar.classInfo">
-          <strong> {{line.lbl}} </strong> {{line.val}} 
-        </p>
+          <div class="container">
+            <div class="row">
+              <div class="col-md-4">
+                <table border=3 ng-show="dndChar.classTable">
+                  <tr class="head">
+                    <td width="120px"> Item </td>
+                    <td width="100px"> Value </td>
+                  </tr>
+                  <tr ng-repeat="att in dndChar.classTable">
+                    <td> {{att.attr}} </td>
+                    <td> {{att.value}} </td>
+                  </tr>
+                </table> 
+              </div>
+              <div class="col-md-4">
+                <p ng-repeat="line in dndChar.classInfo">
+                  <strong> {{line.lbl}} </strong> {{line.val}} 
+                </p>
+              </div>
+            </div>
+          </div>
         </div>
+      </div>
+
+
+      <div class="lang border">
+        <h2> Languages </h2>
+        <p> 
+          <div class="container">
+            <div class="row">
+              <div class="col-xs-6">
+                Available to Select: <input class="readonly" ng-model="dndChar.languageAvail" ng-readonly="true" type="number" /> 
+              </div>
+              <div class="col-xs-6">
+                <dropdown-multiselect options="dndChar.languageList" update="dndChar.recalcLanguageAvail()"> </dropdown-multiselect>
+              </div>
+            </div>
+            <div class="row">
+              <div class="col-xs-6">
+                <p><b> Standard: </b>
+                  <span data-ng-repeat="item in dndChar.languageList | filter: {selected:true, type:'Standard'}"> {{ item.language }}, </span></p>
+                <p><b> Exotic: </b>
+                  <span data-ng-repeat="item in dndChar.languageList | filter: {selected:true, type:'Exotic'}"> {{ item.language }}, </span></p>
+              </div>
+            </div>
+          </div>
+        </p> 
       </div>
 
       <div class="char border">
@@ -200,54 +246,6 @@
         </div>
       </div>
 
-      <div class="lang border">
-        <h2> Languages </h2>
-        <p> Available to Select: 
-              <input class="readonly" ng-model="dndChar.languageAvail" 
-                     ng-readonly="true"
-                     type="number" /> 
-        </p> 
-        <p> 
-          <div class="container">
-            <div class="row">
-              <div class="col-xs-6">
-                <dropdown-multiselect options="dndChar.languageList"> </dropdown-multiselect>
-              </div>
-              <div class="col-xs-6">
-                <ul>
-                  <li data-ng-repeat="item in dndChar.languageList | filter: {selected:true}"> {{ item.language }} </li>
-                </ul>
-              </div>
-            </div>
-          </div>
-        </p> 
-        <p> Standard: 
-          <label ng-repeat="language in dndChar.languageList | filter: {type:'Standard'}">
-            <input 
-              name="language.language"
-              type="checkbox"
-              ng-change="dndChar.languageSelected(language.selected)"
-              value="{{language.selected}}"
-              ng-model="language.selected" />
-              {{language.language}}
-          </label>
-        </p>
-        <p> Exotic: 
-          <label ng-repeat="language in dndChar.languageList | filter: {type:'Exotic'}">
-            <input 
-              name="language.language"
-              type="checkbox"
-              ng-change="dndChar.languageSelected(language.selected)"
-              value="{{language.selected}}"
-              ng-model="language.selected" />
-              {{language.language}}
-          </label>
-        </p>
-
-        <div class="sub" ng-show="dndChar.hasBackground">
-        </div>
-
-      </div>
     </div>
 
     <footer>
